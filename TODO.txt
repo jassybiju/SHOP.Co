@@ -1,0 +1,133 @@
+
+Admin side :
+a. Admin sign in
+b. User management.
+- Implement block and unblock user (should ask for confirmation before the action)
+- Implement search along with cancel or clear button to reset the results (should be done from backend)
+- Implement Pagination (should be done from backend)
+- Table should be in sorted in descending order (latest data should be at first)
+c. Category management 
+- Implement Add,Edit and Delete (soft delete)
+- Implement search along with cancel or clear button to reset the results (should be done from backend).
+- Pagination  (should be done from backend).
+- Table should be in sorted in descending order (latest data should be at first)
+d. Product management
+- Implement Add,Edit and Delete(Soft Delete) products.
+- Product must have multiple images and should be uploaded using a single file field (Minimum 3 Images)
+- Images should be cropped and resized properly before upload.
+
+User side :
+a. Home page
+b. Users sign up & login with validation.
+c. Sign up using OTP with OTP timer and Resend Otp
+d. Login or signup with single sign on (google , facebook …)
+e. Implement forgot password.
+f. List products on the user side.
+g. Implement Product Listing
+h. Implement search along with cancel or clear button to reset the results (should be done from backend)
+i. Sort based on : 
+- Price: low to high
+- Price : high to low 
+- aA - zZ 
+- zZ - aA 
+- Popularity  (Optional)
+- Average ratings (Optional)
+- New arrivals (Optional)
+- Featured (Optional)
+j. Filter based on : 
+- Category
+- Price Range
+- Brand (Optional).
+Note: Search, sort, and filter should work together in combination.
+k. Ensure blocked/unlisted  products are hidden.
+l. Product Details Page
+m. Product details view on the user side with image zoom.
+n. Product detailed page should contain following 
+- Breadcrumbs 
+- Ratings 
+- Price
+- Discounts or coupons applied
+- Reviews 
+- Stock 
+- Proper error handles Sold out / unavailable  and  out of stock EXAMPLE
+- Highlights / specs of product 
+- Related product recommendations
+- Redirect users to product listing page,  if the product is blocked or unavailable on refresh or on other actions (example: onclick of a addtocart Button)
+Add Demo login in your Project
+
+
+Day 1 – Admin Panel (Backend + Frontend Basics)
+
+🎯 Goal: Get the admin system functional with user, category, and product management basics.
+
+Admin Sign-in (2 hrs)
+JWT authentication (login/logout).
+Protected routes (Admin only).
+User Management (4 hrs)
+API: Get users with pagination + search + sort.
+Block/unblock API.
+Frontend: Table with pagination, search, confirm modal for block/unblock.
+Category Management (4 hrs)
+API: Add/Edit/Delete (soft delete).
+API: List categories with search + pagination + sort.
+Frontend: Category table with forms + clear search button.
+Product Management – Base Setup (2 hrs)
+API: Add/Edit/Delete (soft delete).
+Multer/Cloudinary/S3 setup for multiple image upload.
+Image validation: min 3 images.
+Integrate cropping/resizing (sharp or multer-sharp).
+
+✅ End of Day 1 Deliverable:
+Admin can log in.
+Users + Categories fully manageable.
+Products can be created with multiple images.
+
+Day 2 – User Side (Authentication + Listings)
+
+🎯 Goal: Build user authentication and product browsing features.
+User Authentication (5 hrs)
+Sign up + login with validation.
+OTP signup (with timer + resend).
+Forgot password.
+Google / Facebook SSO (basic integration, can refine later).
+Demo login.
+Product Listing (4 hrs)
+API: Get products (with pagination, search, sort, filter).
+Frontend: Product list page with search bar, filters (category, price range, brand).
+Sorting (price, A-Z, Z-A, newest).
+Block/Unlisted Handling (2 hrs)
+Ensure blocked/unlisted products don’t show.
+Redirect user if a blocked product is refreshed.
+
+✅ End of Day 2 Deliverable:
+
+Full user authentication.
+
+Products visible with working search + filter + sort.
+
+Day 3 – Product Details + Polish
+
+🎯 Goal: Make product details page rich + polish all edge cases.
+Product Details Page (5 hrs)
+Breadcrumbs.
+Image zoom.
+Ratings + reviews.
+Stock status + Sold out/unavailable messages.
+Discounts/coupons display.
+Highlights/specs.
+Related products recommendations.
+Redirect on blocked/unavailable product.
+Final Enhancements (3 hrs)
+Handle all API errors gracefully.
+Add pagination + clear/reset search buttons everywhere.
+Make sure sort, filter, search work in combination.
+Testing + Demo Setup (3 hrs)
+Test admin/user flows end-to-end.
+Create a demo admin + demo user login.
+Small UI fixes (tables sorted by latest, clear buttons, etc.).
+
+✅ End of Day 3 Deliverable:
+
+Complete Admin + User side working.
+
+Demo logins ready for presentation.
