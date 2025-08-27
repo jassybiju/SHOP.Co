@@ -28,12 +28,16 @@ const userSchema = new Schema(
       type: Date,
       required: true,
     },
+    gender : {
+      type : String,
+      enum : ['male', 'female', 'not disclosed']
+    },
     active: {
       type: Boolean,
       default: true,
     },
     last_login: {
-      type: DateTime,
+      type: Date,
     },
   },
   { timestamps: true }
@@ -63,4 +67,4 @@ userSchema.methods.comparePassword =async function(password){
     return await bcrypt.compare(password, this.password)
 }
 
-const User = mongoose.model('user', userSchema)
+export const User = mongoose.model('user', userSchema)
