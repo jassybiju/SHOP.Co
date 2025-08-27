@@ -28,9 +28,9 @@ const userSchema = new Schema(
       type: Date,
       required: true,
     },
-    gender : {
-      type : String,
-      enum : ['male', 'female', 'not disclosed']
+    gender: {
+      type: String,
+      enum: ["male", "female", "not disclosed"],
     },
     active: {
       type: Boolean,
@@ -39,32 +39,39 @@ const userSchema = new Schema(
     last_login: {
       type: Date,
     },
+    is_verified: {
+      type: Boolean,
+      default: false,
+    },
+   
   },
   { timestamps: true }
 );
 
+userSchema.index({createdAt : 1}, {expireAfterSeconds: 300, partialFilterExpression : {is_verified : false}})
+
 userSchema.pre("save", async function (next) {
-try {
+  try {
     let user = this;
-  
+
     //checking if password is modified
     if (!user.isModified("password")) return next();
-  
+
     //generating salt
     const SALT_WORK_FACTOR = process.env.SALT_WORK_FACTOR || 10;
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-  
+
     //hashing password
     const hash = bcrypt.hash(user.password, salt);
     user.password = hash;
     next();
-} catch (error) {
-  next(error)
-}
+  } catch (error) {
+    next(error);
+  }
 });
 
-userSchema.methods.comparePassword =async function(password){
-    return await bcrypt.compare(password, this.password)
-}
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
-export const User = mongoose.model('user', userSchema)
+export const User = mongoose.model("user", userSchema);
