@@ -48,7 +48,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.index({createdAt : 1}, {expireAfterSeconds: 300, partialFilterExpression : {is_verified : false}})
+userSchema.index({createdAt : 1}, {expireAfterSeconds: 600, partialFilterExpression : {is_verified : false}})
 
 userSchema.pre("save", async function (next) {
   try {
