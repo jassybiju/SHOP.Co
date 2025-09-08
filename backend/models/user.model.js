@@ -48,21 +48,20 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.index({createdAt : 1}, {expireAfterSeconds: 600, partialFilterExpression : {is_verified : false}})
 
 userSchema.pre("save", async function (next) {
   try {
     let user = this;
-
+    
     //checking if password is modified
     if (!user.isModified("password")) return next();
 
     //generating salt
     const SALT_WORK_FACTOR = process.env.SALT_WORK_FACTOR || 10;
-    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
     //hashing password
-    const hash = bcrypt.hash(user.password, salt);
+    const hash = await bcrypt.hash(user.password, SALT_WORK_FACTOR);
+    
     user.password = hash;
     next();
   } catch (error) {
