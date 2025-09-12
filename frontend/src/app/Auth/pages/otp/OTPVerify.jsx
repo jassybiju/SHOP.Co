@@ -15,7 +15,7 @@ const OTPVerify = () => {
     const navigate = useNavigate()
     const { otpExpiry, clearOtpExpiry } = useStore();
     const { state : { email, type }} = useLocation();
-    const { mutate: otpVerify, isPending } = useVerifyOtp();
+    const { mutate: otpVerify } = useVerifyOtp();
     console.log(otpExpiry)
     const onSubmit = (data) => {
         console.log("OTP Submitted:", data);

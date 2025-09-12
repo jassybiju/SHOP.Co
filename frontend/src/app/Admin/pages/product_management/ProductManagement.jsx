@@ -1,4 +1,4 @@
 const ProductManagement = () => {
-  return <div>ProductManagement</div>;
+  return <div>Product Management</div>;
 };
 export default ProductManagement;

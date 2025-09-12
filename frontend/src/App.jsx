@@ -7,31 +7,22 @@ import { useEffect } from "react";
 import { useStore } from "./store/store";
 import { axiosInstance } from "./app/Auth/services/api/axiosInstance";
 import axios from "axios";
-const queryClient = new QueryClient();
-
+import useFetchUserRole from "./hooks/useFetchUserRole";
+import { useFetchUser } from "./app/Auth/hooks/useAuth";
+import { Loader } from "lucide-react";
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 const App = () => {
-    const { user, setUser } = useStore();
+    
 
-    useEffect(() => {
-        async function getData() {
-            const data = await axios.get(
-                import.meta.env.VITE_BASE_URI + "auth/me",
-                { withCredentials: true }
-            );
-            return data
-        }
-
-        if (!user) {
-            getData().then((res)=> setUser(res.data))
-        }
-    }, [user, setUser]);
-
+    useFetchUser()
+    
     return (
         <>
-            <Toaster />
-            <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
-            </QueryClientProvider>
+        <ReactQueryDevtools/>
+            <Toaster toastOptions={{className : "z-9999"}}/>
+            
+                <RouterProvider router={router} hydrateFallback={<>Loading</>} />
+           
         </>
     );
 };

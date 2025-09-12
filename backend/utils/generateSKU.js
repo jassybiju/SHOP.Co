@@ -1,0 +1,1 @@
+export const generateSKU = (productCode, size, color) => `${productCode}-${color.toUpperCase()}-${size.toUpperCase()}`

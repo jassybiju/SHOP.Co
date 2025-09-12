@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, redirect, useLocation, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 const RedirectIfNoOTP = ({children}) => {
     const {state} = useLocation()

@@ -3,21 +3,18 @@ import Input from "../../../../components/Input"; // reuse same component
 import { useForm } from "react-hook-form";
 import AuthBanner from "../../components/AuthBanner";
 import { useLoginUser } from "../../hooks/useAuth";
-import toast from "react-hot-toast";
 
 const Login = () => {
+    
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const { mutate: login, isPending } = useLoginUser();
-
+    const { mutate: login } = useLoginUser();
+    console.log("Gotcha")
     const onSubmit = (data) => {
-        login(data, {
-            onSuccess: (data) => toast.success(data.data.message),
-            onError: (error) => toast.error(error.message),
-        });
+         login(data);
         console.log(data)
     };
 

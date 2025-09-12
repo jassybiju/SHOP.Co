@@ -1,4 +1,12 @@
+import Header from "../../components/Header";
+
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+    return (
+        <div>
+            {" "}
+            <Header heading="Dashboard" />
+            Dashboard
+        </div>
+    );
 };
 export default Dashboard;

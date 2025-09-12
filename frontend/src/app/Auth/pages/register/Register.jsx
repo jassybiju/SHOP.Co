@@ -10,23 +10,26 @@ import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 
 const Register = () => {
     const { mutate: registerUser, isPending } = useRegister();
-    const {setOtpExpiry} = useStore()
+    const { setOtpExpiry } = useStore();
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
     } = useForm();
+    
     const navigate = useNavigate();
-    console.log(`${import.meta.env.VITE_BASE_URI}auth`);
+
     const onSubmit = (data) => {
         console.log("Form Data:", data);
         registerUser(data, {
             onSuccess: (data, variables) => {
-                console.log(data)
-                setOtpExpiry(Date.now() + 120 * 1000) //120 seconds from now
+                console.log(data);
+                setOtpExpiry(Date.now() + 120 * 1000); //120 seconds from now
                 toast.success(data.data.message);
-                navigate("/auth/otp-verify", {state : {email : variables?.email , type : OTP_TYPES.SIGN_UP }});
+                navigate("/auth/otp-verify", {
+                    state: { email: variables?.email, type: OTP_TYPES.SIGN_UP },
+                });
             },
             onError: (error) => toast.error(error.message),
         });
@@ -194,7 +197,7 @@ const Register = () => {
                     {/* Footer */}
                     <p className="text-center mt-4 text-gray-600">
                         Already have account?{" "}
-                        <Link to={"/auth/login/"}  className="underline">
+                        <Link to={"/auth/login/"} className="underline">
                             Log in
                         </Link>
                     </p>

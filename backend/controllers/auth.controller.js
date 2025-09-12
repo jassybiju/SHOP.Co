@@ -60,33 +60,49 @@ export const loginUser = async (req, res, next) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            return next("User not found");
+            res.status(404)
+            throw new Error("User not found");
         }
         console.log(email, password);
         const isPasswordCorrect = await user.comparePassword(password);
         if (!isPasswordCorrect) {
-            return next("Incorrect Credentials");
+            res.status(400)
+            throw new Error("Incorrect Credentials");
         }
+        console.log('logged in')
         return res
             .cookie("jwt", generateToken(email), {
                 httpOnly: true,
-                secure : false,
-                maxAge :  24 * 60 * 60 * 1000,
-                path : '/'
+                secure: false,
+                maxAge: 24 * 60 * 60 * 1000,
+                path: "/",
             })
             .status(200)
-            .json({ message: "Logged In successful" });
-    } catch (error) {}
-};
-
-export const logoutUser = async (req, res, next)=>{
-    try {
-        res.cookie('jwt', '', {maxAge : 0})
-        res.status(200).json({message: "Logged Out Successful", status : "success"})
+            .json({
+                message: "Logged In successful",
+                data: {
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    role: user.role,
+                },
+            });
     } catch (error) {
         next(error)
     }
-}
+};
+
+export const logoutUser = async (req, res, next) => {
+    try {
+        res.cookie("jwt", "", { maxAge: 0 });
+        res.status(200).json({
+            message: "Logged Out Successful",
+            status: "success",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 export const verifyOTP = async (req, res, next) => {
     console.log(123);
@@ -256,7 +272,6 @@ export const resetPassword = async (req, res, next) => {
 
 export const getUserDetails = async (req, res, next) => {
     try {
-
         const token = req.cookies.jwt;
         if (!token) {
             res.status(403);

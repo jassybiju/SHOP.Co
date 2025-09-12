@@ -3,7 +3,9 @@ import { persist } from "zustand/middleware";
 
 export const useStore = create(persist((set) => ({
     user : null,
-    setUser : (user) => set({user}),
+    isUserLoading : false,
+    setLoading : (loading) =>{console.log(loading); set({isUserLoading : loading})},
+    setUser : (user) =>{console.log(user); set({user}), set({isUserLoading : false})},
     clearUser : () => set({user : null}),
     // otp Expiry 
     otpExpiry : null,
