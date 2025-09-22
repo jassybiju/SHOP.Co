@@ -1,15 +1,15 @@
 import { Brand } from "../../models/brand.model.js";
-import cloudinary, { uploadImages } from "../../utils/cloudinary.js";
+import cloudinary, { getPublicIdFromUrl, uploadImages } from "../../utils/cloudinary.js";
 import { brandFilterOptions, filterOptions } from "../../utils/CONSTANTS.js";
 
-export const addBrandService = async (req,res, value) => {
+export const addBrandService = async (req, res, value) => {
     const existingBrand = await Brand.findOne({ name: value.name });
     if (existingBrand) {
         res.status(400);
         throw new Error("Brand name already exists");
     }
     //getting public id of first image
-    const uploadResults = (await uploadImages(req))[0];
+    const uploadResults = (await uploadImages(req, "brand"))[0];
     console.log({ ...value, image: uploadResults });
     const brand = await Brand.create({ ...value, image: uploadResults });
 
@@ -33,16 +33,14 @@ export const getAllBrandService = async (query) => {
         ];
     }
     console.log(filterOptions, query);
-    const res = await cloudinary.api.resource("brand/uteulc2x2de1js1lg3iy", {
-        colors: true,
-    });
-    console.log(res.secure_url);
+
+   
     const aggregationPipeline = [
         {
             $facet: {
                 data: [
                     { $match: filterOptions },
-                    {$sort :{ [sortField] : order}},
+                    { $sort: { [sortField]: order } },
                     { $skip: limit * (page - 1) },
                     { $limit: limit },
                 ],
@@ -84,29 +82,30 @@ export const getAllBrandService = async (query) => {
                         else: 0,
                     },
                 },
-                limit : {$literal : limit},
-                page : {$literal : page},
+                limit: { $literal: limit },
+                page: { $literal: page },
             },
         },
     ];
 
     const brand = await Brand.aggregate(aggregationPipeline);
-
+    
     console.log(brand[0].data);
-    return brand;
+    return {...brand[0], data : brand[0].data.map(x => ({...x , image : cloudinary.url(x.image, {secure : true}) }))};
 };
 
 export const getBrandService = async (_id) => {
-    const brand = await Brand.findOne({ _id });
+    const brand = await Brand.findOne({ _id }).lean();
     if (!brand) {
         throw new Error("No brand found");
     }
-    return brand;
+    console.log(brand)
+    return {...brand, image : cloudinary.url(brand.image, {secure: true})};
 };
 
-export const editBrandService = async (_id, data) => {
+export const editBrandService = async (_id, data, req) => {
     console.log(data, 2342);
-
+    console.log(req.files);
     const brand = await Brand.findOne({ _id });
     console.log(brand, 234);
     if (!brand) {
@@ -120,9 +119,23 @@ export const editBrandService = async (_id, data) => {
     if (existingWithName) {
         throw new Error("brand name already exists");
     }
+    let image = data.image;
+    if(req.files && req.files.length > 0){
+        console.log(12399)
+        if(brand.image){
+
+                
+                await cloudinary.uploader.destroy(brand.image)
+          
+        }
+        image = (await uploadImages(req, "brand"))[0]
+    }
+    
+    
 
     brand.name = data.name;
     brand.description = data.description;
+    brand.image = image;
 
     await brand.save();
 

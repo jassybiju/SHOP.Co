@@ -1,10 +1,13 @@
+import { oauth2 } from "googleapis/build/src/apis/oauth2/index.js";
 import client from "../config/redisClient.js";
 import { User } from "../models/user.model.js";
 import { OTP_TYPES } from "../utils/CONSTANTS.js";
+import { oauth2Client } from "../utils/googleClient.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 import { sendOTPMail } from "../utils/nodemailer.js";
 import { generateOtp } from "../utils/otp.js";
 import { printKeyValuePair } from "../utils/redis-debug.js";
+import axios from 'axios'
 
 const OTP_INVALID_TIME = process.env.OTP_INVALID_TIME || 120;
 const OTP_EXPIRY_TIME = process.env.OTP_EXPIRY_TIME || 300;
@@ -19,7 +22,7 @@ export const registerUser = async (req, res, next) => {
         if (user && user.is_verified) {
             console.log(1);
             res.status(400);
-            return next(new Error("User already exists"));
+            throw new Error("User already exists");
         } else if (user) {
             await User.findOneAndDelete({ email: email });
         }
@@ -51,7 +54,7 @@ export const registerUser = async (req, res, next) => {
         });
     } catch (error) {
         console.log(error);
-        return next(new Error(error));
+        return next(error);
     }
 };
 
@@ -60,16 +63,16 @@ export const loginUser = async (req, res, next) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(404)
+            res.status(404);
             throw new Error("User not found");
         }
         console.log(email, password);
         const isPasswordCorrect = await user.comparePassword(password);
         if (!isPasswordCorrect) {
-            res.status(400)
+            res.status(400);
             throw new Error("Incorrect Credentials");
         }
-        console.log('logged in')
+        console.log("logged in");
         return res
             .cookie("jwt", generateToken(email), {
                 httpOnly: true,
@@ -88,7 +91,7 @@ export const loginUser = async (req, res, next) => {
                 },
             });
     } catch (error) {
-        next(error)
+        next(error);
     }
 };
 
@@ -223,6 +226,7 @@ export const resendOTP = async (req, res, next) => {
 export const forgetPassword = async (req, res, next) => {
     try {
         const { email } = req.body;
+        console.log(1);
         const user = await User.findOne({ email, is_verified: true });
         if (!user) {
             res.status(400);
@@ -242,10 +246,11 @@ export const forgetPassword = async (req, res, next) => {
             ),
             sendOTPMail(email, otp_code),
         ]);
-
-        res.status(201).json({
+        console.log(otp_code);
+        res.status(200).json({
             message: "OTP send successfully",
             status: "success",
+            data: { otp_timer: Date.now() + Number(OTP_EXPIRY_TIME * 1000) },
         });
     } catch (error) {
         next(error);
@@ -253,12 +258,19 @@ export const forgetPassword = async (req, res, next) => {
 };
 
 export const resetPassword = async (req, res, next) => {
-    printKeyValuePair();
+    await printKeyValuePair();
     try {
-        const { email, new_password } = req.body;
+        const { email, password } = req.body;
         const cache = await client.get(`otp_verified:${email}`);
+        console.log(cache, 1234, req.body);
         if (cache === "true") {
-            console.log("Password Change");
+            const user = await User.findOne({ email: email });
+            if(!user){
+                throw new Error("User not found")
+            }
+            user.password = password
+            await user.save()
+            console.log(user)
             await client.del(`otp_verified:${email}`);
         } else {
             res.status(400);
@@ -279,7 +291,8 @@ export const getUserDetails = async (req, res, next) => {
         }
         const data = verifyToken(req.cookies.jwt);
         const user = await User.findOne({ email: data.email });
-        if (!user) {
+        console.log(user)
+        if (!user || user.active === false) {
             res.status(403);
             return next("Access Denied");
         }
@@ -298,3 +311,28 @@ export const getUserDetails = async (req, res, next) => {
         next(error);
     }
 };
+
+export const googleAuth = async(req, res, next) => {
+    const {code} = req.query
+    try{
+        const googleRes = await oauth2Client.getToken(code)
+        oauth2Client.setCredentials(googleRes.tokens)
+        const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`)
+        console.log(userRes)
+        const {email , name } = userRes.data
+        
+        const [first_name , last_name] = name.split(' ')
+        let user = await User.findOne({email})
+        
+        if(!user){
+            user = await User.create({first_name , last_name , email})
+        }
+        const {_id} = user
+        const token = generateToken(email)
+        res.status(200).cookie('jwt', token).json({status : "success", message : "Google Login Success"})
+        
+    }catch(error){
+        console.log(error)
+        next(error)
+    }
+}

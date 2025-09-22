@@ -1,57 +1,58 @@
 import React, { useRef } from "react";
 import { useModal } from "../../../hooks/ModalContext";
-import { useGetCategory } from "../../../hooks/useCategoryManagement";
 import { Loader2 } from "lucide-react";
+import { useGetCategory } from "../../../hooks/useCategoryManagement";
 
-export default function ViewCategory({id}) {
+export default function ViewCategory({ id }) {
     const { setShowModal } = useModal();
 
-   const {data : category, status} = useGetCategory(id)
-   console.log(status)
-   if(status !== 'success'){
-    return <Loader2/>
-   }
+    const { data: brand, status } = useGetCategory(id);
+    console.log(status);
+    console.log(brand)
+    if (status !== "success") {
+        return <Loader2 className=" animate-spin " />;
+    }
     return (
         <>
             <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Add Category
+                    Add Brand
                 </h2>
 
-                <div >
+                <div>
+                     
                     <div className="mb-6">
                         <label
-                            htmlFor="Category-name"
+                            htmlFor="Brand-name"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Category Name
+                            Brand Name
                         </label>
                         <input
                             type="text"
-                            id="Category-name"
+                            id="Brand-name"
                             name="name"
-                            value={category.data.name}
+                            value={brand.data.name}
                             required
-                            placeholder="Enter Category name"
+                            placeholder="Enter Brand name"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3  text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
-                       
                     </div>
                     <div className="mb-8">
                         <label
-                            htmlFor="Category-description"
+                            htmlFor="Brand-description"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Category Description
+                            Brand Description
                         </label>
+
                         <textarea
-                            id="Category-description"
+                            id="Brand-description"
                             name="description"
-                           value ={category.data.description}
+                            value={brand.data.description}
                             placeholder="Write a short description"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y transition min-h-[80px]"
                         />
-                       
                     </div>
 
                     <div className="flex justify-end gap-4">
@@ -62,7 +63,6 @@ export default function ViewCategory({id}) {
                         >
                             Cancel
                         </button>
-                        
                     </div>
                 </div>
             </div>

@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { useStore } from "../../../store/store";
 import { useLogoutUser } from "../../Auth/hooks/useAuth";
+import { useUser } from "../../../hooks/useUser";
 
 const Sidebar = ({ navList = [] }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const user  = useStore((state) => state.user)
-    const [name , email ] = [user.first_name + " " +user.last_name , user.email]
     
+    // const [name , email ] = [user.first_name + " " +user.last_name , user.email]
+    const {data : user} = useUser()
     const {mutate : logout}  = useLogoutUser()
 
     console.log(user)
@@ -68,8 +69,8 @@ const Sidebar = ({ navList = [] }) => {
                 <div className=" h-20  self-baseline mt-auto flex gap-5 mx-auto items-center ">
                     <CircleUserRound size={40} />
                     <div>
-                        <h2 className="text-xl uppercase ">{name}</h2>
-                        <p className="text-sm">{email}</p>
+                        <h2 className="text-xl uppercase ">{user.first_name}</h2>
+                        <p className="text-sm">{user.email}</p>
                     </div>
                     <LogOut size={20} className="" onClick={logout}/>
                 </div>

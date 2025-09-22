@@ -16,3 +16,9 @@ export const brandFilterOptions = {
     AllBrand : {},
     isInactive : {active : false}
 }
+
+export const productFilterOptions = {
+    isActive : {is_active : true},
+    AllProduct : {},
+    isInActive : {is_active : false}
+}

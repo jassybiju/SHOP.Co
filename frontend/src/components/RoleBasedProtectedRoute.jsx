@@ -1,33 +1,24 @@
-import { Navigate } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 import { useStore } from '../store/store';
-import { useFetchUser } from '../app/Auth/hooks/useAuth';
 import { useEffect } from 'react';
 import { Loader } from 'lucide-react';
+import { useUser } from '../hooks/useUser';
 
 const RoleBasedProtectedRoute = ({ allowedRoles, children }) => {
-    const {data , isLoading } = useFetchUser()
-    const {user, setUser} = useStore()
-    useEffect(()=>{
-        //!TODO
-        if(data){
-            setUser(data)
-        }
-        console.log(data)
-    },[data, setUser])
-    
-    if(isLoading || !user){
-        return <Loader/>
+    const {data : user, isLoading , isError } = useUser()
+
+
+    if(isLoading) return <p>Loading User...</p>
+
+    if(isError || !user) return <Navigate to={'/auth/login'} replace/>
+
+    if(!allowedRoles.includes(user.role)){
+      return <Navigate to={'/'}  replace/>
     }
-    //TODO( resolve : //~~Error) after logged in going to /admin redirects to home because !user is getting true becuase of not getting the user and redirectig to /auth/login from there because of protected routed going to /home
-    console.log(user)
- 
 
-  if (!allowedRoles.includes(user.role)) {
-    console.log(user.role)
-    return <Navigate to="/unauthorised" replace />;
-  }
 
-  return children;
+    return children
+    
 };
 
 export default RoleBasedProtectedRoute

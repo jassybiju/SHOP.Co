@@ -6,6 +6,7 @@ import adminUserManagementRouter from "./routes/admin/user-management.routes.js"
 import brandManagementRouter from './routes/admin/brand-management.routes.js'
 import categoryManagementRouter from './routes/admin/category-management.routes.js'
 import productManagementRouter from './routes/admin/product-managment.routes.js'
+import HomeRouter from './routes/home.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -38,6 +39,8 @@ app.use("/api/admin/user-management", adminUserManagementRouter);
 app.use("/api/admin/brand", brandManagementRouter);
 app.use("/api/admin/category", categoryManagementRouter);
 app.use("/api/admin/product", productManagementRouter);
+
+app.use('/api/home',HomeRouter)
 
 app.use((req, res) => {
     res.status(404);

@@ -3,7 +3,8 @@ import Input from "../../../../components/Input"; // reuse same component
 import { useForm } from "react-hook-form";
 import AuthBanner from "../../components/AuthBanner";
 import { useLoginUser } from "../../hooks/useAuth";
-
+import {useGoogleLogin} from '@react-oauth/google'
+import { googleAuth } from "../../services/auth.service";
 const Login = () => {
     
     const {
@@ -18,6 +19,28 @@ const Login = () => {
         console.log(data)
     };
 
+    const responseGoogle = async (authResult) => {
+        try{
+            if(authResult['code']){
+                const result = await googleAuth(authResult.code)
+                const {email , name } = result.data.user 
+                const token = result.data.token
+                const obj = {email , name , token }
+                console.log(obj)
+            }else{
+                throw new Error(authResult)
+            }
+        }catch(error){
+            console.log('Error while google login', error)
+        }
+    }
+
+
+    const googleLogin = useGoogleLogin({
+        onSuccess : responseGoogle,
+        onError : responseGoogle,
+        flow : 'auth-code'
+    })
     return (
         <div className="flex h-[90vh]">
             {/* Left Side - Background */}
@@ -87,6 +110,7 @@ const Login = () => {
 
                         {/* Google Sign-In */}
                         <button
+                            onClick={googleLogin}
                             type="button"
                             className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"
                         >

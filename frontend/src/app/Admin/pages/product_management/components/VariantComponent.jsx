@@ -1,0 +1,73 @@
+import { Trash2 } from "lucide-react";
+import { useModal } from "../../../hooks/ModalContext";
+import EditVariant from "./EditVariant";
+import AddVariant from "./AddVariant";
+
+const VariantComponent = ({ value, onAddVariant,onEditVariant, field, remove, readonly ,index }) => {
+    const { setShowModal, setModalContent } = useModal();
+
+    const showAddVariantModal = () => {
+        setModalContent(<AddVariant onAddVariant={onAddVariant} />);
+        setShowModal(true);
+    };
+    const showEditVariantModal = () => {
+        setModalContent(<EditVariant onEditVariant={onEditVariant} value={field}/>)
+        setShowModal(true)
+    }
+
+    return (
+        <div
+            
+            className={`h-[100px] lg:h-[120px] w-[24%] bg-gray-50 text-xl md:text-2xl rounded border-2  border-gray-400 flex flex-col justify-evenly  relative ${
+                !readonly && "hover:bg-gray-200 "
+            }`}
+        >
+            {value ? (
+                <div className="pl-3 lg:pl-10 " >
+                    {!readonly && (
+                        <div
+                            className="bg-red-500 p-2 w-max rounded-full absolute -top-5 -right-5"
+                            onClick={() => remove(index)}
+                        >
+                            <Trash2 color={"white"} />
+                        </div>
+                    )}
+                    <div className="flex items-center  gap-3 " onClick={showEditVariantModal}>
+                        Color :{" "}
+                        <span
+                            className={`  w-5 h-5 inline-block rounded-full `}
+                            style={{ backgroundColor: value.color }}
+                        ></span>
+                    </div>
+                    <div className="flex items-center   gap-3">
+                        Size :{" "}
+                        <span
+                            className={`font-bold text-[${value.color}]`}
+                            style={{ color: value.color }}
+                        >
+                            {value.size}
+                        </span>
+                    </div>
+                     <div className="flex items-center   gap-3">
+                        Stock :{" "}
+                        <span
+                            className={`font-bold text-[${value.color}]`}
+                            style={{ color: value.color }}
+                        >
+                            {value.stock}
+                        </span>
+                    </div>
+                </div>
+            ) : (
+                <div
+                    className="flex items-center justify-center"
+                    onClick={showAddVariantModal}
+                >
+                    +
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default VariantComponent

@@ -32,6 +32,7 @@ export const addBrand = async (req, res, next) => {
             status: "success",
         });
     } catch (error) {
+        console.log(error,234)
         next(error);
     }
 };
@@ -40,8 +41,10 @@ export const getAllBrand = async (req, res, next) => {
     try {
         const query = req.query;
         const brandRes = await getAllBrandService(query);
-        res.status(200).json(brandRes[0]);
+        console.log(brandRes)
+        res.status(200).json(brandRes);
     } catch (error) {
+        console.log(error)
         next(error);
     }
 };
@@ -65,14 +68,15 @@ export const editBrand = async (req, res, next) => {
         const { id } = req.params;
         const query = req.body;
 
-        console.log(req);
-        console.log(req.body, 3434);
+      
+        console.log(req.body , id, 3434);
         const { value, error } = brandValidator(query);
         if (error) {
             throw error;
         }
-        console.log(value, id);
-        const brand = await editBrandService(id, value);
+      
+        console.log(12345)
+        const brand = await editBrandService(id, value, req);
         res.status(200).json({
             message: "brand edited successfully",
             datat: brand,

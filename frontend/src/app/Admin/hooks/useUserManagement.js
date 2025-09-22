@@ -1,11 +1,11 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { getAllUsers, getUserById } from "../services/user-management.service"
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { getAllUsers, getUserById, toggleUserActiveStatusById } from "../services/user-management.service"
 
 
 export const useGetAllUsers = (params) => {
     
     return useQuery({
-        queryKey : ['users', params],
+        queryKey : ['user', params],
         queryFn : getAllUsers,
         placeholderData : keepPreviousData
     })
@@ -17,5 +17,15 @@ export const useGetUser = (userId) =>{
         queryKey : ['user', userId],
         queryFn : getUserById,
 
+    })
+}
+
+export const useToggleUserActiveStatus = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn : toggleUserActiveStatusById,
+        onSuccess : (data) => {
+            queryClient.invalidateQueries(['user'])
+        }
     })
 }

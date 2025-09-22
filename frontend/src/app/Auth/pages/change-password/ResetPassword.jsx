@@ -1,0 +1,92 @@
+import { useForm } from "react-hook-form";
+import Input from "../../../../components/Input";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useForgetPassword, useResetPassword } from "../../hooks/useAuth";
+import { toast } from "react-hot-toast";
+import { OTP_TYPES } from "../../../../utils/CONSTANTS";
+const ResetPassword = () => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm();
+
+    const { mutate: resetpassword } = useResetPassword();
+    const {state : {email} } = useLocation()
+    const navigate = useNavigate();
+    const onSubmit = (data) => {
+        console.log("Email submitted:", data);
+        resetpassword({...data, email}, {
+            onSuccess: (res) => {
+                toast.success(res.message);
+                console.log(res);
+            },
+        });
+    };
+
+    return (
+        <div className="flex h-[90vh] items-center justify-center min-h-screen bg-gray-50">
+            <div className="w-full h-3/4 max-w-md p-8 ">
+                {/* Logo / App Name */}
+                <h1 className="text-2xl font-bold text-center mb-2">
+                    Syn<span className="text-purple-500">apse</span>
+                </h1>
+                <h2 className="text-3xl font-bold text-center mb-20">
+                    Rest Password
+                </h2>
+
+                {/* Instruction */}
+
+                {/* Form */}
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4"
+                    noValidate
+                >
+                    <p className="text-gray-600  mb-4">
+                        Enter your new password
+                    </p>
+                    <Input
+                        type="email"
+                        placeholder="Enter the email"
+                        register={register("password", {
+                            required: "Passwrd is required",
+                        })}
+                        error={errors.password?.message}
+                    />
+                    <p className="text-gray-600  mb-4">
+                        Enter your password again
+                    </p>
+                    <Input
+                        type="email"
+                        placeholder="Enter the email"
+                        register={register("confirm_password", {
+                            required: "Password required",
+                            validate: (value) =>
+                                value === watch("password") ||
+                                "Passwords do not match",
+                        })}
+                        error={errors.confirm_password?.message}
+                    />
+                    {/* Buttons */}
+                    <div className="flex items-center justify-between">
+                        <Link
+                            to="/auth/login"
+                            className="text-sm text-gray-600 hover:underline"
+                        >
+                            Back to Login
+                        </Link>
+                        <button
+                            type="submit"
+                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+                        >
+                            Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+export default ResetPassword;

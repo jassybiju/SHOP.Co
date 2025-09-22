@@ -2,7 +2,7 @@ import Input from "../../components/Input";
 import { useModal } from "../Admin/hooks/ModalContext";
 
 const ShowModal = () => {
-    const { showModal, setShowModal, modalContent } = useModal();
+    const { showModal, modalContent } = useModal();
     if (!showModal) return null;
   
     return (

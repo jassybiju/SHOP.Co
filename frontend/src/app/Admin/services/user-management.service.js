@@ -12,3 +12,9 @@ export const getUserById = async (data) => {
     // ! TODO
     const res = await adminAxiosInstance.get('user-management/user'+data.q)
 }
+
+export const toggleUserActiveStatusById = async (id) =>{
+    console.log(id)
+    const res = await adminAxiosInstance.patch('user-management/users/toogle-state/'+id)
+    return res.data
+}

@@ -8,11 +8,6 @@ const productVariantSchema = new mongoose.Schema(
             required: true,
             ref: "Product",
         },
-        sku: {
-            type: String,
-            unique: true,
-            required: true,
-        },
         color: {
             type: String,
         },

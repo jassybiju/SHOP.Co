@@ -6,16 +6,22 @@ import TableComponent from '../../components/TableComponent';
 import Search from '../../components/Search';
 import { useModal } from '../../hooks/ModalContext';
 import AddBrand from './components/AddBrand';
+import ViewBrand from './components/ViewBrand';
+import EditBrand from './components/EditBrand';
 
 const BrandMangement = () => {
+
+// ! TODO  edit brand
   const [params , setParams] = useState({ limit: "5", page: "", search: "", filter: "" })
   const {data : brands , status} = useGetAllBrands(params)
   const { setShowModal , setModalContent } = useModal()
-  const showViewBrandModal=()=>{
-
+  const showViewBrandModal=(id)=>{
+    setModalContent(<ViewBrand id={id}/>)
+    setShowModal(true)
   } 
-  const showEditBrandModal= () => {
-
+  const showEditBrandModal= (id) => {
+        setModalContent(<EditBrand id={id}/>)
+    setShowModal(true)
   }
   const showAddBrandModal = () => {
     setModalContent(<AddBrand/>)

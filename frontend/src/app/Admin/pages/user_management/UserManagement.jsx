@@ -4,7 +4,7 @@ import IconCards from "../../components/IconCards";
 import Search from "../../components/Search";
 import Dropdown from "../../components/Dropdown";
 import TableComponent from "../../components/TableComponent";
-import { useGetAllUsers } from "../../hooks/useUserManagement";
+import { useGetAllUsers, useToggleUserActiveStatus } from "../../hooks/useUserManagement";
 import UserStateComponent from "./ui/UserStateComponent";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,8 @@ const UserManagement = () => {
         isFetching,
     } = useGetAllUsers({ ...params, limit });
 
+    const {mutate : toggleActiveUser } = useToggleUserActiveStatus()
+    
     const navigate = useNavigate()
 
     const column = [
@@ -56,7 +58,7 @@ const UserManagement = () => {
                     >
                         VIEW
                     </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded font-semibold text-xs">
+                    <button className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded font-semibold text-xs" onClick={()=>toggleActiveUser(row._id)}>
                         BLOCK
                     </button>
                 </>

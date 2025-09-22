@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 
-const RedirectIfNoOTP = ({children}) => {
-    const {state} = useLocation()
-    const navigate = useNavigate()
-    useEffect(()=>{
-        if(!state){
-            navigate('auth/register', {replace : true})
-        }
-    },[navigate, state, children])
-  
-    return children
-  
+const RedirectIfNoOTP = ({ children }) => {
+    const { state = {} } = useLocation();
+    const navigate = useNavigate();
+    console.log("---------------", state?.email);
+
+    if (!state?.email) {
+        console.log("123");
+        toast.error("No OTP")
+        return <Navigate to={"/auth/register"} replace />;
+    }
+
+    return children;
 };
 export default RedirectIfNoOTP;

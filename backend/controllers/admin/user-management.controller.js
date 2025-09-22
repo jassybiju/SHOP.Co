@@ -13,3 +13,22 @@ export const getAllUsers = async (req, res, next) => {
         next(error);
     }
 };
+
+export const toggleUserState = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        console.log(req.params)
+        const user = await User.findById(id)
+        if(!user){
+            res.status(404)
+            throw new Error("User not Exists")
+        }
+        user.active = !user.active
+        await user.save()
+
+        res.status(200).json({message : "User Status Toggled Successfuly", status : 'success'})
+
+    } catch (error) {
+        next(error)
+    }
+}

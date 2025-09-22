@@ -10,7 +10,8 @@ const Input = ({ label, type = "text", register, error }) => {
   
   return (
     <div className="mb-4 w-[100%]">
-      <input
+      <input 
+        
         type={type}
         placeholder={label}
         aria-invalid={!!error}

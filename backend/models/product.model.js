@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -35,7 +35,17 @@ const productSchema = new mongoose.Schema({
     is_active : {
         type : Boolean,
         default :true
-    }
+    },
+    images : [{
+        url : {
+            type : String,
+            required : true
+        },
+        is_main : {
+            type : Boolean ,
+            default : false
+        }
+    }]
 
 },{
     timestamps : true

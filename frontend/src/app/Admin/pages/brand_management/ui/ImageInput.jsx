@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 
-const ImageInput = ({ register }) => {
+const ImageInput = ({ register ={}, previewImg , readonly=false}) => {
     const hiddenInputRef = useRef();
     const [preview, setPreview] = useState();
 
-    const { ref: imageRef, onChange: imageOnchage, ...rest } = register;
+    useEffect(()=>{
+        if(previewImg){
+            setPreview(previewImg)
+        }
+    },[previewImg, setPreview])
+    console.log(readonly)
+    const { ref: imageRef = ()=> {}, onChange: imageOnchage = ()=>{}, ...rest } = register;
 
     const handleUploadFile = (e) => {
         const file = e.target.files[0];
@@ -16,7 +22,7 @@ const ImageInput = ({ register }) => {
 
     const onUpload = () => hiddenInputRef.current.click();
 
-    const uploadButtonLabel = preview && "Upload Image";
+    const uploadButtonLabel = readonly ? 'Read Only' : preview && "Upload Image";
     return (
         <div className="mb-6">
             <label
@@ -37,6 +43,7 @@ const ImageInput = ({ register }) => {
                     imageOnchage(e)
                 }}
                 className=" hidden "
+                disabled={readonly}
             />
             <div className="w-[50%] border-2 h-[250px]" onClick={onUpload}>
                 {uploadButtonLabel}

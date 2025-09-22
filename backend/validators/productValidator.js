@@ -14,7 +14,8 @@ const productSchema = Joi.object({
     brand_id : Joi.string().required(),
     category_id : Joi.string().required(),
     price : Joi.number().min(0).required(),
-    variants : Joi.array().items(productVariantValidator).min(1).required()
+    variants : Joi.array().items(productVariantValidator).min(1).required(),
+    images : Joi.any().strip()
 })
 
 export const productValidator = validator(productSchema)

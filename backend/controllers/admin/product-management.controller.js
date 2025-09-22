@@ -3,12 +3,22 @@ import { productValidator } from "../../validators/productValidator.js";
 import { generateSKU } from "../../utils/generateSKU.js";
 import { ProductVariant } from "../../models/product_variants.model.js";
 import mongoose from "mongoose";
+import { uploadImages } from "../../utils/cloudinary.js";
+import {
+    editProductService,
+    getAllProductService,
+    getProductService,
+} from "../../services/admin/product-management.service.js";
 
 export const addProduct = async (req, res, next) => {
+    const parsedData = { ...req.body, variants: JSON.parse(req.body.variants) };
+    const { value, error } = productValidator(parsedData);
+
+    console.log(value, req.files, 23);
+
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { value, error } = productValidator(req.body);
         if (error) {
             res.status(400);
             throw error;
@@ -22,10 +32,28 @@ export const addProduct = async (req, res, next) => {
 
             throw new Error("Product Name Already Exists");
         }
-        console.log(product);
-        const newProduct = await Product.create([product], {
-            session: session,
-        });
+
+        let uploadResult = [];
+
+        if (req.files && req.files.length > 0) {
+            uploadResult = await uploadImages(req, "product");
+        }
+        console.log(uploadResult, 1234);
+
+        const newProduct = await Product.create(
+            [
+                {
+                    ...product,
+                    images: uploadResult.map((x, i) => ({
+                        url: x,
+                        is_main: i === 0,
+                    })),
+                },
+            ],
+            {
+                session: session,
+            }
+        );
         const variantResult = [];
         for (const { size, color, stock } of variants) {
             const sku = generateSKU(newProduct[0]._id, size, color);
@@ -39,7 +67,7 @@ export const addProduct = async (req, res, next) => {
             }
             const newSku = await ProductVariant.create({
                 product_id: newProduct[0]._id,
-                sku,
+                
                 size,
                 color,
                 stock,
@@ -66,8 +94,77 @@ export const addProduct = async (req, res, next) => {
         await session.commitTransaction();
     } catch (error) {
         await session.abortTransaction();
+        console.log(error)
         next(error);
     } finally {
         session.endSession();
     }
 };
+
+export const getAllProducts = async (req, res, next) => {
+    try {
+        const query = req.query;
+        console.log(query)
+        const productRes = await getAllProductService(query);
+        res.status(200).json(productRes);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const product = await getProductService(id);
+        console.log(product);
+        res.status(200).json({
+            message: "product found successfully",
+            data: product,
+            status: "success",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const editProduct = async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+        const query = req.body;
+
+            const value = { ...req.body, variants: JSON.parse(req.body.variants) };
+
+        // console.log(req.body,id, 3434);
+        // Todo MIGHT ADD VALIDATOR
+        // console.log(req.body);
+        const product = await editProductService(id, value, req);
+        res.status(200).json({
+            message: "product edited successfully",
+            datat: product,
+            status: "success",
+        });
+    } catch (error) {
+        console.log(1235334,error)
+        next(error);
+    }
+};
+
+
+export const toggleProduct = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const product = await Product.findById(id)
+        if(!product){
+            res.status(404)
+            throw new Error('No product with Id found')
+        }
+        product.is_active = !product.is_active
+
+        await product.save()
+        console.log(product, 9990)
+        res.status(200).json({message : "Product toggled successfulyy", status : "success"})
+    } catch (error) {
+        next(error)
+    }
+}

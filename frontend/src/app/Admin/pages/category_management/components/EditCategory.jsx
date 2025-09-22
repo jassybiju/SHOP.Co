@@ -1,29 +1,32 @@
 import { useForm } from "react-hook-form";
 import { useModal } from "../../../hooks/ModalContext";
-import { useEditCategory, useGetCategory } from "../../../hooks/useCategoryManagement";
 import { useEffect } from "react";
+import { useEditCategory, useGetCategory } from "../../../hooks/useCategoryManagement";
 
 const EditCategory = ({ id }) => {
     console.log(id);
-    const { data: categories, status } = useGetCategory(id);
+    const { data: brands, status } = useGetCategory(id);
     const {
         register,
         handleSubmit,
         formState: { errors: formError },
         reset,
     } = useForm({ defaultValues: { name: "", description: "" } });
-    const {mutate : editCategory} = useEditCategory()
+    const {mutate : EditCategory} = useEditCategory()
     const { setShowModal } = useModal();
     useEffect(() => {
         reset({
-            name: categories?.data.name,
-            description: categories?.data.description,
+            name: brands?.data.name,
+            description: brands?.data.description,
         });
-    }, [categories, reset]);
+    }, [brands, reset]);
+
+
     const onSubmit = (data) => {
         console.log(data);
-        editCategory({id, data})
+        EditCategory({id, data})
     };
+    
     if (status !== "success") {
         return "Loading...";
     }
@@ -31,26 +34,26 @@ const EditCategory = ({ id }) => {
         <>
             <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Add Category
+                    Edit Brand
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <div className="mb-6">
                         <label
-                            htmlFor="Category-name"
+                            htmlFor="Brand-name"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Category Name
+                            Brand Name
                         </label>
                         <input
                             type="text"
-                            id="Category-name"
+                            id="Brand-name"
                             name="name"
                             {...register("name", {
-                                required: "Category name is required ",
+                                required: "Brand name is required ",
                             })}
                             required
-                            placeholder="Enter Category name"
+                            placeholder="Enter Brand name"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3  text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
                         <p className="text-red-500">
@@ -59,16 +62,16 @@ const EditCategory = ({ id }) => {
                     </div>
                     <div className="mb-8">
                         <label
-                            htmlFor="Category-description"
+                            htmlFor="Brand-description"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Category Description
+                            Brand Description
                         </label>
                         <textarea
-                            id="Category-description"
+                            id="Brand-description"
                             name="description"
                             {...register("description", {
-                                required: "Category descritpion is required ",
+                                required: "Brand descritpion is required ",
                             })}
                             placeholder="Write a short description"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y transition min-h-[80px]"
@@ -91,7 +94,7 @@ const EditCategory = ({ id }) => {
                             type="submit"
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
                         >
-                            Add Category
+                            Edit Brand
                         </button>
                     </div>
                 </form>

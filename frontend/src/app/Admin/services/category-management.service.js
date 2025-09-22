@@ -7,6 +7,7 @@ export const getCategories = async(data) => {
 }
 
 export const addCategory = async (data) => {
+  
   const res = await adminAxiosInstance.post('category/', data)
   return res.data
 }

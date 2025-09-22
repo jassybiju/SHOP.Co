@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { useState } from "react";
 import ImageInput from "../ui/ImageInput";
 export default function AddBrand() {
-    const { setShowModal } = useModal();
+    const { closeModal } = useModal();
 
     const {
         register,
@@ -91,7 +91,7 @@ export default function AddBrand() {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => setShowModal(false)}
+                            onClick={closeModal}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
                         >
                             Cancel

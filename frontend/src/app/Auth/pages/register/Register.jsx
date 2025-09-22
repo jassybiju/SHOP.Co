@@ -25,8 +25,7 @@ const Register = () => {
         registerUser(data, {
             onSuccess: (data, variables) => {
                 console.log(data);
-                setOtpExpiry(Date.now() + 120 * 1000); //120 seconds from now
-                toast.success(data.data.message);
+                // toast.success(data.data.message);
                 navigate("/auth/otp-verify", {
                     state: { email: variables?.email, type: OTP_TYPES.SIGN_UP },
                 });

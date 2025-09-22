@@ -1,6 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addBrand, editBrand, getAllBrands, getBrand } from "../services/brand-management.service";
-
+import {addBrand, editBrand, getAllBrands, getBrand} from '../services/brand-management.service'
 export const useGetAllBrands = (params) => {
     return useQuery({
         queryKey: ["brand", params],
@@ -17,9 +16,11 @@ export const useAddBrand = () => {
     });
 };
 export const useGetBrand = (id) => {
+    console.log(id)
+
     return useQuery({
         queryKey: ["brand", { id }],
-        queryFn: () => getBrand(id),
+        queryFn: ()=>getBrand(id),
         enabled: !!id,
     });
 };

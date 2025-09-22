@@ -5,6 +5,8 @@ import { useStore } from "../../../../store/store";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useVerifyOtp } from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import { Timer } from "lucide-react";
+import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 
 const OTPVerify = () => {
     const {
@@ -12,11 +14,11 @@ const OTPVerify = () => {
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const navigate = useNavigate()
-    const { otpExpiry, clearOtpExpiry } = useStore();
-    const { state : { email, type }} = useLocation();
+    const navigate = useNavigate();
+    const {
+        state: { email, type, otpExpiry },
+    } = useLocation();
     const { mutate: otpVerify } = useVerifyOtp();
-    console.log(otpExpiry)
     const onSubmit = (data) => {
         console.log("OTP Submitted:", data);
         otpVerify(
@@ -24,33 +26,42 @@ const OTPVerify = () => {
             {
                 onSuccess: (data) => {
                     console.log(data);
-                    toast.success(data.data.message);
-                    clearOtpExpiry()
-                    navigate('/home')
+                    toast.success(data.message);
+                    if(type === OTP_TYPES.FORGET_PASSWORD){
+                        return navigate('/auth/reset-password', {state : {email : email}})
+                    }
+                    navigate("/home");
                 },
                 onError: (error) => console.log(error),
             }
-        )
+        );
     };
 
+    const onExpire = () => {console.log("Expired")}
     //for otp timer
-    const [timer, setTimer] = useState(0);
-    const updateTimer = useCallback(() => {
-        const diff = Math.max(0, Math.floor((otpExpiry - Date.now()) / 1000));
-        setTimer(diff);
-        if (diff === 0) clearOtpExpiry();
-    }, [clearOtpExpiry, otpExpiry]);
+    const [timeLeft, setTimeLeft] = useState(
+        Math.max(0, otpExpiry - Date.now())
+    );
 
-    console.log(timer);
+    console.log(timeLeft, otpExpiry , email , type)
 
     useEffect(() => {
-        if (!otpExpiry) {
-            setTimer(0);
+        if (timeLeft <= 0) {
+            onExpire();
             return;
         }
-        const interval = setInterval(updateTimer, 1000);
+
+        const interval = setInterval(() => {
+            const diff = Math.max(0, otpExpiry - Date.now());
+            setTimeLeft(diff);
+
+            if (diff <= 0) {
+                clearInterval(interval);
+                onExpire();
+            }
+        }, 1000);
         return () => clearInterval(interval);
-    }, [updateTimer, setTimer, otpExpiry]);
+    }, [timeLeft, otpExpiry]);
 
     return (
         <div className="flex h-[90vh] justify-center items-center bg-gray-50">
@@ -92,7 +103,6 @@ const OTPVerify = () => {
                         <button
                             type="button"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:bg-purple-950 "
-
                             disabled={otpExpiry === null}
                         >
                             Resend OTP
@@ -101,10 +111,12 @@ const OTPVerify = () => {
 
                     {/* Timer */}
                     <p className="text-sm text-red-500">
-                    {timer !== 0 ?
-                        `${`${Math.floor(timer / 60)} : ${timer % 60}`} seconds
-                        remaining` : "Timeout"
-                    }
+                        {timeLeft !== 0
+                            ? `${`${Math.floor(timeLeft / 60000)} : ${
+                                  Math.floor((timeLeft % 60000)/1000)
+                              }`} seconds
+                        remaining`
+                            : "Timeout"}
                     </p>
 
                     {/* Buttons */}

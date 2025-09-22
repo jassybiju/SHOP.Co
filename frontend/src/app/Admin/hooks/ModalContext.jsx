@@ -11,7 +11,11 @@ export const ModalProvider = ({ children }) => {
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState(<>Hello</>);
 
-
+    const closeModal = () => {
+        console.log('closed')
+        setShowModal(false)
+        setModalContent(<></>)
+    }
     return (
 
         <ModalContext.Provider
@@ -20,6 +24,7 @@ export const ModalProvider = ({ children }) => {
                 setShowModal,
                 modalContent,
                 setModalContent,
+                closeModal
             }}
         >
             {children}

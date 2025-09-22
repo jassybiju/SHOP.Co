@@ -5,10 +5,10 @@ import Search from "../../components/Search";
 import TableComponent from "../../components/TableComponent";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import { useState } from "react";
-import AddCategory from "../brand_management/components/AddBrand";
+import AddCategory from  "./components/AddCategory";
 import { useModal } from "../../hooks/ModalContext";
-import ViewCategory from "./components/ViewCategory";
-import EditCategory from "./components/EditCategory";
+import ViewCategory from "../category_management/components/ViewCategory";
+import EditCategory from "../category_management/components/EditCategory";
 
 const CategoryMangement = () => {
     const [params, setParams] = useState({ limit: "5", page: "", search: "", filter: "" })
