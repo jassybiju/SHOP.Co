@@ -23,7 +23,7 @@ import AddProduct from "./Admin/pages/product_management/AddProduct";
 import ViewProduct from "./Admin/pages/product_management/ViewProduct";
 import EditProduct from "./Admin/pages/product_management/EditProduct";
 import Home from "./Home/pages/home/Home";
-import Search from "./Home/pages/search/Search";
+import SearchPage from "./Home/pages/search/SearchPage";
 import ResetPassword from "./Auth/pages/change-password/ResetPassword";
 import GoogleWrapper from "../components/GoogleWrapper";
 
@@ -36,7 +36,7 @@ export const router = createBrowserRouter(
                 hydrateFallbackElement={<>Loading...</>}
             >
                 <Route index element={<Home />}></Route>
-                <Route path='/search' element={<Search/>}></Route>
+                <Route path='/search' element={<SearchPage/>}></Route>
                 {/* <Route
                     index
                     element={

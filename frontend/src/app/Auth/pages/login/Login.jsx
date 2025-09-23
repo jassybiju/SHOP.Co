@@ -1,10 +1,11 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Input from "../../../../components/Input"; // reuse same component
 import { useForm } from "react-hook-form";
 import AuthBanner from "../../components/AuthBanner";
 import { useLoginUser } from "../../hooks/useAuth";
 import {useGoogleLogin} from '@react-oauth/google'
 import { googleAuth } from "../../services/auth.service";
+import toast from "react-hot-toast";
 const Login = () => {
     
     const {
@@ -13,9 +14,10 @@ const Login = () => {
         formState: { errors },
     } = useForm();
     const { mutate: login } = useLoginUser();
+    const navigate = useNavigate()
     console.log("Gotcha")
     const onSubmit = (data) => {
-         login(data);
+         login(data, {onError : (data)=>toast.error(data.response.data.message), onSuccess : ()=>console.log('success')});
         console.log(data)
     };
 
@@ -23,10 +25,13 @@ const Login = () => {
         try{
             if(authResult['code']){
                 const result = await googleAuth(authResult.code)
-                const {email , name } = result.data.user 
+                console.log(result)
+                const email = result.data.email 
+                const first_name = result.data.first_name
                 const token = result.data.token
-                const obj = {email , name , token }
+                const obj = {email , first_name , token }
                 console.log(obj)
+                navigate("/")
             }else{
                 throw new Error(authResult)
             }

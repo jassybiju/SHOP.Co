@@ -11,6 +11,7 @@ import {
 } from "../services/auth.service";
 import { useStore } from "../../../store/store";
 import {  useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 export const useRegister = () => {
     return useMutation({ mutationFn: registerUser });
@@ -39,6 +40,7 @@ export const useLogoutUser = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(["user"])
             console.log(123);
+            toast.success("Logout success")
             navigate("/auth/login");
         },
     });

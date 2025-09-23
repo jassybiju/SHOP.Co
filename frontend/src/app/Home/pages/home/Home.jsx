@@ -23,7 +23,7 @@ import { useHome } from "../../hooks/useHome";
 export default function Home() {
     const { data : res, status } = useHome();
     console.log(res);
-
+    console.log(status)
     if(status!=='success'){
       return "Laoding.."
     }

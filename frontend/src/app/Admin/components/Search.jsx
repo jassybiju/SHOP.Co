@@ -1,5 +1,8 @@
 import {Search as SearchIcon} from "lucide-react";
 
+
+
+
 const Search = ({ label, onChange }) => {
     return (
         <div class="w-full mx-auto">

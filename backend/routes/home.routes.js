@@ -5,5 +5,7 @@ const router = express.Router()
 
 
 router.get('/',getHomeData)
+router.get('/search',getSearchData)
+
 
 export default router

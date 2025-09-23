@@ -329,7 +329,7 @@ export const googleAuth = async(req, res, next) => {
         }
         const {_id} = user
         const token = generateToken(email)
-        res.status(200).cookie('jwt', token).json({status : "success", message : "Google Login Success"})
+        res.status(200).cookie('jwt', token).json({status : "success", message : "Google Login Success", data : user})
         
     }catch(error){
         console.log(error)
