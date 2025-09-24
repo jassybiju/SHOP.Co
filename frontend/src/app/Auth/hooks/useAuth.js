@@ -34,7 +34,6 @@ export const useLoginUser = () => {
 export const useLogoutUser = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient()
-    console.log("Logoout")
     return useMutation({
         mutationFn: logoutUser,
         onSuccess: () => {

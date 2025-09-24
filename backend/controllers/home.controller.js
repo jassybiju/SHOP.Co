@@ -1,34 +1,13 @@
 import { Product } from "../models/product.model.js";
+import { getHomeDataService, getSearchDataService } from "../services/home.service.js";
 import cloudinary from "../utils/cloudinary.js";
+import { searchValidator } from "../validators/searchValidator.js";
 
 export const getHomeData = async (req, res, next) => {
     try {
-        const product_aggregation_pipeline = [
-            { $match: { is_active: true } },
-            {
-                $facet: {
-                    new_arrivals: [{ $sort: { createdAt: -1 } }, { $limit: 4 }],
-                    top_selling: [{ $sort: { createdAt: 1 } }, { $limit: 4 }],
-                },
-            },
-        ];
-        const products = await Product.aggregate(product_aggregation_pipeline);
-
-        products[0].new_arrivals = products[0].new_arrivals.map((x) =>
-            ({...x , images : x.images.map((img) => ({
-                is_main: img?.is_main,
-                url: cloudinary.url(img?.url, { secure: true }),
-            }))})
-            
-        );
-        products[0].top_selling = products[0].new_arrivals.map((x) =>
-            ({...x , images : x.images.map((img) => ({
-                is_main: img?.is_main,
-                url: cloudinary.url(img?.url, { secure: true }),
-            }))})
-            
-        );
-        console.log(products, 1234);
+        
+        const products = await getHomeDataService()
+        
         res.status(200).json({
             message: "Data recieved",
             status: "success",
@@ -38,3 +17,17 @@ export const getHomeData = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getSearchData = async (req, res, next) => {
+    try {
+        const {value, error} = searchValidator( req.query)
+        if(error){
+            res.status(404)
+            throw error
+        }
+        const products = await getSearchDataService(value)
+        res.json(products)
+    } catch (error) {
+        next(error)
+    }
+}

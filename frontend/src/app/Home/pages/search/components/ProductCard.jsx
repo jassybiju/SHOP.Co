@@ -30,11 +30,12 @@ function StarRating({ rating }) {
 }
 
 function ProductCard({ product }) {
+  console.log(product.images[0]?.url)
   return (
     <div className="group">
       <div className="w-full aspect-[295/298] bg-[#F0EEED] rounded-[20px] overflow-hidden relative mb-4">
         <img
-          src={product.image}
+          src={product.images[0]?.url}
           alt={product.name}
           className="w-full h-full object-cover"
         />
