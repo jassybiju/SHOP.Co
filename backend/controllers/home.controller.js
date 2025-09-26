@@ -1,5 +1,5 @@
 import { Product } from "../models/product.model.js";
-import { getHomeDataService, getSearchDataService } from "../services/home.service.js";
+import { getHomeDataService, getProductDataService, getSearchDataService } from "../services/home.service.js";
 import cloudinary from "../utils/cloudinary.js";
 import { searchValidator } from "../validators/searchValidator.js";
 
@@ -27,6 +27,16 @@ export const getSearchData = async (req, res, next) => {
         }
         const products = await getSearchDataService(value)
         res.json(products)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getProductData = async (req, res, next) => {
+    try {
+        const {id : productId} = req.params        
+        const res = await getProductDataService(productId)
+        res.send('hi')
     } catch (error) {
         next(error)
     }

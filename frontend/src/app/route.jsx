@@ -26,6 +26,7 @@ import Home from "./Home/pages/home/Home";
 import SearchPage from "./Home/pages/search/SearchPage";
 import ResetPassword from "./Auth/pages/change-password/ResetPassword";
 import GoogleWrapper from "../components/GoogleWrapper";
+import ProductPage from "./Home/pages/product/ProductPage";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -37,6 +38,7 @@ export const router = createBrowserRouter(
             >
                 <Route index element={<Home />}></Route>
                 <Route path='/search' element={<SearchPage/>}></Route>
+                <Route path='/product/:id' element={<ProductPage/>}></Route>
                 {/* <Route
                     index
                     element={

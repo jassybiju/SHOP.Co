@@ -8,6 +8,7 @@ import { sendOTPMail } from "../utils/nodemailer.js";
 import { generateOtp } from "../utils/otp.js";
 import { printKeyValuePair } from "../utils/redis-debug.js";
 import axios from 'axios'
+import { userValidator } from "../validators/userValidator.js";
 
 const OTP_INVALID_TIME = process.env.OTP_INVALID_TIME || 120;
 const OTP_EXPIRY_TIME = process.env.OTP_EXPIRY_TIME || 300;
@@ -15,10 +16,16 @@ const OTP_VERIFY_LIMIT = process.env.OTP_VERIFY_LIMIT || 3;
 
 export const registerUser = async (req, res, next) => {
     try {
+        const {value, error} = userValidator(req.body)
+        if(error){
+            res.status(400)
+            throw error
+        }
         const { email } = req.body;
 
         const user = await User.findOne({ email: email });
         console.log(user, email);
+        
         if (user && user.is_verified) {
             console.log(1);
             res.status(400);
@@ -26,6 +33,7 @@ export const registerUser = async (req, res, next) => {
         } else if (user) {
             await User.findOneAndDelete({ email: email });
         }
+        
 
         const otp = generateOtp();
         //senting otp and saving in redis cache
@@ -44,6 +52,7 @@ export const registerUser = async (req, res, next) => {
             ),
             sendOTPMail(email, otp),
         ]);
+        
         await User.create({ ...req.body, is_verified: false });
         console.log(data);
         console.log(await User.findOne({ email }));

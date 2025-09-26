@@ -3,49 +3,59 @@ import Input from "../../../../components/Input"; // reuse same component
 import { useForm } from "react-hook-form";
 import AuthBanner from "../../components/AuthBanner";
 import { useLoginUser } from "../../hooks/useAuth";
-import {useGoogleLogin} from '@react-oauth/google'
+import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../../services/auth.service";
 import toast from "react-hot-toast";
+import { useState } from "react";
 const Login = () => {
-    
     const {
         register,
         handleSubmit,
+
         formState: { errors },
     } = useForm();
+    const [formError, setFormError] = useState("");
     const { mutate: login } = useLoginUser();
-    const navigate = useNavigate()
-    console.log("Gotcha")
+    const navigate = useNavigate();
+    console.log("Gotcha");
     const onSubmit = (data) => {
-         login(data, {onError : (data)=>toast.error(data.response.data.message), onSuccess : ()=>console.log('success')});
-        console.log(data)
+        console.log(123);
+        login(data, {
+            onError: (data) => {
+                setFormError(data.response.data.message);
+                toast.error(data.response.data.message);
+            },
+            onSuccess: () => console.log("success"),
+        });
+        console.log(data);
     };
 
     const responseGoogle = async (authResult) => {
-        try{
-            if(authResult['code']){
-                const result = await googleAuth(authResult.code)
-                console.log(result)
-                const email = result.data.email 
-                const first_name = result.data.first_name
-                const token = result.data.token
-                const obj = {email , first_name , token }
-                console.log(obj)
-                navigate("/")
-            }else{
-                throw new Error(authResult)
+        try {
+            if (authResult["code"]) {
+                const result = await googleAuth(authResult.code);
+                console.log(result);
+                const email = result.data.email;
+                const first_name = result.data.first_name;
+                const token = result.data.token;
+                const obj = { email, first_name, token };
+                console.log(obj);
+                navigate("/");
+            } else {
+                throw new Error(authResult);
             }
-        }catch(error){
-            console.log('Error while google login', error)
+        } catch (error) {
+            console.log("Error while google login", error);
         }
-    }
-
+    };
 
     const googleLogin = useGoogleLogin({
-        onSuccess : responseGoogle,
-        onError : responseGoogle,
-        flow : 'auth-code'
-    })
+        onSuccess: responseGoogle,
+        onError: responseGoogle,
+        flow: "auth-code",
+    });
+
+    console.log(errors);
     return (
         <div className="flex h-[90vh]">
             {/* Left Side - Background */}
@@ -68,6 +78,11 @@ const Login = () => {
                         onSubmit={handleSubmit(onSubmit)}
                         noValidate
                     >
+                        {formError && (
+                            <p className="text-red-500 bg-red-300 p-4 text-center">
+                                {formError}
+                            </p>
+                        )}
                         <Input
                             type="email"
                             label="Email"

@@ -24,9 +24,7 @@ const userSchema = new Schema(
       type: String,
       default: "user",
     },
-    dob: {
-      type: Date,
-    },
+
     gender: {
       type: String,
       enum: ["male", "female", "not disclosed"],

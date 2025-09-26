@@ -7,6 +7,7 @@ import { useRegister } from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { useStore } from "../../../../store/store";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
+import { useState } from "react";
 
 const Register = () => {
     const { mutate: registerUser, isPending } = useRegister();
@@ -17,7 +18,7 @@ const Register = () => {
         watch,
         formState: { errors },
     } = useForm();
-    
+    const [formError, setFormError] = useState('')
     const navigate = useNavigate();
 
     const onSubmit = (data) => {
@@ -25,12 +26,12 @@ const Register = () => {
         registerUser(data, {
             onSuccess: (data, variables) => {
                 console.log(data);
-                // toast.success(data.data.message);
+                toast.success(data.message);
                 navigate("/auth/otp-verify", {
                     state: { email: variables?.email, type: OTP_TYPES.SIGN_UP },
                 });
             },
-            onError: (error) => toast.error(error.message),
+            onError: (data) => setFormError(data.response.data.message)
         });
     };
 
@@ -53,6 +54,11 @@ const Register = () => {
                         className="space-y-4"
                         onSubmit={handleSubmit(onSubmit)}
                     >
+                          {formError && (
+                            <p className="text-red-500 bg-red-300 p-4 text-center">
+                                {formError}
+                            </p>
+                        )}
                         <div className="flex space-x-2 w-full">
                             <Input
                                 type="text"
@@ -93,23 +99,7 @@ const Register = () => {
                                 ]}
                             />
 
-                            {/* DOB */}
-                            <Input
-                                type="date"
-                                label="Date of Birth"
-                                register={register("dob", {
-                                    required: "Date of birth is required",
-                                    validate: (value) => {
-                                        const today = new Date();
-                                        const dob = new Date(value);
-                                        return (
-                                            dob <= today ||
-                                            "DOB cannot be in the future"
-                                        );
-                                    },
-                                })}
-                                error={errors.dob?.message}
-                            />
+                         
                         </div>
                         <Input
                             type="text"
@@ -171,7 +161,7 @@ const Register = () => {
                         {/* Create Account Button */}
                         <button
                             type="submit"
-                            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition"
+                            className={`w-full  text-white py-2 rounded-md  transition ${isPending ? "bg-gray-900" : 'hover:bg-gray-900 bg-black'} `}
                             disabled={isPending}
                         >
                             {isPending
