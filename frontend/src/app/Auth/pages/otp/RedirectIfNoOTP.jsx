@@ -7,7 +7,7 @@ const RedirectIfNoOTP = ({ children }) => {
     const navigate = useNavigate();
     console.log("---------------", state?.email);
 
-    if (!state?.email) {
+    if (!state?.email || !state?.otpExpiry) {
         console.log("123");
         toast.error("No OTP")
         return <Navigate to={"/auth/register"} replace />;

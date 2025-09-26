@@ -3,7 +3,7 @@ import Input from "../../../../components/Input"; // same component
 import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../../../../store/store";
 import { Link, useLocation, useNavigate } from "react-router";
-import { useVerifyOtp } from "../../hooks/useAuth";
+import { useResendOtp, useVerifyOtp } from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { Timer } from "lucide-react";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
@@ -14,11 +14,15 @@ const OTPVerify = () => {
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const [formError, setFormError] = useState('')
     const navigate = useNavigate();
     const {
-        state: { email, type, otpExpiry },
+        state: { email, type, otpExpiry }, pathname
     } = useLocation();
-    const { mutate: otpVerify } = useVerifyOtp();
+
+    const { mutate : otpVerify , isPending : isVerifyOtpPending} = useVerifyOtp();
+    const { mutate : resendOTP , isPending : isResendOtpPending } = useResendOtp()
+
     const onSubmit = (data) => {
         console.log("OTP Submitted:", data);
         otpVerify(
@@ -28,14 +32,38 @@ const OTPVerify = () => {
                     console.log(data);
                     toast.success(data.message);
                     if(type === OTP_TYPES.FORGET_PASSWORD){
-                        return navigate('/auth/reset-password', {state : {email : email}})
+                        return navigate('/auth/reset-password', {replace : true ,state : {email : email}})
                     }
-                    navigate("/home");
+                    navigate("/home", {replace: true});
                 },
-                onError: (error) => console.log(error),
+                onError: (error) =>{
+                    const errorMessage = error.response?.data?.message
+                    console.log(errorMessage)
+                    setFormError(errorMessage)
+                    toast.error(errorMessage)
+                }
             }
         );
     };
+
+    const resendOTPHandle = () => {
+        setFormError('')
+        resendOTP({email}, {
+            onSuccess : (res) => {
+                console.log(res)
+                if(res.data.otp_timer){
+                    navigate(pathname, {replace : true, state : {email : email , type : type , otpExpiry : res.data.otp_timer}})
+                }
+
+            },
+            onError : (res) => {
+                console.log(res)
+                const errorMessage = res.response?.data?.message
+                setFormError(errorMessage)
+                toast.error(errorMessage)
+            }
+        })
+    } 
 
     const onExpire = () => {console.log("Expired")}
     //for otp timer
@@ -43,10 +71,14 @@ const OTPVerify = () => {
         Math.max(0, otpExpiry - Date.now())
     );
 
-    console.log(timeLeft, otpExpiry , email , type)
+    console.log(timeLeft, otpExpiry , email , type , Math.max(0, otpExpiry - Date.now()))
 
     useEffect(() => {
-        if (timeLeft <= 0) {
+
+        let initialTimeLeft = Math.max(0, (otpExpiry || 0) - Date.now())
+        setTimeLeft(initialTimeLeft)
+
+        if (initialTimeLeft <= 0) {
             onExpire();
             return;
         }
@@ -54,14 +86,16 @@ const OTPVerify = () => {
         const interval = setInterval(() => {
             const diff = Math.max(0, otpExpiry - Date.now());
             setTimeLeft(diff);
-
+            console.log(timeLeft)
             if (diff <= 0) {
                 clearInterval(interval);
                 onExpire();
             }
         }, 1000);
         return () => clearInterval(interval);
-    }, [timeLeft, otpExpiry]);
+    }, [otpExpiry]);
+
+    console.log(formError)
 
     return (
         <div className="flex h-[90vh] justify-center items-center bg-gray-50">
@@ -73,7 +107,11 @@ const OTPVerify = () => {
                 <h2 className="text-xl font-semibold text-center mb-6">
                     Enter the OTP
                 </h2>
-
+                
+                 <p className= {` p-4 text-center ${formError && "text-red-500 bg-red-300"}`}>
+                              &nbsp;  {formError}
+                            </p>
+                       
                 {/* Info text */}
                 <p className="text-center text-gray-600 mb-4">
                     The OTP has been sent to your registered email
@@ -100,10 +138,11 @@ const OTPVerify = () => {
                         />
 
                         {/* Resend OTP */}
-                        <button
+                        <button 
+                            onClick={resendOTPHandle}
                             type="button"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:bg-purple-950 "
-                            disabled={otpExpiry === null}
+                            disabled={isResendOtpPending }
                         >
                             Resend OTP
                         </button>
@@ -125,13 +164,14 @@ const OTPVerify = () => {
                             to={"/auth/register"}
                             className="text-sm text-gray-600 hover:underline"
                         >
-                            Go back
+                            Go back 
                         </Link>
                         <button
+                            disabled={isVerifyOtpPending}
                             type="submit"
-                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:bg-purple-800 "
                         >
-                            Verify
+                            { isVerifyOtpPending ? "Verifying" : "Verify" }
                         </button>
                     </div>
                 </form>

@@ -24,11 +24,11 @@ const Register = () => {
     const onSubmit = (data) => {
         console.log("Form Data:", data);
         registerUser(data, {
-            onSuccess: (data, variables) => {
-                console.log(data);
-                toast.success(data.message);
+            onSuccess: (res, variables) => {
+                console.log(res);
+                toast.success(res.message);
                 navigate("/auth/otp-verify", {
-                    state: { email: variables?.email, type: OTP_TYPES.SIGN_UP },
+                    state: {otpExpiry : res.data.otp_timer, email: variables?.email, type: OTP_TYPES.SIGN_UP },
                 });
             },
             onError: (data) => setFormError(data.response.data.message)

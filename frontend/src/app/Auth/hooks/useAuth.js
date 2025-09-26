@@ -57,8 +57,7 @@ export const useForgetPassword = () =>
 
 export const useVerifyOtp = () => useMutation({ mutationFn: verifyOtp });
 export const useResendOtp = () => useMutation({ mutationFn: resendOtp });
-export const useResetPassword = () =>
-    useMutation({ mutationFn: resetPassword });
+export const useResetPassword = () => useMutation({ mutationFn: resetPassword });
 // export const useResetPassword = () => useMutation({ mutationFn: resetPassword });
 // export const useFetchUser = () => {
 

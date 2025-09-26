@@ -46,7 +46,7 @@ const userSchema = Joi.object({
         "string.pattern.base":
             "Password must be at least 8 characters and include uppercase, lowercase, number and special character",
     }),
-
+    gender : Joi.string().valid('male', 'female', 'other').required(),
     confirm_password: Joi.any().valid(Joi.ref("password")).required().messages({
         "any.only": "Confirm password does not match password",
         "any.required": "Confirm password is required",

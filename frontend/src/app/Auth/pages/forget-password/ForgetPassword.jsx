@@ -4,22 +4,27 @@ import { Link, useNavigate } from "react-router";
 import { useForgetPassword } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
+import { useState } from "react";
 const ForgetPassword = () => {
     const {
         register,
-        handleSubmit,
+    handleSubmit,
         formState: { errors },
   } = useForm();
-
-    const { mutate: forgetPassword } = useForgetPassword();
+    const [formError, setFormError] = useState('')
+    const { mutate: forgetPassword , isPending} = useForgetPassword();
     const navigate = useNavigate()
     const onSubmit = (data) => {
         console.log("Email submitted:", data);
         forgetPassword(data, {
             onSuccess: (res) => {
                 toast.success(res.message);
-                navigate('/auth/otp-verify', {state : {otpExpiry : res.data.otp_timer, email : data.email , type : OTP_TYPES.FORGET_PASSWORD }})
+                
+                navigate('/auth/otp-verify', {replace :true, state : {otpExpiry : res.data.otp_timer, email : data.email , type : OTP_TYPES.FORGET_PASSWORD }})
             },
+            onError: (res) => {
+                setFormError(res.response.data.message)
+            }
         });
     };
 
@@ -30,10 +35,14 @@ const ForgetPassword = () => {
                 <h1 className="text-2xl font-bold text-center mb-2">
                     Syn<span className="text-purple-500">apse</span>
                 </h1>
-                <h2 className="text-3xl font-bold text-center mb-20">
+                <h2 className="text-3xl font-bold text-center mb-10">
                     Forgot Password ?
                 </h2>
-
+  
+                            <p className= {` p-4 text-center ${formError && "text-red-500 bg-red-300"}`}>
+                              &nbsp;  {formError}
+                            </p>
+                       
                 {/* Instruction */}
                 <p className="text-gray-600  mb-4">
                     Enter your registered email
@@ -63,10 +72,11 @@ const ForgetPassword = () => {
                             Back to Login
                         </Link>
                         <button
+                            disabled={isPending}
                             type="submit"
-                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+                            className={`px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-800  transition disabled:bg-purple-800 `}
                         >
-                            Verify Email
+                           { isPending ? "Verifying Email" : "Verify Email" } 
                         </button>
                     </div>
                 </form>

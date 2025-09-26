@@ -12,16 +12,24 @@ const ResetPassword = () => {
         formState: { errors },
     } = useForm();
 
-    const { mutate: resetpassword } = useResetPassword();
+    const { mutate: resetpassword, isPending  } = useResetPassword();
     const {state : {email} } = useLocation()
+    
     const navigate = useNavigate();
     const onSubmit = (data) => {
         console.log("Email submitted:", data);
         resetpassword({...data, email}, {
             onSuccess: (res) => {
+                console.log(res)
                 toast.success(res.message);
                 console.log(res);
+                navigate('/',{replace :true})
             },
+            onError : (res) => {
+                console.log(res)
+                toast.error(res.response.data.message)
+                navigate(-1)
+            }
         });
     };
 
@@ -77,9 +85,10 @@ const ResetPassword = () => {
                         >
                             Back to Login
                         </Link>
-                        <button
+                        <button 
+                        disabled={isPending}
                             type="submit"
-                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
+                            className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-800 transition disabled:bg-purple-800" 
                         >
                             Change Password
                         </button>
