@@ -44,7 +44,7 @@ export const useLogoutUser = () => {
     return useMutation({
         mutationFn: logoutUser,
         onSuccess: () => {
-            queryClient.invalidateQueries(["user"]);
+            queryClient.clear();
             console.log(123);
             toast.success("Logout success");
             navigate("/auth/login");

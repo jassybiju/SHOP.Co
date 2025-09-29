@@ -97,6 +97,9 @@ const Register = () => {
                                     { value: "female", label: "Female" },
                                     { value: "other", label: "Other" },
                                 ]}
+                                 register={register("gender", {
+                                required: "Gender is required",
+                            })}
                             />
 
                          

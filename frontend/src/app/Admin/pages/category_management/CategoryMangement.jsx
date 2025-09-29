@@ -107,7 +107,7 @@ const CategoryMangement = () => {
                     className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
                     onClick={showAddCategoryModal}
                 >
-                    Add Product
+                    Add Category
                 </button>
             </div>
             <TableComponent data={categories.data} column={column} pages={categories.pages} page={categories.page} onPageChange={(x) => setParams(state => ({...state,page : x }))}/>

@@ -8,6 +8,7 @@ import {
     Package2,
     Package2Icon,
     PackageCheck,
+    PackageMinus,
     PackageOpen,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
@@ -18,6 +19,7 @@ import {
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import ProductStateComponent from "./ui/ProductStateComponent";
 import { productFilterOptions } from "../../../../utils/CONSTANTS";
+import { useEffect } from "react";
 
 const ProductManagement = () => {
     const navigate = useNavigate();
@@ -26,17 +28,26 @@ const ProductManagement = () => {
         sort: "created at - asc",
         filter: "AllUsers",
         page: 1,
+        limit : 1
     });
 
     const { data: categories } = useGetAllCategories();
 
     const { data: products, status } = useGetAllProducts(params);
     const { mutate: toggleProduct } = useToggleProductStatus();
-    console.log(status)
+    console.log(products)
+  useEffect(()=> {
+        if(products?.pages < params?.page){
+            setParams((state)=> ({...state, page : products.pages}))
+        }
+        // console.log(users?.page , params?.page)
+    },[params,   products])
+
     if (status !== "success") {
         return "Loading";
     }
-    console.log(products)
+    
+    
 
     const column = [
         {
@@ -44,20 +55,20 @@ const ProductManagement = () => {
             key: "_id",
             render: (_, row, data) => data.indexOf(row) + 1,
         },
-        { label: "Product", key: "name", render: (val, row) => <>{val}</> },
+        { label: "Product", key: "name", render: (val, row) => <div className="flex w-full text-nowrap items-center gap-3 px-3"><img  src={row?.images[0]?.url} className="rounded-full w-10 h-10" alt="" />{val}</div> },
         {
             label: "Category",
             key: "category_id",
             render: (val) => categories.data.find((x) => x._id === val)?.name,
         },
-        { label: "Qty", key: "stock" },
+        { label: "Qty", key: "variants", render: (val)=>val.reduce((acc, cur)=>acc+cur.stock,0) },
         { label: "Price", key: "price" },
         {
             label: "is_active",
             key: "is_active",
             render: (val) =><ProductStateComponent state={val}/>,
         },
-        { label: "Description", key: "description" },
+        { label: "Description", key: "description" , render : (val)=>(<>{val.substring(0,10)}...</>)  },
         {
             label: "Actions",
             key: "_id",
@@ -97,13 +108,13 @@ const ProductManagement = () => {
             <div className="flex gap-10 m-10">
                 <IconCards
                     icon={<Package2 size={35} />}
-                    value={120}
-                    label={"total users"}
+                    value={products.total_products}
+                    label={"total products"}
                 />
                 <IconCards
-                    icon={<PackageOpen size={35} />}
-                    value={1024}
-                    label={"Blocked users"}
+                    icon={<PackageMinus size={35} />}
+                    value={products.blocked_products}
+                    label={"Blocked products"}
                 />
             </div>
             <div className=" flex justify-between mx-6">

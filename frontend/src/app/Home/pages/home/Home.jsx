@@ -13,12 +13,15 @@ import {
     ArrowLeft,
     Check,
     Mail,
+    
 } from "lucide-react";
 import { useLogoutUser } from "../../../Auth/hooks/useAuth";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import NewsLetter from "../../components/NewsLetter";
 import { useHome } from "../../hooks/useHome";
+import ProductCard from "../search/components/ProductCard";
+import { Link } from "react-router";
 
 export default function Home() {
     const { data : res, status } = useHome();
@@ -30,7 +33,6 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-white">
             {/* Top Banner */}
-            <Navbar />
             {/* Hero Section */}
             <section className="relative bg-gray-light">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -168,38 +170,7 @@ export default function Home() {
                         {/* Product 1 */}
 
                         {res.data.new_arrivals.map((x) => (
-                            <div className="group cursor-pointer">
-                                <div className="bg-gray-medium rounded-2xl p-4 mb-4 relative overflow-hidden">
-                                    <img
-                                        src="https://api.builder.io/api/v1/image/assets/TEMP/ba88a2aeddb4a9edbd5157f7d1dd11a6ad7d0474?width=592"
-                                        alt="T-shirt with Tape Details"
-                                        className="w-full h-72 object-cover"
-                                    />
-                                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
-                                        <Heart className="w-5 h-5" />
-                                    </button>
-                                </div>
-                                <h3 className="font-poppins font-bold text-lg mb-2 uppercase">
-                                   {x.name}
-                                </h3>
-                                <div className="flex items-center mb-2">
-                                    <div className="flex text-yellow-star">
-                                        {[...Array(4)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className="w-4 h-4 fill-current"
-                                            />
-                                        ))}
-                                        <Star className="w-4 h-4 fill-current opacity-50" />
-                                    </div>
-                                    <span className="ml-2 font-poppins text-sm text-gray-600">
-                                        4.5/5
-                                    </span>
-                                </div>
-                                <div className="font-poppins font-bold text-xl">
-                                    ${x.price - (x.price * (x.discount /100))}
-                                </div>
-                            </div>
+                           <ProductCard product={x}/>
                         ))}
                       
 
@@ -207,12 +178,13 @@ export default function Home() {
                     </div>
 
                     <div className="text-center">
-                        <button
+                        <Link 
+                        to={'search'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"
                         >
                             View All
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -232,52 +204,18 @@ export default function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         {/* Product 1 */}
                         {res.data.top_selling.map(x => (
-                        <div className="group cursor-pointer">
-                            <div className="bg-gray-medium rounded-2xl p-4 mb-4 relative overflow-hidden">
-                                <img
-                                    src={x.images[0]?.url}
-                                    alt="Vertical Striped Shirt"
-                                    className="w-full h-72 object-cover"
-                                />
-                            </div>
-                            <h3 className="font-poppins font-bold text-lg mb-2 uppercase">
-                                {x.name}
-                            </h3>
-                            <div className="flex items-center mb-2">
-                                <div className="flex text-yellow-star">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className="w-4 h-4 fill-current"
-                                        />
-                                    ))}
-                                </div>
-                                <span className="ml-2 font-poppins text-sm text-gray-600">
-                                    5.0/5
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="font-poppins font-bold text-xl">
-                                    ${x.price - (x.price * (x.discount /100))}
-                                </span>
-                                <span className="font-poppins font-bold text-xl text-gray-400 line-through">
-                                    ${x.price}
-                                </span>
-                                <div className="bg-red-sale-bg text-red-sale text-xs px-2 py-1">
-                                    -{x.discount}%
-                                </div>
-                            </div>
-                        </div>
+                      <ProductCard product={x}/>
 ))}
                       </div>   
 
                     <div className="text-center">
-                        <button
+                        <Link 
+                            to={'/search'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"
                         >
                             View All
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </section>

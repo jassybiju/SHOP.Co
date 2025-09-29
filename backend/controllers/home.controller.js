@@ -35,8 +35,8 @@ export const getSearchData = async (req, res, next) => {
 export const getProductData = async (req, res, next) => {
     try {
         const {id : productId} = req.params        
-        const res = await getProductDataService(productId)
-        res.send('hi')
+        const product = await getProductDataService(productId)
+        res.json(product)
     } catch (error) {
         next(error)
     }

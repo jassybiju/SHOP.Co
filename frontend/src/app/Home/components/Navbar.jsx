@@ -1,26 +1,39 @@
-import { ChevronDown, Heart, Search, ShoppingCart, User, X } from "lucide-react";
+import {
+    ChevronDown,
+    Heart,
+    Search,
+    ShoppingCart,
+    User,
+    X,
+} from "lucide-react";
 import { useLogoutUser } from "../../Auth/hooks/useAuth";
-import {useUser} from '../../../hooks/useUser'
-import { Link } from "react-router";
+import { useUser } from "../../../hooks/useUser";
+import { Link, useNavigate } from "react-router";
+import SearchProduct from "./SearchProduct";
+import Dropdown from "./DropDown";
 const Navbar = () => {
     const { mutate: logout } = useLogoutUser();
-    const {data:user} = useUser()
-    console.log(user)
+    const { data: user } = useUser();
+    const navigate = useNavigate()
+    let dropdownitems = [{label : "Logout" , onClick : logout}]
+    if(user?.role === 'admin'){
+        dropdownitems.push({label :"Admin", onClick :()=> navigate('admin') })
+    }    
     return (
         <>
-        {!user &&
-            <div className="bg-black text-white px-4 py-2 text-center relative">
-                <p className="text-sm font-poppins">
-                    Sign up and get 20% off to your first order.{" "}
-                    <span className="underline cursor-pointer">
-                        Sign Up Now
-                    </span>
-                </p>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <X className="w-5 h-5" />
-                </button>
-            </div>
-}
+            {!user && (
+                <div className="bg-black text-white px-4 py-2 text-center relative">
+                    <p className="text-sm font-poppins">
+                        Sign up and get 20% off to your first order.{" "}
+                        <span className="underline cursor-pointer">
+                            Sign Up Now
+                        </span>
+                    </p>
+                    <button className="absolute right-4 top-1/2 -translate-y-1/2">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+            )}
             {/* Header */}
             <header className="border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,34 +64,35 @@ const Navbar = () => {
 
                         {/* Search and Icons */}
                         <div className="flex items-center space-x-4">
-                            {/* Search Bar */}
-                            <div className="hidden lg:flex items-center bg-gray-light rounded-full px-4 py-3 w-80">
-                                <Search className="w-5 h-5 text-gray-400 mr-3" />
-                                <input
-                                    type="text"
-                                    placeholder="Search for products..."
-                                    className="bg-transparent outline-none text-sm flex-1 font-poppins"
-                                />
-                            </div>
-                            { user ?
-                            
-                            <div className="flex items-center space-x-3">
-                                <Search className="w-6 h-6 lg:hidden cursor-pointer" />
-                                <div className="relative cursor-pointer">
-                                    <ShoppingCart className="w-6 h-6" />
-                                    <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                        4
+                            <SearchProduct />
+                            {user ? (
+                                <div className="flex items-center space-x-3">
+                                    <Search className="w-6 h-6 lg:hidden cursor-pointer" />
+                                    <div className="relative cursor-pointer">
+                                        <ShoppingCart className="w-6 h-6" />
+                                        <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                            4
+                                        </div>
                                     </div>
+                                    <Heart className="w-6 h-6 cursor-pointer" />
+
+                                    <Dropdown
+                                        label={
+                                            <User className="w-6 h-6 cursor-pointer" />
+                                        }
+                                        items={dropdownitems}
+                                    />
                                 </div>
-                                <Heart className="w-6 h-6 cursor-pointer" />
-                                <User
-                                    className="w-6 h-6 cursor-pointer"
-                                    onClick={logout}
-                                />
-                            </div>
-                            : <div>
-                                <Link to={'/auth/login'} className="bg-black text-white px-10 py-2 rounded-full hover:bg-black/90">Login</Link>
-                            </div>}
+                            ) : (
+                                <div>
+                                    <Link
+                                        to={"/auth/login"}
+                                        className="bg-black text-white px-10 py-2 rounded-full hover:bg-black/90"
+                                    >
+                                        Login
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

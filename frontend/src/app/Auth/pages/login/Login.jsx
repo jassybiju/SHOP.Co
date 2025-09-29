@@ -81,7 +81,7 @@ const Login = () => {
                         {formError && (
                             <p className="text-red-500 bg-red-300 p-4 text-center">
                                 {formError}
-                            </p>
+                            </p>   
                         )}
                         <Input
                             type="email"

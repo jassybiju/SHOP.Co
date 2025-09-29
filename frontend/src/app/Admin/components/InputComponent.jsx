@@ -39,6 +39,7 @@ const InputComponent = ({
         input = (
             <textarea
                 {...rest}
+                {...register}
                 disabled={readonly}
                 className={`block w-full bg-gray-50 border ${
                     error ? "border-red-400" : "border-gray-300"

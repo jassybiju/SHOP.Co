@@ -1,6 +1,5 @@
 import { RouterProvider } from "react-router";
 import { router } from "./app/route";
-import Navbar from "./components/Navbar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import 'react-image-crop/dist/ReactCrop.css'

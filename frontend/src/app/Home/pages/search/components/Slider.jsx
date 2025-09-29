@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 export const Slider = ({ value = [0,1000], onValueChange, min = 0, max=1000, step }) => {
+
   const [hovered, setHovered] = useState('max'); // "min" | "max" | null
-  console.log(value , max)
+  console.log(min, max)
 const handleMinChange = (e) => {
   const newMin = Number(e.target.value);
   onValueChange([newMin, Math.max(newMin + step, value[1])]); // clamp max dynamically

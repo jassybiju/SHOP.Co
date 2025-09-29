@@ -1,3 +1,6 @@
+import { Heart, Star } from "lucide-react";
+import { Link } from "react-router";
+
 function StarRating({ rating }) {
     return (
         <div className="flex items-center gap-1">
@@ -31,37 +34,42 @@ function StarRating({ rating }) {
 
 function ProductCard({ product }) {
   console.log(product.images[0]?.url)
+  
   return (
-    <div className="group">
-      <div className="w-full aspect-[295/298] bg-[#F0EEED] rounded-[20px] overflow-hidden relative mb-4">
-        <img
-          src={product.images[0]?.url}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <h3 className="text-xl font-bold text-black mb-2 leading-tight">
-        {product.name}
-      </h3>
-      <div className="mb-2">
-        <StarRating rating={product.rating} />
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-2xl font-bold text-black">${product.price}</span>
-        {product.originalPrice && (
-          <>
-            <span className="text-2xl font-bold text-black/40 line-through">
-              ${product.originalPrice}
-            </span>
-            {product.discount && (
-              <span className="bg-red-50 text-red-500 text-xs font-medium px-3 py-1.5 rounded-full">
-                -{product.discount}%
-              </span>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+    <Link className="group" to={'/product/'+product._id}>
+  <div className="group cursor-pointer w-full">
+                                <div className="bg-gray-medium rounded-2xl p-4 mb-4 relative overflow-hidden">
+                                    <img
+                                        src={product.images[0].url}
+                                        alt="T-shirt with Tape Details"
+                                        className="w-full h-72 object-cover"
+                                    />
+                                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
+                                        <Heart className="w-5 h-5" />
+                                    </button>
+                                </div>
+                                <h3 className="font-poppins font-bold text-lg mb-2 uppercase">
+                                   {product.name}
+                                </h3>
+                                <div className="flex items-center mb-2">
+                                    <div className="flex text-yellow-star">
+                                        {[...Array(4)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className="w-4 h-4 fill-current"
+                                            />
+                                        ))}
+                                        <Star className="w-4 h-4 fill-current opacity-50" />
+                                    </div>
+                                    <span className="ml-2 font-poppins text-sm text-gray-600">
+                                        4.5/5
+                                    </span>
+                                </div>
+                                <div className="font-poppins font-bold text-xl">
+                                    ${product.price - (product.price * (product.discount /100))}
+                                </div>
+                            </div>
+    </Link>
   );
 }
 

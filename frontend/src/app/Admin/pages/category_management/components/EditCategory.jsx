@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
 import { useModal } from "../../../hooks/ModalContext";
 import { useEffect } from "react";
-import { useEditCategory, useGetCategory } from "../../../hooks/useCategoryManagement";
+import {
+    useEditCategory,
+    useGetCategory,
+} from "../../../hooks/useCategoryManagement";
+import toast from "react-hot-toast";
 
 const EditCategory = ({ id }) => {
     console.log(id);
@@ -12,8 +16,8 @@ const EditCategory = ({ id }) => {
         formState: { errors: formError },
         reset,
     } = useForm({ defaultValues: { name: "", description: "" } });
-    const {mutate : EditCategory} = useEditCategory()
-    const { setShowModal } = useModal();
+    const { mutate: EditCategory } = useEditCategory();
+    const { setShowModal, closeModal} = useModal();
     useEffect(() => {
         reset({
             name: brands?.data.name,
@@ -21,12 +25,24 @@ const EditCategory = ({ id }) => {
         });
     }, [brands, reset]);
 
-
     const onSubmit = (data) => {
         console.log(data);
-        EditCategory({id, data})
+        EditCategory(
+            { id, data },
+            {
+                onError: (res) => {
+                    console.log(res)
+                    toast.error(res.response.data.message);
+                },
+                onSuccess: (res) => {
+                    console.log(res)
+                    toast.success(res.message)
+                    closeModal()
+                }
+            }
+        );
     };
-    
+
     if (status !== "success") {
         return "Loading...";
     }
@@ -34,7 +50,7 @@ const EditCategory = ({ id }) => {
         <>
             <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Edit Brand
+                    Edit Category
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -43,14 +59,14 @@ const EditCategory = ({ id }) => {
                             htmlFor="Brand-name"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Brand Name
+                            Category Name
                         </label>
                         <input
                             type="text"
                             id="Brand-name"
                             name="name"
                             {...register("name", {
-                                required: "Brand name is required ",
+                                required: "Category name is required ",
                             })}
                             required
                             placeholder="Enter Brand name"
@@ -65,13 +81,13 @@ const EditCategory = ({ id }) => {
                             htmlFor="Brand-description"
                             className="block text-gray-700 font-medium mb-2"
                         >
-                            Brand Description
+                            Category Description
                         </label>
                         <textarea
-                            id="Brand-description"
+                            id="category-description"
                             name="description"
                             {...register("description", {
-                                required: "Brand descritpion is required ",
+                                required: "Category descritpion is required ",
                             })}
                             placeholder="Write a short description"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y transition min-h-[80px]"
@@ -85,7 +101,7 @@ const EditCategory = ({ id }) => {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => setShowModal(false)}
+                            onClick={closeModal}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
                         >
                             Cancel
@@ -94,7 +110,7 @@ const EditCategory = ({ id }) => {
                             type="submit"
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
                         >
-                            Edit Brand
+                            Edit Category
                         </button>
                     </div>
                 </form>

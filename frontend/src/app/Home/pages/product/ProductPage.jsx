@@ -1,32 +1,14 @@
-import { ChevronRight, Minus, Plus, Star } from "lucide-react";
-import Navbar from "../../../../components/Navbar";
+import { ChevronRight, Loader2, Minus, Plus, Star } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
+import Navbar from "../../components/Navbar";
+import toast from "react-hot-toast";
+import ProductCard from "../search/components/ProductCard";
+import BreadCrumb from "../../components/BreadCrumb";
 
-function Breadcrumb({ items }) {
-    return (
-        <nav className="flex items-center space-x-1 text-sm mb-6">
-            {items.map((item, index) => (
-                <div key={index} className="flex items-center">
-                    {index > 0 && (
-                        <ChevronRight className="w-4 h-4 text-gray-text mx-1 rotate-90" />
-                    )}
-                    <span
-                        className={`font-poppins ${
-                            index === items.length - 1
-                                ? "text-black"
-                                : "text-gray-text"
-                        }`}
-                    >
-                        {item.label}
-                    </span>
-                </div>
-            ))}
-        </nav>
-    );
-}
+
 
 function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
     const sizeClasses = {
@@ -82,26 +64,29 @@ function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
 }
 
 const ProductPage = () => {
-    const {id} = useParams()
-    const {data} = useProduct(id)
-    console.log(data)
+    const { id } = useParams();
+    const { data, isError, error, isLoading } = useProduct(id);
+    console.log(data);
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
-    const [selectedSize, setSelectedSize] = useState("Medium");
+    const [selectedVariant, setSelectedVariant] = useState("Medium");
     const [activeTab, setActiveTab] = useState("details");
 
-    const breadcrumbItems = [
-        { label: "Home" },
-        { label: "Search" },
-        { label: "T-shirts" },
-    ];
+    if (isLoading) {
+        return <Loader2 className="animate-spin" />;
+    }
 
-    const productImages = [
-        "https://api.builder.io/api/v1/image/assets/TEMP/9346afee27212b276cd093c478128db674a63492?width=304",
-        "https://api.builder.io/api/v1/image/assets/TEMP/d8385e6307f3b48a64c08f74eca51d1151fae503?width=888",
-        "https://api.builder.io/api/v1/image/assets/TEMP/23af1545b104ae11fb57f57452a6852dd673e2d8?width=304",
-        "https://api.builder.io/api/v1/image/assets/TEMP/d0441589a44be6b4f70aa55d069748667b27482c?width=304",
+    if (isError) {
+        console.log(error);
+        toast.error(error?.response?.data?.message);
+        return <Navigate to={"/search"} replace />;
+    }
+
+    const breadcrumbItems = [
+        { label: "Home", link:"/" },
+        { label: "Search" , link : '/search'},
+        
     ];
 
     const relatedProducts = [
@@ -142,12 +127,10 @@ const ProductPage = () => {
     const sizes = ["Medium", "Medium", "Medium", "Medium"];
     return (
         <div>
-            <Navbar />
-
             <div className="min-h-screen bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     {/* Breadcrumb */}
-                    <Breadcrumb items={breadcrumbItems} />
+                    <BreadCrumb items={[...breadcrumbItems, {label : data.name , link : '/product/'+data._id}]} />
 
                     {/* Main Product Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-16 mb-12 md:mb-16">
@@ -155,7 +138,7 @@ const ProductPage = () => {
                         <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
                             {/* Thumbnail Images */}
                             <div className="flex lg:flex-col gap-3 md:gap-4 order-2 lg:order-1 overflow-x-auto lg:overflow-visible">
-                                {productImages.map((image, index) => (
+                                {data.images.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
@@ -166,7 +149,7 @@ const ProductPage = () => {
                                         }`}
                                     >
                                         <img
-                                            src={image}
+                                            src={image.url}
                                             alt={`Product view ${index + 1}`}
                                             className="w-full h-full object-cover"
                                         />
@@ -178,7 +161,7 @@ const ProductPage = () => {
                             <div className="flex-1 order-1 lg:order-2 ">
                                 <div className="aspect-square border-2 rounded-xl md:rounded-2xl overflow-hidden bg-gray-100">
                                     <img
-                                        src={productImages[selectedImage]}
+                                        src={data.images[selectedImage].url}
                                         alt="One Life Graphic T-shirt"
                                         className="w-full h-full object-cover"
                                     />
@@ -191,7 +174,7 @@ const ProductPage = () => {
                             {/* Title and Rating */}
                             <div>
                                 <h1 className="font-hero text-2xl md:text-3xl lg:text-4xl text-black mb-3 md:mb-4">
-                                    One Life Graphic T-shirt
+                                    {data.name}
                                 </h1>
                                 <StarRating rating={4.5} />
                             </div>
@@ -199,13 +182,13 @@ const ProductPage = () => {
                             {/* Price */}
                             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                                 <span className="font-poppins text-3xl  font-bold text-black">
-                                    $260
+                                    $     ${data.price - (data.price * (data.discount /100))}
                                 </span>
                                 <span className="font-poppins text-2xl text-black opacity-50 font-bold text-gray-text line-through  ">
-                                    $300
+                                    ${data.price}
                                 </span>
                                 <div className="bg-red-400 text-red-discount px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium">
-                                    -40%
+                                    -{data.discount}%
                                 </div>
                             </div>
 
@@ -224,20 +207,20 @@ const ProductPage = () => {
                                     Select Variant
                                 </h3>
                                 <div className="flex gap-3 flex-wrap">
-                                    {sizes.map((size, index) => (
+                                    {data.variants?.filter(x => x.stock !== 0).map((variant, index) => (
                                         <button
                                             key={index}
                                             onClick={() =>
-                                                setSelectedSize(size)
+                                                setSelectedVariant(variant)
                                             }
-                                            className={`px-5 py-3 rounded-full font-poppins text-sm border transition-all ${
-                                                selectedSize === size
+                                            className={`border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
+                                                selectedVariant === variant
                                                     ? "bg-gray-variant border-gray-400"
-                                                    : "bg-gray-variant border-transparent hover:border-gray-300"
-                                            } flex items-center gap-2`}
+                                                    : "bg-gray-variant  hover:border-gray-300"
+                                        } flex items-center gap-2`}
                                         >
-                                            {size}
-                                            <div className="w-4 h-4 bg-red-discount rounded-full"></div>
+                                            {variant.size} <div className="w-4 bg-red-400 h-4 rounded-full"></div>
+                                            {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
                                         </button>
                                     ))}
                                 </div>
@@ -310,22 +293,18 @@ const ProductPage = () => {
                             >
                                 Rating & Reviews
                             </button>
-                            <button
-                                onClick={() => setActiveTab("faqs")}
-                                className={`pb-3 md:pb-4 px-1 ml-6 md:ml-12 font-poppins text-lg md:text-xl whitespace-nowrap ${
-                                    activeTab === "faqs"
-                                        ? "text-black border-b-2 border-black font-medium"
-                                        : "text-gray-400"
-                                }`}
-                            >
-                                FAQs
-                            </button>
                         </div>
 
                         {activeTab === "details" && (
                             <div className="space-y-6 md:space-y-8">
-                                <div>
-                                    <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
+                                <div
+                                    className="text-2xl"
+                                    dangerouslySetInnerHTML={{
+                                        __html: data.description,
+                                    }}
+                                />
+
+                                {/* <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Product Description
                                     </h3>
                                     <p className="font-poppins text-base md:text-lg leading-relaxed mb-4 md:mb-6">
@@ -355,10 +334,10 @@ const ProductPage = () => {
                                         Available in versatile color options,
                                         this graphic tee complements every
                                         style.
-                                    </p>
-                                </div>
+                                    </p> */}
+                                {/* </div> */}
 
-                                <div>
+                                {/* <div>
                                     <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Key Features
                                     </h3>
@@ -388,9 +367,9 @@ const ProductPage = () => {
                                         </li>
                                         <li>Sizes: S, M, L, XL, XXL</li>
                                     </ul>
-                                </div>
+                                </div> */}
 
-                                <div>
+                                {/* <div>
                                     <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Care Instructions
                                     </h3>
@@ -404,9 +383,12 @@ const ProductPage = () => {
                                             Do not iron directly on the print
                                         </li>
                                     </ul>
-                                </div>
+                                </div> */}
                             </div>
                         )}
+                         {activeTab === "reviews" && (
+                            <>{data?.ratings?.length == 0 && 'No ratings Yet'}</>
+)}
                     </div>
 
                     {/* You Might Also Like */}
@@ -415,45 +397,8 @@ const ProductPage = () => {
                             You might also like
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            {relatedProducts.map((product, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-gray-light rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer"
-                                >
-                                    <div className="aspect-square bg-gray-light relative overflow-hidden">
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                    </div>
-                                    <div className="p-3 md:p-4">
-                                        <h3 className="font-poppins font-bold text-base md:text-lg mb-2">
-                                            {product.name}
-                                        </h3>
-                                        <StarRating
-                                            rating={product.rating}
-                                            size="sm"
-                                        />
-                                        <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                            <span className="font-poppins text-lg md:text-xl font-bold">
-                                                ${product.price}
-                                            </span>
-                                            {product.originalPrice && (
-                                                <>
-                                                    <span className="font-poppins text-lg md:text-xl font-bold text-gray-400 line-through">
-                                                        ${product.originalPrice}
-                                                    </span>
-                                                    {product.discount && (
-                                                        <div className="bg-red-discount-bg text-red-discount px-2 py-1 rounded-full text-xs font-medium">
-                                                            -{product.discount}%
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
+                            {data.products.map((product, index) => (
+                                <ProductCard product={product}/>
                             ))}
                         </div>
                     </div>

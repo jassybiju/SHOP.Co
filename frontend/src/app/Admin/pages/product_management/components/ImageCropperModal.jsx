@@ -9,6 +9,7 @@ import {
 } from "react-image-crop";
 import setCanvasPreview from "./setCanvarPreview";
 import { useRef } from "react";
+import toast from "react-hot-toast";
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 100;
@@ -25,6 +26,14 @@ const ImageCropperModal = ({ updateImage }) => {
 
     const onSelectFile = (e) => {
         const file = e.target.files?.[0];
+
+         const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+        if(!allowedTypes.includes(file.type)){
+            toast.error("Invalid Image type")
+            closeModal()
+            return
+        }
         if (!file) return;
         const reader = new FileReader();
         reader.addEventListener("load", () => {

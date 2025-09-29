@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useModal } from "../../../hooks/ModalContext";
 import ImageCropperModal from "./ImageCropperModal";
+import toast from "react-hot-toast";
 
 export const ImageComponent = ({
     name = "",
@@ -33,6 +34,7 @@ export const ImageComponent = ({
         dataTransfer.items.add(file);
         const fileList = dataTransfer.files;
         console.log(file, fileList);
+       
         if (hiddenInputRef.current) {
             hiddenInputRef.current.files = fileList;
             console.log(fileList, file, hiddenInputRef.current.files);

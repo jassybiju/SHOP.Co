@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 import { Product } from "../models/product.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import { Brand } from "../models/brand.model.js";
@@ -39,6 +39,7 @@ export const getSearchDataService = async (query) => {
         is_active: true,
     };
 
+    console.log(query);
     if (query.q) {
         filterOptions.$or = [
             { name: { $regex: query.q, $options: "i" } },
@@ -51,8 +52,14 @@ export const getSearchDataService = async (query) => {
         filterOptions.price.$gte = query.price_min;
         if (query.price_max) filterOptions.price.$lte = query.price_max;
     }
-    if (query.size) filterOptions["variants.size"] = { $in: [...query.size] };
-
+    if (query.size)
+        filterOptions["variants.size"] = {
+            $in: Array.isArray(query.size) ? [...query.size] : [query.size],
+        };
+    if (query.color)
+        filterOptions["variants.color"] = {
+            $in: Array.isArray(query.color) ? [...query.color] : [query.color],
+        };
     if (query.brand) {
         const queryBrand = Array.isArray(query.brand)
             ? query.brand?.map((x) => new RegExp(x, "i"))
@@ -74,6 +81,7 @@ export const getSearchDataService = async (query) => {
         //     throw new Error("Invalid Brand");
         // }
     }
+    console.log(query.color);
 
     if (query.category) {
         const queryCategories = Array.isArray(query.category)
@@ -87,7 +95,6 @@ export const getSearchDataService = async (query) => {
             },
             { _id: 1 }
         );
-        console.log(category, query.category);
         if (category.length !== 0) {
             filterOptions.category_id = {
                 $in: [...category.map((x) => x._id)],
@@ -99,8 +106,12 @@ export const getSearchDataService = async (query) => {
         //     throw new Error("Invalid Category");
         // }
     }
-    const allBrands = await Brand.find({}, { name: 1, _id: 0 }).sort({name : 1});
-    const allCategories = await Category.find({}, { name: 1, _id: 0 }).sort({name : 1});
+    const allBrands = await Brand.find({}, { name: 1, _id: 0 }).sort({
+        name: 1,
+    });
+    const allCategories = await Category.find({}, { name: 1, _id: 0 }).sort({
+        name: 1,
+    });
     console.log(allBrands, 99998);
     console.log(filterOptions);
     const product_aggregation_pipeline = [
@@ -205,8 +216,8 @@ export const getSearchDataService = async (query) => {
                 allCategories: { $literal: allCategories.map((x) => x?.name) },
                 allColors: { $arrayElemAt: ["$variantsInfo.colors", 0] },
                 allSizes: { $arrayElemAt: ["$variantsInfo.sizes", 0] },
-                minPrice : {$arrayElemAt : ["$priceInfo.minPrice", 0]},
-                maxPrice : {$arrayElemAt : ["$priceInfo.maxPrice", 0]}
+                minPrice: { $arrayElemAt: ["$priceInfo.minPrice", 0] },
+                maxPrice: { $arrayElemAt: ["$priceInfo.maxPrice", 0] },
             },
         },
     ];
@@ -225,8 +236,39 @@ export const getSearchDataService = async (query) => {
     };
 };
 
+export const getProductDataService = async (productId) => {
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+        throw new Error("Invalid Object Id");
+    }
 
-export const getProductDataService = async(productId) => {
-    const product = await Product.findById(productId)
-    return product
-}
+    const product = await Product.aggregate([
+        {
+            $match: {
+                _id: mongoose.Types.ObjectId.createFromHexString(productId),
+                is_active : true
+            },
+        },
+        {
+            $lookup : {
+                from :'productvariants',
+                foreignField: "product_id",
+                localField : '_id',
+                as : 'variants'
+            }
+        }
+    ])
+    const products = await Product.find().limit(4).lean()
+    console.log(product)
+    if (!product[0]) {
+        throw new Error("No Product");
+    }
+    return {
+        ...product[0],
+        images: product[0].images.map((x) => ({
+            ...x,
+            url: cloudinary.url(x.url, { sercure: true }),
+        })),
+        ratings: [],
+        products : products.map(x => ({...x , images : x.images.map(img =>({...img, url : cloudinary.url(img.url , {secure : true})}))}))
+    };
+};

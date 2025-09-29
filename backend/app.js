@@ -49,7 +49,9 @@ app.use((req, res) => {
 
 app.use((error, req, res , next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    
     console.log(statusCode, 12);
+    
     res.status(statusCode);
     console.log(error.message);
     res.json({

@@ -14,10 +14,17 @@ import { useSearchProduct } from "../../hooks/useSearch";
 import { useGetAllBrands } from "../../../Admin/hooks/useBrandManagement";
 import ProductCard from "./components/ProductCard";
 import Footer from "../../components/Footer";
+import { useEffect } from "react";
+import Pagination from "./components/Pagination";
+import { useSearchParams } from "react-router";
+import BreadCrumb from "../../components/BreadCrumb";
 
 // const Slider = ()=>(<>SLider</>)
 
 const SearchPage = () => {
+    const [searchParams] = useSearchParams();
+    const q = searchParams.get("q");
+    console.log(searchParams.get("q"));
     const [filterToggle, setFilterToggle] = useState({
         color: true,
         category: true,
@@ -25,45 +32,70 @@ const SearchPage = () => {
         size: true,
         brand: true,
     });
-    const [priceRange, setPriceRange] = useState([50, 200]);
-    const [selectedColors, setSelectedColors] = useState(["#063AF5"]);
-    const [currentPage, setCurrentPage] = useState(1);
+    // const [priceRange, setPriceRange] = useState([50, 200]);
+    // const [selectedColors, setSelectedColors] = useState(["#063AF5"]);
+    // const [currentPage, setCurrentPage] = useState(1);
 
     const [params, setParams] = useState({
-        q: "",
+        q: q,
         sort: "createdAt",
         order: "desc",
         price_min: 0,
         price_max: null,
-        size: ["M"],
+        size: [],
         brand: [],
-        category: ["shirt"],
-        color: ["#ffff"],
+        limit: 1,
+        category: [],
+        color: [],
         page: 1,
     });
-
+    useEffect(() => {
+        setParams((state) => ({ ...state, q: q, page: 1 }));
+    }, [q]);
     const { data, isLoading } = useSearchProduct(params);
+
+    //   useEffect(()=> {
+    //     if(data?.pages < params?.page){
+    //         setParams((state)=> ({...state, page : data.pages}))
+    //     }
+    //     // console.log(users?.page , params?.page)
+    // },[params,   data])
+    useEffect(() => {
+        if (data?.minPrice > params.price_min) {
+            setParams((state) => ({ ...state, price_min: data.minPrice }));
+        }
+        if (data?.maxPrice < params.price_max) {
+            setParams((state) => ({ ...state, price_max: data.maxPrice }));
+        }
+    }, [data, params]);
+
     if (isLoading) {
         return "Searching...";
     }
 
+    const SORT_OPTIONS = [
+        // { label: "Most Popular", sort: "popularity", order: "desc" },
+        { label: "Price: Low to High", sort: "price", order: "asc" },
+        { label: "Price: High to Low", sort: "price", order: "desc" },
+        { label: "Newest First", sort: "createdAt", order: "desc" },
+        { label: "Oldest First", sort: "createdAt", order: "asc" },
+    ];
+
     const products = data?.data;
-    console.log(data, filterToggle);
+    console.log(data, filterToggle, params);
+
+    const breadcrumbItems = [
+        { label: "Home", link: "/" },
+        { label: "search", link: "/search" },
+    ];
 
     return (
         <>
-            <Navbar />
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-white p-6">
                 {/* Breadcrumb */}
-                <div className="px-6 pt-4 pb-6">
-                    <div className="flex items-center gap-3 text-base">
-                        <span className="text-black/60 font-normal">Home</span>
-                        <ChevronRight className="w-4 h-4 text-black/60 -rotate-90" />
-                        <span className="text-black font-normal">Search</span>
-                    </div>
-                </div>
 
-                <div className="flex gap-6 px-6">
+                <BreadCrumb items={breadcrumbItems} />
+                <div className="flex gap-6 px-0">
                     {/* Filter Sidebar */}
                     <div className="w-[400px] flex-shrink-0">
                         <div className="border border-black/10 rounded-[20px] bg-white p-6">
@@ -73,12 +105,24 @@ const SearchPage = () => {
                                     Filters
                                 </h2>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
-                                        <span className="text-white text-xs font-medium">
-                                            2
-                                        </span>
-                                    </div>
-                                    <button className="text-black/60 text-sm">
+                                    <button
+                                        className="text-black/60 text-sm"
+                                        onClick={() =>
+                                            setParams({
+                                                q: "",
+                                                sort: "createdAt",
+                                                order: "desc",
+                                                price_min: 0,
+                                                price_max: null,
+                                                size: [],
+                                                brand: [],
+                                                limit: 10,
+                                                category: [],
+                                                color: [],
+                                                page: 1,
+                                            })
+                                        }
+                                    >
                                         Clear All
                                     </button>
                                     <Filter className="w-6 h-6 text-black" />
@@ -153,13 +197,11 @@ const SearchPage = () => {
                             <div className="border-b border-black/10 pb-6 mb-6">
                                 <div
                                     className="flex items-center justify-between mb-4"
-                                    onClick={
-                                        () =>
-                                            setFilterToggle((state) => ({
-                                                ...state,
-                                                price: !state.price,
-                                            }))
-                                        // {                                        console.log(123)}
+                                    onClick={() =>
+                                        setFilterToggle((state) => ({
+                                            ...state,
+                                            price: !state.price,
+                                        }))
                                     }
                                 >
                                     <h3 className="text-base font-semibold text-black">
@@ -191,12 +233,8 @@ const SearchPage = () => {
                                                     price_max: max,
                                                 }))
                                             }
-                                            // max={data.maxPrice }
-                                            min={
-                                                data.minPrice < params.price_min
-                                                    ? data.minPrice
-                                                    : params.price_min
-                                            }
+                                            max={data.maxPrice}
+                                            min={data.minPrice}
                                             step={10}
                                             className="w-full"
                                         />
@@ -250,7 +288,12 @@ const SearchPage = () => {
                                 </div>
                                 {filterToggle.color && (
                                     <div className="grid grid-cols-5 gap-4">
-                                        {data.allColors.map((color) => (
+                                        {[
+                                            ...params.color,
+                                            ...data.allColors.filter(
+                                                (x) => !params.color.includes(x)
+                                            ),
+                                        ].map((color) => (
                                             <button
                                                 key={color}
                                                 className="w-10 h-10 rounded-full border relative"
@@ -271,27 +314,30 @@ const SearchPage = () => {
                                                 }}
                                                 onClick={() => {
                                                     if (
-                                                        selectedColors.includes(
-                                                            color.value
+                                                        params.color.includes(
+                                                            color
                                                         )
                                                     ) {
-                                                        setSelectedColors(
-                                                            selectedColors.filter(
-                                                                (c) =>
-                                                                    c !==
-                                                                    color.value
-                                                            )
-                                                        );
+                                                        setParams((state) => ({
+                                                            ...state,
+                                                            color: state.color.filter(
+                                                                (x) =>
+                                                                    x !== color
+                                                            ),
+                                                        }));
                                                     } else {
-                                                        setSelectedColors([
-                                                            ...selectedColors,
-                                                            color.value,
-                                                        ]);
+                                                        setParams((state) => ({
+                                                            ...state,
+                                                            color: [
+                                                                ...state.color,
+                                                                color,
+                                                            ],
+                                                        }));
                                                     }
                                                 }}
                                             >
-                                                {selectedColors.includes(
-                                                    color.value
+                                                {params.color.includes(
+                                                    color
                                                 ) && (
                                                     <Check className="w-5 h-5 text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                                                 )}
@@ -384,7 +430,8 @@ const SearchPage = () => {
                                                 className="flex items-center gap-3"
                                             >
                                                 {/* <Checkbox className="w-4 h-4 border-gray-400" /> */}
-                                                <label  className={`text-sm text-black/60  cursor-pointer px-7 py-2 rounded w-full ${
+                                                <label
+                                                    className={`text-sm text-black/60  cursor-pointer px-7 py-2 rounded w-full ${
                                                         params.brand.includes(
                                                             brand
                                                         )
@@ -394,21 +441,21 @@ const SearchPage = () => {
                                                     onClick={() =>
                                                         setParams((state) => ({
                                                             ...state,
-                                                            brand:
-                                                                state.brand.includes(
-                                                                    brand
-                                                                )
-                                                                    ? state.brand.filter(
-                                                                          (x) =>
-                                                                              x !==
-                                                                              brand
-                                                                      )
-                                                                    : [
-                                                                          ...state.brand,
-                                                                          brand,
-                                                                      ],
+                                                            brand: state.brand.includes(
+                                                                brand
+                                                            )
+                                                                ? state.brand.filter(
+                                                                      (x) =>
+                                                                          x !==
+                                                                          brand
+                                                                  )
+                                                                : [
+                                                                      ...state.brand,
+                                                                      brand,
+                                                                  ],
                                                         }))
-                                                    }>
+                                                    }
+                                                >
                                                     {brand}
                                                 </label>
                                             </div>
@@ -424,78 +471,68 @@ const SearchPage = () => {
                         {/* Header */}
                         <div className="flex items-center justify-between mb-8">
                             <h1 className="text-3xl font-bold text-black">
+                                {q &&(<>
                                 <span className="text-gray-600 font-normal">
                                     Looking for
                                 </span>{" "}
-                                Casual
+                                {q}</>) }
                             </h1>
                             <div className="flex items-center gap-3 text-base">
-                                <span className="text-black/60">
-                                    Showing 1-10 of 100 Products
-                                </span>
-                                <div className="flex items-center gap-1">
-                                    <span className="text-black/60">
-                                        Sort by:
-                                    </span>
-                                    <span className="text-black">
-                                        Most Popular
-                                    </span>
-                                    <ChevronDown className="w-4 h-4 text-black" />
-                                </div>
+                                <span className="text-black/60">Sort by:</span>
+                                <select
+                                    value={`${params.sort}_${params.order}`}
+                                    onChange={(e) => {
+                                        const [sort, order] =
+                                            e.target.value.split("_");
+                                        setParams((state) => ({
+                                            ...state,
+                                            sort,
+                                            order,
+                                        }));
+                                    }}
+                                    className="border border-black/20 rounded-md px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
+                                >
+                                    {SORT_OPTIONS.map((option) => (
+                                        <option
+                                            key={option.label}
+                                            value={`${option.sort}_${option.order}`}
+                                        >
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
                         {/* Products Grid */}
-                        <div className="grid grid-cols-4 gap-8 mb-12">
-                            {products.map((product) => (
-                                <ProductCard
-                                    key={product.id}
-                                    product={product}
-                                />
-                            ))}
-                        </div>
+                        {products.length === 0 ? (
+                            "No Items"
+                        ) : (
+                            <>
+                                <div className="grid grid-cols-3 gap-8 mb-12">
+                                    {products.map((product) => (
+                                        <ProductCard
+                                            key={product.id}
+                                            product={product}
+                                        />
+                                    ))}
+                                </div>
+                                <div className="flex justify-center w-full">
+                                    <Pagination
+                                        page={data?.page}
+                                        pages={data?.pages}
+                                        onPageChange={(x) =>
+                                            setParams((state) => ({
+                                                ...state,
+                                                page: x,
+                                            }))
+                                        }
+                                    />
+                                </div>
+                            </>
+                        )}
 
                         {/* Pagination */}
-                        <div className="border-t border-black/10 pt-8">
-                            <div className="flex items-center justify-between">
-                                <button
-                                    variant="outline"
-                                    className="flex items-center gap-2 h-10 px-4"
-                                >
-                                    <ChevronLeft className="w-5 h-5" />
-                                    Previous
-                                </button>
-
-                                <div className="flex items-center gap-1">
-                                    {[1, 2, 3, "...", 8, 9, 10].map(
-                                        (page, index) => (
-                                            <button
-                                                key={index}
-                                                className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium ${
-                                                    page === currentPage
-                                                        ? "bg-black/6 text-black"
-                                                        : "text-black/50 hover:bg-black/6"
-                                                }`}
-                                                onClick={() =>
-                                                    typeof page === "number" &&
-                                                    setCurrentPage(page)
-                                                }
-                                            >
-                                                {page}
-                                            </button>
-                                        )
-                                    )}
-                                </div>
-
-                                <button
-                                    variant="outline"
-                                    className="flex items-center gap-2 h-10 px-4"
-                                >
-                                    Next
-                                    <ChevronRight className="w-5 h-5" />
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

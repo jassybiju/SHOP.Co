@@ -1,4 +1,4 @@
-import { ImageUp, Trash2 } from "lucide-react";
+import { ImageUp, Loader2, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
 import InputComponent from "../../components/InputComponent";
@@ -19,8 +19,10 @@ import { useEffect } from "react";
 import EditVariant from "./components/EditVariant";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";
+import { useConfirmation } from "../../hooks/useConfirmation";
 const EditProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
+    const {openConfirmation, ConfirmationComponent} = useConfirmation()
     const { id } = useParams();
     const { data: product } = useGetProduct(id);
     console.log(product);
@@ -49,6 +51,7 @@ const EditProduct = () => {
 
     useEffect(() => {
         if (product?.data) {
+            console.log(product)
             reset({
                 ...product.data,
                 images: product.data.images.map((x) => x.url),
@@ -62,9 +65,8 @@ const EditProduct = () => {
     }, [product, reset]);
 
     const onSubmit = (data) => {
-        toast.success("Saved");
         console.log(data, "----------------------");
-        console.log(data,444)
+        console.log(data.description,444)
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("price", data.price);
@@ -89,7 +91,13 @@ const EditProduct = () => {
 
         formData.append("variants", JSON.stringify(data.variants));
 
-        editProduct({ id, formData });
+        editProduct({ id, formData }, {onError : (res)=>{
+            console.log(res);
+            toast.error(res.response.data.message)
+        }, onSuccess : (res)=>{
+            console.log(res)
+            toast.success(res.message)
+        }});
         for (let i of formData.entries()) {
             console.log(i);
         }
@@ -99,7 +107,7 @@ const EditProduct = () => {
 
     return (
         <>
-            <Header heading="Add Product" goback />
+            <Header heading="Edit Product" goback />
             <form
                 className="mr-3 m-0 md:m-5 flex flex-wrap"
                 onSubmit={handleSubmit(onSubmit)}
@@ -183,7 +191,9 @@ const EditProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent textarea label={"Category"} />
+                    <InputComponent textarea label={"Description"}  register={register("description", {
+                                required: "Description is required",
+                            })}/>
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
                         <h1 className="font-bold ">Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">
@@ -216,9 +226,9 @@ const EditProduct = () => {
                         <button
                             disabled={status === "pending"}
                             type="submit"
-                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
+                            className="px-6 py-3 flex bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                            {status} Add Product
+                            {status === 'pending'  && <Loader2 className=" animate-spin "/>} Edit Product
                         </button>
                     </div>
                 </div>

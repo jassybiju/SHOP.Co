@@ -13,7 +13,7 @@ export const uploadImages = async (req, folder) => {
             folder: folder,
         });
         console.log(file.path)
-        fs.unlinkSync(file.path);
+        // fs.unlinkSync(file.path);
         uploadResults.push(result.public_id);
     }
     return uploadResults;

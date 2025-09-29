@@ -19,15 +19,16 @@ export const ImageGroupComponent = ({
                     watch={watch}
                     setValue={setValue}
                     name={"images[1]"}
-                    // registerObj={{
-                        //     validate: (val) => {
-                            //         if (typeof val === "string" && val.length > 0)
-                            //             return true;
-                        //         if (val instanceof FileList && val.length > 0)
-                        //             return true;
-                        //         return "Image Requried";
-                        //     },
-                        // }}
+                    registerObj={{
+                            validate: (val) => {
+                                console.log(val)
+                                    if (typeof val === "string" && val.length > 0)
+                                        return true;
+                                if (val[0] instanceof File && val.length > 0)
+                                    return true;
+                                return "1 Image Requried";
+                            },
+                        }}
                         />
             </div>
             <div className="row-span-3 col-span-2">
@@ -39,15 +40,15 @@ export const ImageGroupComponent = ({
                         watch={watch}
                         name={"images[0]"}
                         registerObj={{
-                            // validate: (val) => {
-                            //     console.log(val)
-                            //         if (typeof val === "string" && val.length > 0)
-                            //             return true;
-                            //     if (val instanceof FileList && val.length > 0)
-                            //         return true;
-                            //     console.log(val)
-                            //     return "Main Image Requried";
-                            // },
+                            validate: (val) => {
+                                // console.log(val[0] instanceof FileList)
+                                    if (typeof val === "string" && val.length > 0)
+                                        return true;
+                                if (val[0] instanceof File && val.length > 0)
+                                    return true;
+                                // console.log(val)
+                                return "Main Image Requried";
+                            },
                         }}
                         />
             </div>
@@ -58,6 +59,16 @@ export const ImageGroupComponent = ({
                         previewImg={value[2]}
                         register={register}
                         name={"images[2]"}
+                           registerObj={{
+                            validate: (val) => {
+                                console.log(val)
+                                    if (typeof val === "string" && val.length > 0)
+                                        return true;
+                                if (val[0] instanceof File && val.length > 0)
+                                    return true;
+                                return "1 Image Requried";
+                            },
+                        }}
                 />
             </div>
             <div className="">
@@ -67,6 +78,16 @@ export const ImageGroupComponent = ({
                         setValue={setValue}
                     register={register}
                     name={"images[3]"}
+                       registerObj={{
+                            validate: (val) => {
+                                console.log(val)
+                                    if (typeof val === "string" && val.length > 0)
+                                        return true;
+                                if (val[0] instanceof File && val.length > 0)
+                                    return true;
+                                return "1 Image Requried";
+                            },
+                        }}
                 />
             </div>
             <h2 className="absolute -bottom-5 text-red-500">

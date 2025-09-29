@@ -23,7 +23,7 @@ const VariantComponent = ({ value, onAddVariant,onEditVariant, field, remove, re
             }`}
         >
             {value ? (
-                <div className="pl-3 lg:pl-10 " >
+                <div className=" " >
                     {!readonly && (
                         <div
                             className="bg-red-500 p-2 w-max rounded-full absolute -top-5 -right-5"
@@ -32,7 +32,8 @@ const VariantComponent = ({ value, onAddVariant,onEditVariant, field, remove, re
                             <Trash2 color={"white"} />
                         </div>
                     )}
-                    <div className="flex items-center  gap-3 " onClick={showEditVariantModal}>
+                    <div onClick={showEditVariantModal} className="pl-3 lg:pl-10">
+                    <div className="flex items-center  gap-3 " >
                         Color :{" "}
                         <span
                             className={`  w-5 h-5 inline-block rounded-full `}
@@ -56,6 +57,7 @@ const VariantComponent = ({ value, onAddVariant,onEditVariant, field, remove, re
                         >
                             {value.stock}
                         </span>
+                    </div>
                     </div>
                 </div>
             ) : (

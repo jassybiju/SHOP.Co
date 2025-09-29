@@ -18,7 +18,7 @@ export const getProduct = async (id) => {
 };
 
 export const editProduct = async ({id, formData}) => {
-  console.log(id, formData)
+  console.log(id, formData, 980)
   const res = await adminAxiosInstance.put('product/'+id , formData)
   return res.data
 }

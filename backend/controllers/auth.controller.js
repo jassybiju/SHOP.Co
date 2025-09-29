@@ -78,7 +78,10 @@ export const loginUser = async (req, res, next) => {
             res.status(404);
             throw new Error("User not found");
         }
-
+        if (!user.active) {
+            res.status(404).cookie("jwt", { maxAge: 0 });
+            throw new Error("User Blocked");
+        }
         console.log(email, password);
 
         const isPasswordCorrect = await user.comparePassword(password);
@@ -261,7 +264,7 @@ export const resendOTP = async (req, res, next) => {
 };
 
 export const forgetPassword = async (req, res, next) => {
-    printKeyValuePair()
+    printKeyValuePair();
     try {
         const { email } = req.body;
         console.log(1);
@@ -291,7 +294,7 @@ export const forgetPassword = async (req, res, next) => {
         res.status(200).json({
             message: "OTP send successfully",
             status: "success",
-            data: { otp_timer: Date.now() + Number( OTP_INVALID_TIME * 1000) },
+            data: { otp_timer: Date.now() + Number(OTP_INVALID_TIME * 1000) },
         });
     } catch (error) {
         next(error);
@@ -301,16 +304,15 @@ export const forgetPassword = async (req, res, next) => {
 export const resetPassword = async (req, res, next) => {
     await printKeyValuePair();
     try {
-        const { email, password , confirm_password } = req.body;
+        const { email, password, confirm_password } = req.body;
         const cache = await client.get(`otp_verified:${email}`);
         console.log(cache, 1234, req.body);
-        if(password !== confirm_password){
-            res.status(400)
-            throw new Error("Password not same")
+        if (password !== confirm_password) {
+            res.status(400);
+            throw new Error("Password not same");
         }
-        
+
         if (cache === "true") {
-            
             const user = await User.findOne({ email: email });
             if (!user) {
                 throw new Error("User not found");
@@ -323,7 +325,10 @@ export const resetPassword = async (req, res, next) => {
             res.status(400);
             throw new Error("Unauthorized");
         }
-        return res.json({ status: "success" , message : "Password Reset Successful"});
+        return res.json({
+            status: "success",
+            message: "Password Reset Successful",
+        });
     } catch (error) {
         next(error);
     }
@@ -340,9 +345,10 @@ export const getUserDetails = async (req, res, next) => {
         const user = await User.findOne({ email: data.email });
         console.log(user);
         if (!user || user.active === false) {
-            res.status(403);
-            return next("Access Denied");
+            res.status(403).cookie("jwt","", { maxAge: 0 });
+            throw new Error("User Blocked");
         }
+        console.log(user);
         res.status(200).json({
             data: {
                 first_name: user.first_name,

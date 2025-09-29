@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 
 const UserManagement = () => {
-    const limit = 2;
+    const limit = 10;
     const [params, setParams] = useState({
         search: "",
         sort: "created at - asc",
@@ -29,6 +29,13 @@ const UserManagement = () => {
     const {mutate : toggleActiveUser } = useToggleUserActiveStatus()
     
     const navigate = useNavigate()
+
+    useEffect(()=> {
+        if(users?.pages < params?.page){
+            setParams((state)=> ({...state, page : users.pages}))
+        }
+        console.log(users?.page , params?.page)
+    },[params,   users])
 
     const column = [
         {
@@ -58,8 +65,9 @@ const UserManagement = () => {
                     >
                         VIEW
                     </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded font-semibold text-xs" onClick={()=>toggleActiveUser(row._id)}>
-                        BLOCK
+                    <button className={` text-white py-1 px-4 rounded font-semibold text-xs ${row.active ? 'bg-red-500 hover:bg-red-600' : 
+                    "bg-green-500 hover:bg-green-600"}`} onClick={()=>toggleActiveUser(row._id)}>
+                       {row.active ? "Block " : "Unblock"} 
                     </button>
                 </>
             ),
@@ -126,10 +134,11 @@ const UserManagement = () => {
                         }
                     />
                     <Dropdown
+                        label={"Sort By"}
                         options={SortOptions}
-                        value={Object.keys(SORT_OPTION_CONSTANT).find(
-                            (key) => SORT_OPTION_CONSTANT[key] === params.sort
-                        )}
+                        // value={Object.keys(SORT_OPTION_CONSTANT).find(
+                        //     (key) => SORT_OPTION_CONSTANT[key] === params.sort
+                        // )}
                         onChange={(e) =>
                             setParams((state) => ({
                                 ...state,
@@ -138,6 +147,7 @@ const UserManagement = () => {
                         }
                     />
                     <Dropdown
+                        label='Filter By'
                         options={filterOptions}
                         onChange={(e) =>
                             setParams((state) => ({
@@ -157,8 +167,9 @@ const UserManagement = () => {
             <TableComponent
                 data={users.data}
                 column={column}
-                pages={Math.ceil(users.total_users/users.limit)}
+                pages={users.pages}
                 page={users.page}
+            
                 onPageChange={(x)=>setParams(state => ({...state, page : x}))}
             />
         </div>

@@ -27,7 +27,8 @@ export const getAllUsersService = async (query) => {
         {
             $facet: {
                 total_users: [{ $count: "total" }],
-                
+                total_users_entries : [{$match : filterCriteria }, {$count : 'total'}],
+
                 data: [
                       { $match: filterCriteria },
                     { $sort: { [sortField]: order } },
@@ -48,6 +49,20 @@ export const getAllUsersService = async (query) => {
                 blocked_users: {
                     $arrayElemAt: ["$blocked_users.count", 0],
                 },
+                pages : {$cond : {
+                    if : {
+                        $gt : [{ $arrayElemAt : ['$total_users_entries.total', 0]} , 0]
+                    },then : {
+                        $ceil : {
+                            $divide : [
+                                {
+                                    $arrayElemAt : ['$total_users_entries.total', 0]
+                                },
+                                limit
+                            ]
+                        }
+                    },else : 0
+                }},
                 page: { $literal: page },
                 limit: { $literal: limit },
             },

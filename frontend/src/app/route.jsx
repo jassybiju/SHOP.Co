@@ -33,6 +33,7 @@ export const router = createBrowserRouter(
         <>
             <Route
                 path="/"
+                element={<AppLayout/>}
                 errorElement={<>Erorr</>}
                 hydrateFallbackElement={<>Loading...</>}
             >
@@ -49,7 +50,27 @@ export const router = createBrowserRouter(
                 /> */}
 
                 {/* /admin route  */}
-                <Route
+               
+                <Route path="auth" element={<RedirectIfLoggedIn/>}>
+                    <Route path="register" element={<Register />} />
+                    <Route path="login" element={<GoogleWrapper><Login /></GoogleWrapper>} />
+                    <Route
+                        path="otp-verify"
+                        element={
+                            <RedirectIfNoOTP>
+                                <OTPVerify />
+                            </RedirectIfNoOTP>
+                        }
+                    />
+                    <Route path="forget-password"element={<ForgetPassword />}/>
+                    <Route path="reset-password"element={<ResetPassword />}/>
+                </Route>
+
+                <Route path="/">
+                        
+                </Route>
+            </Route>
+             <Route
                     path="admin"
                     element={
                         <>
@@ -78,25 +99,6 @@ export const router = createBrowserRouter(
                     </Route>
                 </Route>
 
-                <Route path="auth">
-                    <Route path="register" element={<Register />} />
-                    <Route path="login" element={<GoogleWrapper><Login /></GoogleWrapper>} />
-                    <Route
-                        path="otp-verify"
-                        element={
-                            <RedirectIfNoOTP>
-                                <OTPVerify />
-                            </RedirectIfNoOTP>
-                        }
-                    />
-                    <Route path="forget-password"element={<ForgetPassword />}/>
-                    <Route path="reset-password"element={<ResetPassword />}/>
-                </Route>
-
-                <Route path="/">
-                        
-                </Route>
-            </Route>
         </>
     )
 );

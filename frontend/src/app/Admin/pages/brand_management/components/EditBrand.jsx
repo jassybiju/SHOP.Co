@@ -13,24 +13,33 @@ const EditBrand = ({ id }) => {
         formState: { errors: formError },
         reset,
     } = useForm({ defaultValues: { name: "", description: "" } });
-    const { mutate: editBrand , status : editBrandStatus} = useEditBrand();
+    const { mutate: editBrand, status: editBrandStatus } = useEditBrand();
     const { setShowModal } = useModal();
     useEffect(() => {
         reset({
             name: brands?.data.name,
             description: brands?.data.description,
-            image : brands?.data.image
+            image: brands?.data.image,
         });
     }, [brands, reset]);
 
-
-    console.log(editBrandStatus)
+    console.log(editBrandStatus);
 
     const onSubmit = (data) => {
         console.log(data);
-    editBrand({ id, data });
+        editBrand(
+            { id, data },
+            {
+                onError: (data) => {
+                    console.log(data);
+                },
+                onSuccess : (data) =>{
+                    console.log(data)
+                }
+            }
+        );
     };
-    
+
     if (status !== "success") {
         return "Loading...";
     }
@@ -42,7 +51,10 @@ const EditBrand = ({ id }) => {
                 </h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <ImageInput register={register("image")} previewImg={brands?.data.image} />
+                    <ImageInput
+                        register={register("image")}
+                        previewImg={brands?.data.image}
+                    />
 
                     <div className="mb-6">
                         <label
@@ -92,17 +104,19 @@ const EditBrand = ({ id }) => {
                         <button
                             type="button"
                             onClick={() => setShowModal(false)}
-                            disabled={editBrandStatus === 'pending'}
+                            disabled={editBrandStatus === "pending"}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-800"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            disabled={editBrandStatus === 'pending'}
+                            disabled={editBrandStatus === "pending"}
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-800"
                         >
-                           { editBrandStatus === 'pending' ? 'Editing Brand' : 'Edit Brand'}
+                            {editBrandStatus === "pending"
+                                ? "Editing Brand"
+                                : "Edit Brand"}
                         </button>
                     </div>
                 </form>

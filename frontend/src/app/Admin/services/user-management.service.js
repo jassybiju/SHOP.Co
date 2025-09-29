@@ -10,7 +10,9 @@ export const getAllUsers = async (data) => {
 
 export const getUserById = async (data) => {
     // ! TODO
-    const res = await adminAxiosInstance.get('user-management/user'+data.q)
+    console.log(data)
+    const res = await adminAxiosInstance.get('user-management/users/'+data.queryKey[1])
+    return res.data
 }
 
 export const toggleUserActiveStatusById = async (id) =>{

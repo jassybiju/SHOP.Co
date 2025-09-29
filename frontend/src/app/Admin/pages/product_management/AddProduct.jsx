@@ -152,7 +152,9 @@ const AddProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent textarea label={"Category"} />
+                    <InputComponent textarea label={"Descripiton"} register={register("description", {
+                                required: "Discription is required",
+                            })} error={errors.description}/>
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
                         <h1 className="font-bold ">Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">

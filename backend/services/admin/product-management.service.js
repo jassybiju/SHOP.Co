@@ -3,6 +3,7 @@ import { Product } from "../../models/product.model.js";
 import cloudinary, { uploadImages } from "../../utils/cloudinary.js";
 import { productFilterOptions } from "../../utils/CONSTANTS.js";
 import { ProductVariant } from "../../models/product_variants.model.js";
+import { Brand } from "../../models/brand.model.js";
 
 export const getAllProductService = async (query) => {
     const limit = Number(query.limit) || 10;
@@ -48,6 +49,13 @@ export const getAllProductService = async (query) => {
                     { $match: filterOptions },
                     { $count: "count" },
                 ],
+                total_products : [
+                    {$count : 'products'}
+                ],
+                total_blocked_products : [
+                    {$match : {is_active : false}},
+                    {$count : 'products'}
+                ]
             },
         },
         {
@@ -84,6 +92,8 @@ export const getAllProductService = async (query) => {
                 },
                 limit: { $literal: limit },
                 page: { $literal: page },
+                total_products : {$arrayElemAt : ['$total_products.products',0]},
+                blocked_products : {$arrayElemAt : ['$total_blocked_products.products',0]}
             },
         },
     ];
@@ -147,10 +157,11 @@ export const getProductService = async (_id) => {
 export const editProductService = async (_id, data, req) => {
     const product = await Product.findOne({ _id });
     if (!product) throw new Error("No product Found");
-    console.log(data, req.files, 1234)
+
+    
     //checking for duplicate product name
     const existingWithName = await Product.findOne({
-        name: data.name,
+        name: {$regex : `^${data.name}$` , $options : 'i'},
         _id: { $ne: _id },
     });
     if (existingWithName) throw new Error("Product name already exists");
@@ -161,7 +172,11 @@ export const editProductService = async (_id, data, req) => {
 
     //uploading new images in req.files
     const uploadUrls = await uploadImages(req, 'product')
-
+    console.log(uploadUrls , data.imagesData)
+    const newImageEntries = data.imagesData.filter(x => x.is_new)
+    if(uploadUrls.length !== newImageEntries.length){
+        throw new Error('Expected new images is not recieved')
+    }
 
     let uploadedIndex = 0
 
@@ -169,7 +184,9 @@ export const editProductService = async (_id, data, req) => {
         if(x.is_new){
             return {url : uploadUrls[uploadedIndex++], is_main : i==0}
         }else{
+            console.log(product.images)
             return product.images[i]
+            
         }
     })
     
@@ -182,7 +199,7 @@ export const editProductService = async (_id, data, req) => {
     await Promise.all(
         data.variants.map(async variant => {
             if(variant._id){
-                return await ProductVariant.findByIdAndUpdate({_id : variant._id}, {$set : {color : variant.color, size : variant.size , stock : variant.stock}},{new:true})
+                return await ProductVariant.findByIdAndUpdate({_id : '68d0c4b274b58a496e344520'}, {$set : {color : variant.color, size : variant.size , stock : variant.stock}},{new:true})
             }else{
                 return await ProductVariant.create({product_id : _id , color : variant.color, size : variant.size , stock : variant.stock})
             }
@@ -194,6 +211,10 @@ export const editProductService = async (_id, data, req) => {
     const deletingVariants = existingVariantId.filter(x => !editedVariants.includes(x))
     if(deletingVariants.length > 0){
         await ProductVariant.deleteMany({_id : {$in : deletingVariants}})
+    }
+
+    if(!await Brand.findOne({_id : data.brand_id})){
+        throw new Error("Brand Doesnt exists")
     }
 
     product.name = data.name;

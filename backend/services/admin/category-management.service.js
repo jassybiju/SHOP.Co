@@ -1,7 +1,8 @@
 import { Category } from "../../models/category.model.js";
 
 export const addCategoryService = async (value) => {
-    const existinCategory = await Category.findOne({ name: value.name });
+    const existinCategory = await Category.findOne({ name: {$regex : `^${value.name}$` , $options : 'i' }  });
+    console.log(existinCategory)
     if (existinCategory) {
         throw new Error("Category name exists");
     }
@@ -110,9 +111,11 @@ export const editCategoryService = async (_id, data) => {
     }
 
     const existingWithName = await Category.findOne({
-        name: data.name,
+        name: {$regex : `^${data.name}$` , $options : 'i'},
         _id: { $ne: _id },
     });
+    // const existinCategory = await Category.findOne({ name: {$regex : `^${value.name}$` , $options : 'i' }  });
+
     if (existingWithName) {
         throw new Error("Category name already exists");
     }

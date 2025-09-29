@@ -7,12 +7,23 @@ export const getAllUsers = async (req, res, next) => {
     
 
         const users = await getAllUsersService(query)
-
+        
         res.json(users);
     } catch (error) {
         next(error);
     }
 };
+
+export const getUsersById = async(req, res, next)=>{
+    try{
+        const {id} = req.params
+        const user = await User.findById(id)
+        console.log(user)
+        res.status(200).json({message : "User Details got succeffult", status : "success" , data : user})
+    }catch(error){
+        next(error)
+    }
+}
 
 export const toggleUserState = async (req, res, next) => {
     try {
