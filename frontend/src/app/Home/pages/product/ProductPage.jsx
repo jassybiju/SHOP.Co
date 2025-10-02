@@ -219,7 +219,7 @@ const ProductPage = () => {
                                                     : "bg-gray-variant  hover:border-gray-300"
                                         } flex items-center gap-2`}
                                         >
-                                            {variant.size} <div className="w-4 bg-red-400 h-4 rounded-full"></div>
+                                            {variant.size} <div className="w-4  h-4 rounded-full" style={{backgroundColor : variant.color}}></div>
                                             {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
                                         </button>
                                     ))}

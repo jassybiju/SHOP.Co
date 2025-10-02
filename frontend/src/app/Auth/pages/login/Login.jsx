@@ -7,6 +7,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../../services/auth.service";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useUser } from "../../../../hooks/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 const Login = () => {
     const {
         register,
@@ -14,6 +16,8 @@ const Login = () => {
 
         formState: { errors },
     } = useForm();
+        const queryClient = useQueryClient()
+
     const [formError, setFormError] = useState("");
     const { mutate: login } = useLoginUser();
     const navigate = useNavigate();
@@ -31,6 +35,7 @@ const Login = () => {
     };
 
     const responseGoogle = async (authResult) => {
+        console.log("Google Login")
         try {
             if (authResult["code"]) {
                 const result = await googleAuth(authResult.code);
@@ -38,8 +43,8 @@ const Login = () => {
                 const email = result.data.email;
                 const first_name = result.data.first_name;
                 const token = result.data.token;
-                const obj = { email, first_name, token };
-                console.log(obj);
+                const obj = { email, first_name,  };
+                queryClient.setQueryData(['user'],obj)
                 navigate("/");
             } else {
                 throw new Error(authResult);

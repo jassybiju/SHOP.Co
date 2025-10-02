@@ -19,10 +19,8 @@ import { useEffect } from "react";
 import EditVariant from "./components/EditVariant";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";
-import { useConfirmation } from "../../hooks/useConfirmation";
 const EditProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
-    const {openConfirmation, ConfirmationComponent} = useConfirmation()
     const { id } = useParams();
     const { data: product } = useGetProduct(id);
     console.log(product);

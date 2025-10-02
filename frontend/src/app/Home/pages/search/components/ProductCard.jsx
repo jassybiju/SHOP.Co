@@ -42,7 +42,7 @@ function ProductCard({ product }) {
                                     <img
                                         src={product.images[0].url}
                                         alt="T-shirt with Tape Details"
-                                        className="w-full h-72 object-cover"
+                                        className="w-full h-full object-cover"
                                     />
                                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
                                         <Heart className="w-5 h-5" />

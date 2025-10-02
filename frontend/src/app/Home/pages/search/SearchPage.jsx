@@ -22,9 +22,19 @@ import BreadCrumb from "../../components/BreadCrumb";
 // const Slider = ()=>(<>SLider</>)
 
 const SearchPage = () => {
-    const [searchParams] = useSearchParams();
-    const q = searchParams.get("q");
-    console.log(searchParams.get("q"));
+    const [searchParams , setSearchParams] = useSearchParams();
+    const params = {
+        q: searchParams.get("q"),
+        category: searchParams.getAll('category'),
+        brand: searchParams.getAll('brand'),
+        color : searchParams.getAll('color'),
+        size : searchParams.getAll('size'),
+        sort : searchParams.get('sort'),
+        order : searchParams.get('order')
+    };
+
+
+    console.log(params);
     const [filterToggle, setFilterToggle] = useState({
         color: true,
         category: true,
@@ -36,22 +46,23 @@ const SearchPage = () => {
     // const [selectedColors, setSelectedColors] = useState(["#063AF5"]);
     // const [currentPage, setCurrentPage] = useState(1);
 
-    const [params, setParams] = useState({
-        q: q,
-        sort: "createdAt",
-        order: "desc",
-        price_min: 0,
-        price_max: null,
-        size: [],
-        brand: [],
-        limit: 1,
-        category: [],
-        color: [],
-        page: 1,
-    });
-    useEffect(() => {
-        setParams((state) => ({ ...state, q: q, page: 1 }));
-    }, [q]);
+    // const [params, setParams] = useState({
+    //     q: q,
+    //     sort: "createdAt",
+    //     order: "desc",
+    //     price_min: 0,
+    //     price_max: null,
+    //     size: [],
+    //     brand: [],
+    //     limit: 1,
+    //     category: [],
+    //     color: [],
+    //     page: 1,
+    // });
+    // useEffect(() => {
+    //     setParams((state) => ({ ...state, q: q, page: 1 }));
+    // }, [q]);
+
     const { data, isLoading } = useSearchProduct(params);
 
     //   useEffect(()=> {
@@ -60,14 +71,14 @@ const SearchPage = () => {
     //     }
     //     // console.log(users?.page , params?.page)
     // },[params,   data])
-    useEffect(() => {
-        if (data?.minPrice > params.price_min) {
-            setParams((state) => ({ ...state, price_min: data.minPrice }));
-        }
-        if (data?.maxPrice < params.price_max) {
-            setParams((state) => ({ ...state, price_max: data.maxPrice }));
-        }
-    }, [data, params]);
+    // useEffect(() => {
+    //     if (data?.minPrice > params.price_min) {
+    //         setParams((state) => ({ ...state, price_min: data.minPrice }));
+    //     }
+    //     if (data?.maxPrice < params.price_max) {
+    //         setParams((state) => ({ ...state, price_max: data.maxPrice }));
+    //     }
+    // }, [data, params]);
 
     if (isLoading) {
         return "Searching...";
@@ -89,6 +100,29 @@ const SearchPage = () => {
         { label: "search", link: "/search" },
     ];
 
+    const toggleCategories = (cat) => {
+        const updated = params.category.includes(cat) ? params.category.filter(c => c !== cat) : [...params.category, cat]
+        setSearchParams(({...Object.fromEntries(searchParams), category : updated}))
+    }
+
+    const toggleColor = (col) => {
+        const updated = params.color.includes(col) ? params.color.filter(c => c !== col) : [...params.color , col]
+        setSearchParams(({...Object.fromEntries(searchParams) , color : updated}))
+    }
+
+    const toggleSize = (size) => {
+        const updated = params.size.includes(size) ? params.size.filter(s => s!== size) : [...params.size , size]
+        setSearchParams(({...Object.fromEntries(searchParams) , size : updated}))
+    }
+
+    const toggleBrand = (brand)=>{
+          const updated = params.brand.includes(brand) ? params.brand.filter(b => b!== brand) : [...params.brand , brand]
+        setSearchParams(({...Object.fromEntries(searchParams) , brand : updated}))
+    }
+    const toggleSortOptions = (option) => {
+        console.log(option,12340)
+        setSearchParams({...Object.fromEntries(searchParams), sort : option.sort , order : option.order})
+    }
     return (
         <>
             <div className="min-h-screen bg-white p-6">
@@ -107,21 +141,21 @@ const SearchPage = () => {
                                 <div className="flex items-center gap-3">
                                     <button
                                         className="text-black/60 text-sm"
-                                        onClick={() =>
-                                            setParams({
-                                                q: "",
-                                                sort: "createdAt",
-                                                order: "desc",
-                                                price_min: 0,
-                                                price_max: null,
-                                                size: [],
-                                                brand: [],
-                                                limit: 10,
-                                                category: [],
-                                                color: [],
-                                                page: 1,
-                                            })
-                                        }
+                                        // onClick={() =>
+                                        //     setParams({
+                                        //         q: "",
+                                        //         sort: "createdAt",
+                                        //         order: "desc",
+                                        //         price_min: 0,
+                                        //         price_max: null,
+                                        //         size: [],
+                                        //         brand: [],
+                                        //         limit: 10,
+                                        //         category: [],
+                                        //         color: [],
+                                        //         page: 1,
+                                        //     })
+                                        // }
                                     >
                                         Clear All
                                     </button>
@@ -166,24 +200,25 @@ const SearchPage = () => {
                                                             ? `bg-gray-400 text-white `
                                                             : "hover:bg-gray-200"
                                                     }`}
-                                                    onClick={() =>
-                                                        setParams((state) => ({
-                                                            ...state,
-                                                            category:
-                                                                state.category.includes(
-                                                                    category
-                                                                )
-                                                                    ? state.category.filter(
-                                                                          (x) =>
-                                                                              x !==
-                                                                              category
-                                                                      )
-                                                                    : [
-                                                                          ...state.category,
-                                                                          category,
-                                                                      ],
-                                                        }))
-                                                    }
+                                                    onClick={()=>{toggleCategories(category)}}
+                                                    // onClick={() =>
+                                                    //     setParams((state) => ({
+                                                    //         ...state,
+                                                    //         category:
+                                                    //             state.category.includes(
+                                                    //                 category
+                                                    //             )
+                                                    //                 ? state.category.filter(
+                                                    //                       (x) =>
+                                                    //                           x !==
+                                                    //                           category
+                                                    //                   )
+                                                    //                 : [
+                                                    //                       ...state.category,
+                                                    //                       category,
+                                                    //                   ],
+                                                    //     }))
+                                                    // }
                                                 >
                                                     {category}
                                                 </label>
@@ -226,13 +261,13 @@ const SearchPage = () => {
                                                     ? params.price_max
                                                     : 1000,
                                             ]}
-                                            onValueChange={([min, max]) =>
-                                                setParams((state) => ({
-                                                    ...state,
-                                                    price_min: min,
-                                                    price_max: max,
-                                                }))
-                                            }
+                                            // onValueChange={([min, max]) =>
+                                            //     setParams((state) => ({
+                                            //         ...state,
+                                            //         price_min: min,
+                                            //         price_max: max,
+                                            //     }))
+                                            // }
                                             max={data.maxPrice}
                                             min={data.minPrice}
                                             step={10}
@@ -312,29 +347,30 @@ const SearchPage = () => {
                                                             ? 0.2
                                                             : 1,
                                                 }}
-                                                onClick={() => {
-                                                    if (
-                                                        params.color.includes(
-                                                            color
-                                                        )
-                                                    ) {
-                                                        setParams((state) => ({
-                                                            ...state,
-                                                            color: state.color.filter(
-                                                                (x) =>
-                                                                    x !== color
-                                                            ),
-                                                        }));
-                                                    } else {
-                                                        setParams((state) => ({
-                                                            ...state,
-                                                            color: [
-                                                                ...state.color,
-                                                                color,
-                                                            ],
-                                                        }));
-                                                    }
-                                                }}
+                                                onClick={()=>toggleColor(color)}
+                                                // onClick={() => {
+                                                //     if (
+                                                //         params.color.includes(
+                                                //             color
+                                                //         )
+                                                //     ) {
+                                                //         setParams((state) => ({
+                                                //             ...state,
+                                                //             color: state.color.filter(
+                                                //                 (x) =>
+                                                //                     x !== color
+                                                //             ),
+                                                //         }));
+                                                //     } else {
+                                                //         setParams((state) => ({
+                                                //             ...state,
+                                                //             color: [
+                                                //                 ...state.color,
+                                                //                 color,
+                                                //             ],
+                                                //         }));
+                                                //     }
+                                                // }}
                                             >
                                                 {params.color.includes(
                                                     color
@@ -378,22 +414,23 @@ const SearchPage = () => {
                                                     ) &&
                                                     "bg-black text-white hover:bg-black"
                                                 }`}
-                                                onClick={() =>
-                                                    setParams((state) => ({
-                                                        ...state,
-                                                        size: state.size.includes(
-                                                            size
-                                                        )
-                                                            ? state.size.filter(
-                                                                  (x) =>
-                                                                      x != size
-                                                              )
-                                                            : [
-                                                                  ...state.size,
-                                                                  size,
-                                                              ],
-                                                    }))
-                                                }
+                                                onClick={()=>toggleSize(size)}
+                                                // onClick={() =>
+                                                //     setParams((state) => ({
+                                                //         ...state,
+                                                //         size: state.size.includes(
+                                                //             size
+                                                //         )
+                                                //             ? state.size.filter(
+                                                //                   (x) =>
+                                                //                       x != size
+                                                //               )
+                                                //             : [
+                                                //                   ...state.size,
+                                                //                   size,
+                                                //               ],
+                                                //     }))
+                                                // }
                                             >
                                                 {size}
                                             </button>
@@ -438,23 +475,24 @@ const SearchPage = () => {
                                                             ? `bg-gray-400 text-white `
                                                             : "hover:bg-gray-200"
                                                     }`}
-                                                    onClick={() =>
-                                                        setParams((state) => ({
-                                                            ...state,
-                                                            brand: state.brand.includes(
-                                                                brand
-                                                            )
-                                                                ? state.brand.filter(
-                                                                      (x) =>
-                                                                          x !==
-                                                                          brand
-                                                                  )
-                                                                : [
-                                                                      ...state.brand,
-                                                                      brand,
-                                                                  ],
-                                                        }))
-                                                    }
+                                                    onClick={()=>toggleBrand(brand)}
+                                                    // onClick={() =>
+                                                    //     setParams((state) => ({
+                                                    //         ...state,
+                                                    //         brand: state.brand.includes(
+                                                    //             brand
+                                                    //         )
+                                                    //             ? state.brand.filter(
+                                                    //                   (x) =>
+                                                    //                       x !==
+                                                    //                       brand
+                                                    //               )
+                                                    //             : [
+                                                    //                   ...state.brand,
+                                                    //                   brand,
+                                                    //               ],
+                                                    //     }))
+                                                    // }
                                                 >
                                                     {brand}
                                                 </label>
@@ -471,29 +509,31 @@ const SearchPage = () => {
                         {/* Header */}
                         <div className="flex items-center justify-between mb-8">
                             <h1 className="text-3xl font-bold text-black">
-                                {q &&(<>
-                                <span className="text-gray-600 font-normal">
-                                    Looking for
-                                </span>{" "}
-                                {q}</>) }
+                                {params.q && (
+                                    <>
+                                        <span className="text-gray-600 font-normal">
+                                            Looking for
+                                        </span>{" "}
+                                        {params.q}
+                                    </>
+                                )}
                             </h1>
                             <div className="flex items-center gap-3 text-base">
                                 <span className="text-black/60">Sort by:</span>
-                                <select
+                                <select 
+                                // onChange={(e)=>toggleSortOptions(e.target.value)}
                                     value={`${params.sort}_${params.order}`}
                                     onChange={(e) => {
                                         const [sort, order] =
                                             e.target.value.split("_");
-                                        setParams((state) => ({
-                                            ...state,
-                                            sort,
-                                            order,
-                                        }));
+                                            toggleSortOptions({sort,order})
+                                        
                                     }}
                                     className="border border-black/20 rounded-md px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
                                 >
                                     {SORT_OPTIONS.map((option) => (
-                                        <option
+                                        <option 
+                                            
                                             key={option.label}
                                             value={`${option.sort}_${option.order}`}
                                         >
@@ -521,12 +561,12 @@ const SearchPage = () => {
                                     <Pagination
                                         page={data?.page}
                                         pages={data?.pages}
-                                        onPageChange={(x) =>
-                                            setParams((state) => ({
-                                                ...state,
-                                                page: x,
-                                            }))
-                                        }
+                                        // onPageChange={(x) =>
+                                        //     setParams((state) => ({
+                                        //         ...state,
+                                        //         page: x,
+                                        //     }))
+                                        // }
                                     />
                                 </div>
                             </>

@@ -36,7 +36,7 @@ export default function Home() {
             {/* Hero Section */}
             <section className="relative bg-gray-light">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-8 items-center py-16 lg:py-24">
+                    <div className="grid lg:grid-cols-2 gap-8 items-center py-16 lg:py-24 bg-amber-50 lg:bg-[url(https://api.builder.io/api/v1/image/assets/TEMP/cc5ac856502dbe60fc369bcb305fc33a0932a7e6?width=2880)] " style={{ backgroundRepeat : 'no-repeat' ,backgroundSize : 'contain',  }}>
                         {/* Left Content */}
                         <div className="space-y-8">
                             {/* Decorative stars */}
@@ -115,13 +115,13 @@ export default function Home() {
                         </div>
 
                         {/* Right Content - Hero Image */}
-                        <div className="relative">
+                        {/* <div className="relative">
                             <img
                                 src="https://api.builder.io/api/v1/image/assets/TEMP/cc5ac856502dbe60fc369bcb305fc33a0932a7e6?width=2880"
                                 alt="Fashion models wearing stylish clothes"
                                 className="w-full h-auto object-cover rounded-lg"
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </section>

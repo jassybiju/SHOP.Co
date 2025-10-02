@@ -48,17 +48,16 @@ const Navbar = () => {
                         {/* Navigation */}
                         <nav className="hidden md:flex items-center space-x-8">
                             <div className="flex items-center space-x-1 cursor-pointer">
-                                <span className="font-poppins">Shop</span>
-                                <ChevronDown className="w-4 h-4" />
+                                <Link to={'/'} className="font-poppins">Home</Link>
                             </div>
-                            <span className="font-poppins cursor-pointer">
-                                On Sale
-                            </span>
-                            <span className="font-poppins cursor-pointer">
+                            <Link to='/search/' className="font-poppins cursor-pointer">
                                 New Arrivals
+                            </Link>
+                            <span className="font-poppins cursor-pointer">
+                                About
                             </span>
                             <span className="font-poppins cursor-pointer">
-                                Brands
+                                Contact
                             </span>
                         </nav>
 

@@ -1,15 +1,16 @@
+import { useModal } from "../hooks/ModalContext";
 
-const ConfirmationModal = ({isOpen , onClose, onConfirm ,title ,message , confirmText="Confirm", }) => {
-
-    if(!isOpen) null;
-    const handleConfirm= (e) => {
+const ConfirmationModal = ({ onConfirm ,title ,message , confirmText="Confirm" }) => {
+    const {closeModal}= useModal()
+    
+    const handleConfirm = (e) => {
         e.stopPropagation();
         onConfirm()
-        onClose()
+        closeModal()
     }
     const handleOverlayClick = (e)=>{
         if(e.target === e.currentTarget){
-            onClose()
+            closeModal()
         }
     }
 
@@ -53,7 +54,7 @@ const ConfirmationModal = ({isOpen , onClose, onConfirm ,title ,message , confir
           <button
             type="button"
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150"
-            onClick={onClose}
+            onClick={closeModal}
           >
             Cancel
           </button>
