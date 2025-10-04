@@ -48,10 +48,53 @@ export const getSearchDataService = async (query) => {
     }
 
     if (query.price_min || query.price_max) {
-        filterOptions.price = {};
-        filterOptions.price.$gte = query.price_min;
-        if (query.price_max) filterOptions.price.$lte = query.price_max;
+        // Remove raw price filter
+        delete filterOptions.price;
+
+        const priceConditions = [];
+
+        if (query.price_min !== undefined) {
+            priceConditions.push({
+                $gte: [
+                    {
+                        $subtract: [
+                            "$price",
+                            {
+                                $multiply: [
+                                    "$price",
+                                    { $divide: ["$discount", 100] },
+                                ],
+                            },
+                        ],
+                    },
+                    query.price_min,
+                ],
+            });
+        }
+
+        if (query.price_max !== undefined) {
+            priceConditions.push({
+                $lte: [
+                    {
+                        $subtract: [
+                            "$price",
+                            {
+                                $multiply: [
+                                    "$price",
+                                    { $divide: ["$discount", 100] },
+                                ],
+                            },
+                        ],
+                    },
+                    query.price_max,
+                ],
+            });
+        }
+
+        // Combine conditions under $and
+        filterOptions.$expr = { $and: priceConditions };
     }
+
     if (query.size)
         filterOptions["variants.size"] = {
             $in: Array.isArray(query.size) ? [...query.size] : [query.size],
@@ -171,7 +214,19 @@ export const getSearchDataService = async (query) => {
                     {
                         $group: {
                             _id: null,
-                            minPrice: { $min: "$price" },
+                            minPrice: {
+                                $min: {
+                                    $subtract: [
+                                        "$price",
+                                        {
+                                            $multiply: [
+                                                "$price",
+                                                { $divide: ["$discount", 100] },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
                             maxPrice: { $max: "$price" },
                         },
                     },
@@ -245,20 +300,20 @@ export const getProductDataService = async (productId) => {
         {
             $match: {
                 _id: mongoose.Types.ObjectId.createFromHexString(productId),
-                is_active : true
+                is_active: true,
             },
         },
         {
-            $lookup : {
-                from :'productvariants',
+            $lookup: {
+                from: "productvariants",
                 foreignField: "product_id",
-                localField : '_id',
-                as : 'variants'
-            }
-        }
-    ])
-    const products = await Product.find().limit(4).lean()
-    console.log(product)
+                localField: "_id",
+                as: "variants",
+            },
+        },
+    ]);
+    const products = await Product.find().limit(4).lean();
+    console.log(product);
     if (!product[0]) {
         throw new Error("No Product");
     }
@@ -269,6 +324,12 @@ export const getProductDataService = async (productId) => {
             url: cloudinary.url(x.url, { sercure: true }),
         })),
         ratings: [],
-        products : products.map(x => ({...x , images : x.images.map(img =>({...img, url : cloudinary.url(img.url , {secure : true})}))}))
+        products: products.map((x) => ({
+            ...x,
+            images: x.images.map((img) => ({
+                ...img,
+                url: cloudinary.url(img.url, { secure: true }),
+            })),
+        })),
     };
 };

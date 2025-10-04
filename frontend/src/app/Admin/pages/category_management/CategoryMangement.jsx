@@ -6,7 +6,7 @@ import TableComponent from "../../components/TableComponent";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import { useState } from "react";
 import AddCategory from  "./components/AddCategory";
-import { useModal } from "../../hooks/ModalContext";
+import { useModal } from "../../../../hooks/useModal";
 import ViewCategory from "../category_management/components/ViewCategory";
 import EditCategory from "../category_management/components/EditCategory";
 

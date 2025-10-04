@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
     ChevronDown,
@@ -18,23 +18,23 @@ import { useEffect } from "react";
 import Pagination from "./components/Pagination";
 import { useSearchParams } from "react-router";
 import BreadCrumb from "../../components/BreadCrumb";
+import { useThrottle } from "../../../../hooks/useThrottle";
 
 // const Slider = ()=>(<>SLider</>)
 
 const SearchPage = () => {
-    const [searchParams , setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const params = {
         q: searchParams.get("q"),
-        category: searchParams.getAll('category'),
-        brand: searchParams.getAll('brand'),
-        color : searchParams.getAll('color'),
-        size : searchParams.getAll('size'),
-        sort : searchParams.get('sort'),
-        order : searchParams.get('order')
+        category: searchParams.getAll("category"),
+        brand: searchParams.getAll("brand"),
+        color: searchParams.getAll("color"),
+        size: searchParams.getAll("size"),
+        sort: searchParams.get("sort"),
+        order: searchParams.get("order"),
     };
 
-
-    console.log(params);
+    // console.log(params);
     const [filterToggle, setFilterToggle] = useState({
         color: true,
         category: true,
@@ -42,7 +42,6 @@ const SearchPage = () => {
         size: true,
         brand: true,
     });
-    // const [priceRange, setPriceRange] = useState([50, 200]);
     // const [selectedColors, setSelectedColors] = useState(["#063AF5"]);
     // const [currentPage, setCurrentPage] = useState(1);
 
@@ -63,8 +62,35 @@ const SearchPage = () => {
     //     setParams((state) => ({ ...state, q: q, page: 1 }));
     // }, [q]);
 
-    const { data, isLoading } = useSearchProduct(params);
+    const [priceRange, setPriceRange] = useState([0, 0]);
+    const [throttleRange , setThrottleRange] = useState(priceRange)
+   
+    // useEffect(() => {
+    //     const handler = setTimeout(() => {
+    //         setDebouncedRange(priceRange);
+    //     }, 1000);
 
+    //     return ()=> clearTimeout(handler)
+    // }, [priceRange]);
+
+    const { data, isLoading } = useSearchProduct({
+        ...params,
+        price_min: throttleRange[0],
+        price_max: throttleRange[1],
+    });
+    useEffect(() => {
+        console.log(priceRange, 123);
+    }, [priceRange]);
+    useEffect(() => {
+        if (
+            data?.minPrice &&
+            data?.maxPrice &&
+            priceRange[1] === 0 &&
+            priceRange[0] === 0
+        ) {
+            setPriceRange([data.minPrice, data.maxPrice]);
+        }
+    }, [data, priceRange]);
     //   useEffect(()=> {
     //     if(data?.pages < params?.page){
     //         setParams((state)=> ({...state, page : data.pages}))
@@ -93,7 +119,7 @@ const SearchPage = () => {
     ];
 
     const products = data?.data;
-    console.log(data, filterToggle, params);
+    // console.log(data, filterToggle, params);
 
     const breadcrumbItems = [
         { label: "Home", link: "/" },
@@ -101,28 +127,49 @@ const SearchPage = () => {
     ];
 
     const toggleCategories = (cat) => {
-        const updated = params.category.includes(cat) ? params.category.filter(c => c !== cat) : [...params.category, cat]
-        setSearchParams(({...Object.fromEntries(searchParams), category : updated}))
-    }
+        const updated = params.category.includes(cat)
+            ? params.category.filter((c) => c !== cat)
+            : [...params.category, cat];
+        setSearchParams({
+            ...Object.fromEntries(searchParams),
+            category: updated,
+        });
+    };
 
     const toggleColor = (col) => {
-        const updated = params.color.includes(col) ? params.color.filter(c => c !== col) : [...params.color , col]
-        setSearchParams(({...Object.fromEntries(searchParams) , color : updated}))
-    }
+        const updated = params.color.includes(col)
+            ? params.color.filter((c) => c !== col)
+            : [...params.color, col];
+        setSearchParams({
+            ...Object.fromEntries(searchParams),
+            color: updated,
+        });
+    };
 
     const toggleSize = (size) => {
-        const updated = params.size.includes(size) ? params.size.filter(s => s!== size) : [...params.size , size]
-        setSearchParams(({...Object.fromEntries(searchParams) , size : updated}))
-    }
+        const updated = params.size.includes(size)
+            ? params.size.filter((s) => s !== size)
+            : [...params.size, size];
+        setSearchParams({ ...Object.fromEntries(searchParams), size: updated });
+    };
 
-    const toggleBrand = (brand)=>{
-          const updated = params.brand.includes(brand) ? params.brand.filter(b => b!== brand) : [...params.brand , brand]
-        setSearchParams(({...Object.fromEntries(searchParams) , brand : updated}))
-    }
+    const toggleBrand = (brand) => {
+        const updated = params.brand.includes(brand)
+            ? params.brand.filter((b) => b !== brand)
+            : [...params.brand, brand];
+        setSearchParams({
+            ...Object.fromEntries(searchParams),
+            brand: updated,
+        });
+    };
     const toggleSortOptions = (option) => {
-        console.log(option,12340)
-        setSearchParams({...Object.fromEntries(searchParams), sort : option.sort , order : option.order})
-    }
+        // console.log(option,12340)
+        setSearchParams({
+            ...Object.fromEntries(searchParams),
+            sort: option.sort,
+            order: option.order,
+        });
+    };
     return (
         <>
             <div className="min-h-screen bg-white p-6">
@@ -200,7 +247,11 @@ const SearchPage = () => {
                                                             ? `bg-gray-400 text-white `
                                                             : "hover:bg-gray-200"
                                                     }`}
-                                                    onClick={()=>{toggleCategories(category)}}
+                                                    onClick={() => {
+                                                        toggleCategories(
+                                                            category
+                                                        );
+                                                    }}
                                                     // onClick={() =>
                                                     //     setParams((state) => ({
                                                     //         ...state,
@@ -255,12 +306,11 @@ const SearchPage = () => {
                                             <span>${data.maxPrice}</span>
                                         </div>
                                         <Slider
-                                            value={[
-                                                params.price_min,
-                                                params.price_max
-                                                    ? params.price_max
-                                                    : 1000,
-                                            ]}
+                                            value={priceRange}
+                                            onAfterChange={(value)=>setThrottleRange(value)}
+                                            onValueChange={([min, max]) => {
+                                                setPriceRange([min, max]);
+                                            }}
                                             // onValueChange={([min, max]) =>
                                             //     setParams((state) => ({
                                             //         ...state,
@@ -347,7 +397,9 @@ const SearchPage = () => {
                                                             ? 0.2
                                                             : 1,
                                                 }}
-                                                onClick={()=>toggleColor(color)}
+                                                onClick={() =>
+                                                    toggleColor(color)
+                                                }
                                                 // onClick={() => {
                                                 //     if (
                                                 //         params.color.includes(
@@ -414,7 +466,7 @@ const SearchPage = () => {
                                                     ) &&
                                                     "bg-black text-white hover:bg-black"
                                                 }`}
-                                                onClick={()=>toggleSize(size)}
+                                                onClick={() => toggleSize(size)}
                                                 // onClick={() =>
                                                 //     setParams((state) => ({
                                                 //         ...state,
@@ -475,7 +527,9 @@ const SearchPage = () => {
                                                             ? `bg-gray-400 text-white `
                                                             : "hover:bg-gray-200"
                                                     }`}
-                                                    onClick={()=>toggleBrand(brand)}
+                                                    onClick={() =>
+                                                        toggleBrand(brand)
+                                                    }
                                                     // onClick={() =>
                                                     //     setParams((state) => ({
                                                     //         ...state,
@@ -520,20 +574,18 @@ const SearchPage = () => {
                             </h1>
                             <div className="flex items-center gap-3 text-base">
                                 <span className="text-black/60">Sort by:</span>
-                                <select 
-                                // onChange={(e)=>toggleSortOptions(e.target.value)}
+                                <select
+                                    // onChange={(e)=>toggleSortOptions(e.target.value)}
                                     value={`${params.sort}_${params.order}`}
                                     onChange={(e) => {
                                         const [sort, order] =
                                             e.target.value.split("_");
-                                            toggleSortOptions({sort,order})
-                                        
+                                        toggleSortOptions({ sort, order });
                                     }}
                                     className="border border-black/20 rounded-md px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
                                 >
                                     {SORT_OPTIONS.map((option) => (
-                                        <option 
-                                            
+                                        <option
                                             key={option.label}
                                             value={`${option.sort}_${option.order}`}
                                         >

@@ -6,9 +6,10 @@ import Dropdown from "../../components/Dropdown";
 import TableComponent from "../../components/TableComponent";
 import { useGetAllUsers, useToggleUserActiveStatus } from "../../hooks/useUserManagement";
 import UserStateComponent from "./ui/UserStateComponent";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import useConfirmationModal from "../../hooks/useConfirmationModal";
 
 const UserManagement = () => {
     const limit = 10;
@@ -37,6 +38,8 @@ const UserManagement = () => {
         console.log(users?.page , params?.page)
     },[params,   users])
 
+    const showConfirmation = useConfirmationModal()
+
     const column = [
         {
             label: "Users",
@@ -52,24 +55,24 @@ const UserManagement = () => {
         { label: "ID", key: "_id" },
         {
             label: "User state",
-            key: "active",
-            render: (val) => <UserStateComponent state={val} />,
+            key: "role",
+            render : (val) => <p className="capitalize">{val}</p>
         },
         {
             label: "ACTIONS",
             render: (_, row) => (
-                <>
+                <div className="flex gap-4 justify-center mx-auto">
                     <button
                         className="bg-violet-600 hover:bg-violet-700 text-white py-1 px-4 rounded font-semibold text-xs"
                         onClick={() => navigate(row._id)}
                     >
                         VIEW
                     </button>
-                    <button className={` text-white py-1 px-4 rounded font-semibold text-xs ${row.active ? 'bg-red-500 hover:bg-red-600' : 
-                    "bg-green-500 hover:bg-green-600"}`} onClick={()=>toggleActiveUser(row._id)}>
+                        <button className={` text-white py-1 px-4 rounded font-semibold text-xs ${row.active ? 'bg-red-500 hover:bg-red-600' : 
+                        "bg-green-500 hover:bg-green-600"}`} onClick={()=>showConfirmation(()=>toggleActiveUser(row._id), `${row.active? "block" : 'unblock'} user `)}>
                        {row.active ? "Block " : "Unblock"} 
                     </button>
-                </>
+                </div>
             ),
         },
     ];
@@ -157,8 +160,9 @@ const UserManagement = () => {
                         }
                     />
                 </div>
-                <button
-                    type="submit"
+                <button 
+
+                    onClick={showConfirmation}
                     className="hover:text-gray-700 h-auto px-10  rounded  text-xl  bg-violet-700 hover:bg-violet-500 text-white"
                 >
                     Export

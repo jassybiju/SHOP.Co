@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import { useEffect } from "react";
 import {
     useEditCategory,
     useGetCategory,
 } from "../../../hooks/useCategoryManagement";
 import toast from "react-hot-toast";
-import ConfirmationModal from "../../../components/ConfirmationModal";
+// import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const EditCategory = ({ id }) => {
     console.log(id);
@@ -18,7 +18,7 @@ const EditCategory = ({ id }) => {
         reset,
     } = useForm({ defaultValues: { name: "", description: "" } });
     const { mutate: EditCategory } = useEditCategory();
-    const { setShowModal, closeModal, setModalContent} = useModal();
+    const { setShowModal, closeModal, setModalContent } = useModal();
     useEffect(() => {
         reset({
             name: brands?.data.name,
@@ -32,22 +32,22 @@ const EditCategory = ({ id }) => {
             { id, data },
             {
                 onError: (res) => {
-                    console.log(res)
+                    console.log(res);
                     toast.error(res.response.data.message);
                 },
                 onSuccess: (res) => {
-                    console.log(res)
-                    toast.success(res.message)
-                    closeModal()
-                }
+                    console.log(res);
+                    toast.success(res.message);
+                    closeModal();
+                },
             }
         );
     };
 
-    const ShowConfirmationModal = ()=>{
-        setModalContent(<ConfirmationModal onConfirm={handleSubmit(onSubmit)}/>)
-        setShowModal(true)
-    }
+    // const ShowConfirmationModal = ()=>{
+    //     setModalContent(<ConfirmationModal onConfirm={handleSubmit(onSubmit)}/>)
+    //     setShowModal(true)
+    // }
 
     if (status !== "success") {
         return "Loading...";
@@ -59,7 +59,9 @@ const EditCategory = ({ id }) => {
                     Edit Category
                 </h2>
 
-                <form onSubmit={ShowConfirmationModal} noValidate>
+                <form
+                // onSubmit={ShowConfirmationModal} noValidate
+                >
                     <div className="mb-6">
                         <label
                             htmlFor="Brand-name"

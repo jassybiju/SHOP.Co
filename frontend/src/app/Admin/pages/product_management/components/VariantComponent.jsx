@@ -1,5 +1,5 @@
 import { Trash2 } from "lucide-react";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import EditVariant from "./EditVariant";
 import AddVariant from "./AddVariant";
 

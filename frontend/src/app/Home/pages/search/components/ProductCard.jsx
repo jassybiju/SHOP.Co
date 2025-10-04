@@ -33,7 +33,7 @@ function StarRating({ rating }) {
 }
 
 function ProductCard({ product }) {
-  console.log(product.images[0]?.url)
+//   console.log(product.images[0]?.url)
   
   return (
     <Link className="group" to={'/product/'+product._id}>

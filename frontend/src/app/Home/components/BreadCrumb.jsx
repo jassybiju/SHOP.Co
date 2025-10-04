@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 
 const BreadCrumb = ({items}) => {
-    console.log(items)
+    // console.log(items)
     return (
         <nav className="flex items-center space-x-1 text-sm mb-6">
             {items.map((item, index) => (

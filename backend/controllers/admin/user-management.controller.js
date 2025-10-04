@@ -4,7 +4,7 @@ import { getAllUsersService } from "../../services/admin/user-management.service
 export const getAllUsers = async (req, res, next) => {
     try {
         const query = req.query;
-    
+        console.log(query)
 
         const users = await getAllUsersService(query)
         

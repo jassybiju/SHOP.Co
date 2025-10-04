@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import { useForm } from "react-hook-form";
 import { useAddBrand } from "../../../hooks/useBrandManagement";
 import { toast } from "react-hot-toast";

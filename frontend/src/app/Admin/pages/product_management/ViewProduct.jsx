@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import { useRef, useState } from "react";
 import InputComponent from "../../components/InputComponent";
 import Dropdown from "../../components/Dropdown";
-import { useModal } from "../../hooks/ModalContext";
+import { useModal } from '../../../../hooks/useModal';
 import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";

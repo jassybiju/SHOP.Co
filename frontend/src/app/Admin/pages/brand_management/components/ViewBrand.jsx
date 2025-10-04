@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import { Loader2 } from "lucide-react";
 import ImageInput from "../ui/ImageInput";
 import { useGetBrand } from "../../../hooks/useBrandManagement";

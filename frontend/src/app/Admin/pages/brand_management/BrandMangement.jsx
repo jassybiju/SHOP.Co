@@ -4,7 +4,7 @@ import { useGetAllBrands } from '../../hooks/useBrandManagement';
 import Dropdown from '../../components/Dropdown';
 import TableComponent from '../../components/TableComponent';
 import Search from '../../components/Search';
-import { useModal } from '../../hooks/ModalContext';
+import { useModal } from '../../../../hooks/useModal';
 import AddBrand from './components/AddBrand';
 import ViewBrand from './components/ViewBrand';
 import EditBrand from './components/EditBrand';

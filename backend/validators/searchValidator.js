@@ -17,7 +17,7 @@ const searchSchema = Joi.object({
     ),
     color : Joi.any(),
     price_min: Joi.number().min(0).default(0),
-    price_max: Joi.number().min(0).greater(Joi.ref("price_min")),
+    price_max: Joi.number().min(Joi.ref("price_min")).default(Number.MAX_SAFE_INTEGER),
     size: Joi.alternatives().try(
         Joi.array().items(Joi.string().trim().min(1)),
         Joi.string().trim()

@@ -20,6 +20,9 @@ import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import ProductStateComponent from "./ui/ProductStateComponent";
 import { productFilterOptions } from "../../../../utils/CONSTANTS";
 import { useEffect } from "react";
+import ToggleBtn from "./ui/ToggleBtn";
+import toast from "react-hot-toast";
+import useConfirmationModal from "../../hooks/useConfirmationModal";
 
 const ProductManagement = () => {
     const navigate = useNavigate();
@@ -28,26 +31,26 @@ const ProductManagement = () => {
         sort: "created at - asc",
         filter: "AllUsers",
         page: 1,
-        limit : 1
+        limit: 1,
     });
 
     const { data: categories } = useGetAllCategories();
 
     const { data: products, status } = useGetAllProducts(params);
     const { mutate: toggleProduct } = useToggleProductStatus();
-    console.log(products)
-  useEffect(()=> {
-        if(products?.pages < params?.page){
-            setParams((state)=> ({...state, page : products.pages}))
+    console.log(products);
+    useEffect(() => {
+        if (products?.pages < params?.page) {
+            setParams((state) => ({ ...state, page: products.pages }));
         }
         // console.log(users?.page , params?.page)
-    },[params,   products])
+    }, [params, products]);
+
+    const showConfirmation = useConfirmationModal()
 
     if (status !== "success") {
         return "Loading";
     }
-    
-    
 
     const column = [
         {
@@ -55,24 +58,52 @@ const ProductManagement = () => {
             key: "_id",
             render: (_, row, data) => data.indexOf(row) + 1,
         },
-        { label: "Product", key: "name", render: (val, row) => <div className="flex w-full text-nowrap items-center gap-3 px-3"><img  src={row?.images[0]?.url} className="rounded-full w-10 h-10" alt="" />{val}</div> },
+        {
+            label: "Product",
+            key: "name",
+            render: (val, row) => (
+                <div className="flex w-full text-nowrap items-center gap-3 px-3">
+                    <img
+                        src={row?.images[0]?.url}
+                        className="rounded-full w-10 h-10"
+                        alt=""
+                    />
+                    {val}
+                </div>
+            ),
+        },
         {
             label: "Category",
             key: "category_id",
-            render: (val) => categories.data.find((x) => x._id === val)?.name,
+            render: (val) => <div className="rounded-full bg-gray-300 py-1"> {categories.data.find((x) => x._id === val)?.name}</div>,
         },
-        { label: "Qty", key: "variants", render: (val)=>val.reduce((acc, cur)=>acc+cur.stock,0) },
+        {
+            label: "Qty",
+            key: "variants",
+            render: (val) => val.reduce((acc, cur) => acc + cur.stock, 0),
+        },
         { label: "Price", key: "price" },
         {
             label: "is_active",
             key: "is_active",
-            render: (val) =><ProductStateComponent state={val}/>,
+            render: (val, row) => (
+                <ToggleBtn
+                    state={val}
+                    onClick={()=>showConfirmation(()=>toggleProduct(row._id, {
+                        onSuccess: (res) => toast.success(res.message),
+                    }), `${val ? 'block' : 'unblock'} this product `)}
+                />
+            ),
         },
-        { label: "Description", key: "description" , render : (val)=>(<>{val.substring(0,10)}...</>)  },
+        // {
+        //     label: "Description",
+        //     key: "description",
+        //     render: (val) => <>{val.substring(0, 10)}...</>,
+        // },
         {
             label: "Actions",
             key: "_id",
-            render: (_, row) => (
+            render: (val, row) => (
                 <div className="flex gap-5">
                     {" "}
                     <Link
@@ -89,11 +120,9 @@ const ProductManagement = () => {
                     </Link>
                     <button
                         className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded font-semibold text-xs"
-                        onClick={() =>
-                            toggleProduct(row._id, {
-                                onSuccess: (res) => console.log(res),
-                            })
-                        }
+                        onClick={()=>showConfirmation(()=>toggleProduct(row._id, {
+                        onSuccess: (res) => toast.success(res.message),
+                    }), `${row.is_active ? 'block' : 'unblock'} this product `)}
                     >
                         Block{" "}
                     </button>
@@ -113,7 +142,7 @@ const ProductManagement = () => {
                 />
                 <IconCards
                     icon={<PackageMinus size={35} />}
-                    value={products.blocked_products}
+                    value={products.blocked_products || 0}
                     label={"Blocked products"}
                 />
             </div>
@@ -128,7 +157,16 @@ const ProductManagement = () => {
                             }))
                         }
                     />
-                    <Dropdown label="Sort by" onChange={(e)=>setParams(state => ({...state, filter:e.target.value}))} options={productFilterOptions} />
+                    <Dropdown
+                        label="Sort by"
+                        onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                filter: e.target.value,
+                            }))
+                        }
+                        options={productFilterOptions}
+                    />
                 </div>
                 <Link
                     type="submit"

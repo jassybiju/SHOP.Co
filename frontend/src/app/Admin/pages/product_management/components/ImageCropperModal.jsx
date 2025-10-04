@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import { useState } from "react";
 import {
     centerCrop,
@@ -27,12 +27,17 @@ const ImageCropperModal = ({ updateImage }) => {
     const onSelectFile = (e) => {
         const file = e.target.files?.[0];
 
-         const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+        ];
 
-        if(!allowedTypes.includes(file.type)){
-            toast.error("Invalid Image type")
-            closeModal()
-            return
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Invalid Image type");
+            closeModal();
+            return;
         }
         if (!file) return;
         const reader = new FileReader();
@@ -61,7 +66,7 @@ const ImageCropperModal = ({ updateImage }) => {
         const { width, height } = e.currentTarget;
 
         const crop = makeAspectCrop(
-            { unit: "%", width: ((MIN_DIMENSION / width) * 100 )},
+            { unit: "%", width: (MIN_DIMENSION / width) * 100 },
             ASPECT_RATIO,
             width,
             height
@@ -71,7 +76,7 @@ const ImageCropperModal = ({ updateImage }) => {
     };
 
     const handleCrop = () => {
-        console.log(imgRef.current)
+        console.log(imgRef.current);
         setCanvasPreview(
             imgRef.current, // HTMLImageElement
             previewCanvasRef.current, // HTMLCanvasElement

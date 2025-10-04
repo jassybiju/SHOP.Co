@@ -20,6 +20,7 @@ export const getHomeData = async (req, res, next) => {
 
 export const getSearchData = async (req, res, next) => {
     try {
+        console.log(req.query)
         const {value, error} = searchValidator( req.query)
         if(error){
             res.status(404)

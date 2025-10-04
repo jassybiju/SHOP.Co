@@ -9,9 +9,9 @@ export const getAllUsersService = async (query) => {
     let sortField = query.sort || "createdAt";
     let filter = query.filter || "AllUsers";
     const order = query.order === "desc" ? -1 : 1;
-
+    
     //getting key from filterOption
-    let filterCriteria = filterOptions[filter] || {};
+    let filterCriteria = {...filterOptions[filter] || {}};
 
     //If search match condition 
     if (search) {
@@ -20,7 +20,7 @@ export const getAllUsersService = async (query) => {
             { email: { $regex: search, $options: "i" } },
         ];
     }
-    console.log(filterCriteria, filter, limit * page, order, sortField);
+    console.log(filterCriteria.$or, filter, limit * page, order, sortField);
 
 
     const aggregationPipeline = [

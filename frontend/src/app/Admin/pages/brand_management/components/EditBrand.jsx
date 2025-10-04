@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useModal } from "../../../hooks/ModalContext";
+import { useModal } from "../../../../../hooks/useModal";
 import { useEditBrand, useGetBrand } from "../../../hooks/useBrandManagement";
 import { useEffect } from "react";
 import ImageInput from "../ui/ImageInput";
