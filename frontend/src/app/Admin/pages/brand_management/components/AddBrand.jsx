@@ -23,7 +23,7 @@ export default function AddBrand() {
             onSuccess: (data) => {
                 console.log(data);
                 toast.success(data.message);
-                setShowModal(false);
+                closeModal();
             },
             onError: (error) => {
                 

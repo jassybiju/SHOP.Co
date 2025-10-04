@@ -27,7 +27,7 @@ const Header = ({
                 </div>
             </div>
             <div>
-                <Link to={"/admin/"}>
+                <Link to={"/"}>
                     <Home />
                 </Link>
             </div>

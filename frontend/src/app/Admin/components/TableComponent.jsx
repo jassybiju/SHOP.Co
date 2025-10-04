@@ -1,5 +1,6 @@
 import { MoveLeft, MoveRight } from "lucide-react";
 import AdminPagination from "./AdminPagination";
+import Pagination from "../../Home/pages/search/components/Pagination";
 
 const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) => {
     console.log(pages)
@@ -61,9 +62,10 @@ const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) =
                     ))}
                 </tbody>
             </table>
-          
-                    <AdminPagination page={page} pages={pages} onPageChange={onPageChange}/>
-                
+                    <div className="w-full flex justify-center">
+
+                    <Pagination page={page} pages={pages} onPageChange={onPageChange}/>
+                </div>
             
         </div>
     );

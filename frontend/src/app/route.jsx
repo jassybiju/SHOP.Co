@@ -27,6 +27,7 @@ import SearchPage from "./Home/pages/search/SearchPage";
 import ResetPassword from "./Auth/pages/change-password/ResetPassword";
 import GoogleWrapper from "../components/GoogleWrapper";
 import ProductPage from "./Home/pages/product/ProductPage";
+import About from "./Home/pages/about/About";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -38,6 +39,7 @@ export const router = createBrowserRouter(
                 hydrateFallbackElement={<>Loading...</>}
             >
                 <Route index element={<Home />}></Route>
+                <Route path="/about" element={<About />}></Route>
                 <Route path='/search' element={<SearchPage/>}></Route>
                 <Route path='/product/:id' element={<ProductPage/>}></Route>
                 {/* <Route

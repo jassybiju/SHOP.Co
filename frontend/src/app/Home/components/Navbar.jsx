@@ -8,17 +8,20 @@ import {
 } from "lucide-react";
 import { useLogoutUser } from "../../Auth/hooks/useAuth";
 import { useUser } from "../../../hooks/useUser";
-import { Link, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import SearchProduct from "./SearchProduct";
 import Dropdown from "./DropDown";
 const Navbar = () => {
     const { mutate: logout } = useLogoutUser();
     const { data: user } = useUser();
-    const navigate = useNavigate()
-    let dropdownitems = [{label : "Logout" , onClick : logout}]
-    if(user?.role === 'admin'){
-        dropdownitems.push({label :"Admin", onClick :()=> navigate('admin') })
-    }    
+    const navigate = useNavigate();
+    let dropdownitems = [{ label: "Logout", onClick: logout }];
+    if (user?.role === "admin") {
+        dropdownitems.push({
+            label: "Admin",
+            onClick: () => navigate("admin"),
+        });
+    }
     return (
         <>
             {!user && (
@@ -47,18 +50,57 @@ const Navbar = () => {
 
                         {/* Navigation */}
                         <nav className="hidden md:flex items-center space-x-8">
-                            <div className="flex items-center space-x-1 cursor-pointer">
-                                <Link to={'/'} className="font-poppins">Home</Link>
-                            </div>
-                            <Link to='/search/' className="font-poppins cursor-pointer">
-                                New Arrivals
-                            </Link>
-                            <span className="font-poppins cursor-pointer">
+                            {/* Home */}
+                            <NavLink
+                                to="/"
+                                className={({ isActive }) =>
+                                    `relative font-poppins cursor-pointer
+       after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+       after:w-0 after:bg-black after:transition-all after:duration-300
+       hover:after:w-full ${isActive ? "after:w-full" : ""}`
+                                }
+                            >
+                                Home
+                            </NavLink>
+
+                            {/* New Arrivals */}
+                            <NavLink
+                                to="/search"
+                                className={({ isActive }) =>
+                                    `relative font-poppins cursor-pointer
+       after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+       after:w-0 after:bg-black after:transition-all after:duration-300
+       hover:after:w-full ${isActive ? "after:w-full" : ""}`
+                                }
+                            >
+                                Shop
+                            </NavLink>
+
+                            {/* About */}
+                            <NavLink
+                                to="/about"
+                                className={({ isActive }) =>
+                                    `relative font-poppins cursor-pointer
+       after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+       after:w-0 after:bg-black after:transition-all after:duration-300
+       hover:after:w-full ${isActive ? "after:w-full" : ""}`
+                                }
+                            >
                                 About
-                            </span>
-                            <span className="font-poppins cursor-pointer">
+                            </NavLink>
+
+                            {/* Contact */}
+                            <NavLink
+                                to="/contact"
+                                className={({ isActive }) =>
+                                    `relative font-poppins cursor-pointer
+       after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px]
+       after:w-0 after:bg-black after:transition-all after:duration-300
+       hover:after:w-full ${isActive ? "after:w-full" : ""}`
+                                }
+                            >
                                 Contact
-                            </span>
+                            </NavLink>
                         </nav>
 
                         {/* Search and Icons */}

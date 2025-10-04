@@ -22,13 +22,14 @@ import NewsLetter from "../../components/NewsLetter";
 import { useHome } from "../../hooks/useHome";
 import ProductCard from "../search/components/ProductCard";
 import { Link } from "react-router";
+import Loader from "../../../../components/Loader";
 
 export default function Home() {
     const { data : res, status } = useHome();
     console.log(res);
     console.log(status)
     if(status!=='success'){
-      return "Laoding.."
+      return Loader
     }
     return (
         <div className="min-h-screen bg-white">

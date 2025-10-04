@@ -51,7 +51,9 @@ const OTPVerify = () => {
         resendOTP({email}, {
             onSuccess : (res) => {
                 console.log(res)
+                toast.success(res.message)
                 if(res.data.otp_timer){
+
                     navigate(pathname, {replace : true, state : {email : email , type : type , otpExpiry : res.data.otp_timer}})
                 }
 
@@ -161,7 +163,7 @@ const OTPVerify = () => {
                     {/* Buttons */}
                     <div className="flex justify-between items-center mt-6">
                         <Link
-                            to={"/auth/register"}
+                            to={-1}
                             className="text-sm text-gray-600 hover:underline"
                         >
                             Go back 

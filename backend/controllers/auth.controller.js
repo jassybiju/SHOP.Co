@@ -285,6 +285,11 @@ export const forgetPassword = async (req, res, next) => {
             res.status(400);
             throw new Error("No User found with this email Id");
         }
+        const is_verified_already_sent = await client.get(`otp_verified:${email}`);
+        if(is_verified_already_sent){
+            await client.del(`otp_verified:${email}`);
+
+        }
         const otp_code = generateOtp();
         //senting otp and saving in redis cache
         await Promise.all([

@@ -121,7 +121,7 @@ const UserManagement = () => {
                 />
                 <IconCards
                     icon={<User size={35} />}
-                    value={users.blocked_users}
+                    value={users.blocked_users || 0}
                     label={"Blocked users"}
                 />
             </div>

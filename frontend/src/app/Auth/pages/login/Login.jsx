@@ -107,11 +107,7 @@ const Login = () => {
                             label="Password"
                             register={register("password", {
                                 required: "Password is required",
-                                minLength: {
-                                    value: 6,
-                                    message:
-                                        "Password must be at least 6 characters",
-                                },
+                                
                             })}
                             error={errors.password?.message}
                         />
