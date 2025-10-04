@@ -40,7 +40,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-   
+    is_google_login : {
+      type : Boolean,
+      default : false
+    }
   },
   { timestamps: true }
 );

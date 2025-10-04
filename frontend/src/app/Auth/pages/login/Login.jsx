@@ -50,6 +50,7 @@ const Login = () => {
                 throw new Error(authResult);
             }
         } catch (error) {
+            toast.error(error.response.data.message)
             console.log("Error while google login", error);
         }
     };

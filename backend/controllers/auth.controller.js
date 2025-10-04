@@ -82,6 +82,10 @@ export const loginUser = async (req, res, next) => {
             res.status(404).cookie("jwt", { maxAge: 0 });
             throw new Error("User Blocked");
         }
+        if(user.is_google_login){
+            res.status(400).cookie('jwt',{maxAge : 0})
+            throw new Error('User is Logged In through Google')
+        }
         console.log(email, password);
 
         const isPasswordCorrect = await user.comparePassword(password);
@@ -161,8 +165,16 @@ export const verifyOTP = async (req, res, next) => {
 
         //* Checking if limit exceeded
         if (otp_count >= OTP_VERIFY_LIMIT) {
-            await client.del(`OTP:${email}`);
-            res.status(400);
+ await client.set(
+                `OTP:${email}`,
+                JSON.stringify({
+                    otp,
+                    // otp_count:  + 1otp_count,
+                    otp_type,
+                    otp_invalid_time :  Date.now(),
+                }),
+                "KEEPTTL"
+            );            res.status(400);
             throw new Error("OTP count limit reached, Resend OTP");
         }
         //res on invalid otp
@@ -318,6 +330,7 @@ export const resetPassword = async (req, res, next) => {
                 throw new Error("User not found");
             }
             user.password = password;
+            user.is_google_login = false
             await user.save();
             console.log(user);
             await client.del(`otp_verified:${email}`);
@@ -378,14 +391,18 @@ export const googleAuth = async (req, res, next) => {
 
         const [first_name, last_name] = name.split(" ");
         let user = await User.findOne({ email });
-
         if (!user) {
             user = await User.create({
                 first_name,
                 last_name,
                 email,
                 is_verified: true,
+                is_google_login : true
             });
+        }
+        
+        if(!user?.is_google_login){
+            res.status(400).json({message : "Invalid Request : Use email and password", status : "error"})
         }
         const { _id } = user;
         const token = generateToken(email);
