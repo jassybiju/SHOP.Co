@@ -1,3 +1,4 @@
+import { Category } from "../../models/category.model.js";
 import {
     addCategoryService,
     editCategoryService,
@@ -68,3 +69,23 @@ export const editCategory = async (req, res, next) => {
         next(error);
     }
 };
+
+export const toggleCategoryStatus = async(req,res)=>{
+    try {
+        const { id } = req.params;
+
+        const category = await Category.findById(id)
+        if(!category){
+            res.status(404)
+            throw new Error("Category Not found")
+        }
+        category.is_active= !category.is_active
+        await category.save()
+
+        res.status(200).json({
+            message : 'Category toggled successfully',
+        status : 'success'        })
+    } catch (error) {
+        next(error)
+    }
+}

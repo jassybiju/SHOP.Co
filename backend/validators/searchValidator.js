@@ -6,7 +6,7 @@ const searchSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20),
     sort: Joi.string().valid("name", "price", "createdAt").default("createdAt"), // TODO add valids
-    order: Joi.string().valid("asc", "desc").insensitive().default("desc"),
+    order: Joi.string().valid("asc", "desc").insensitive().default("asc"),
     category: Joi.alternatives().try(
         Joi.array().items(Joi.string().trim().min(1)),
         Joi.string().trim()

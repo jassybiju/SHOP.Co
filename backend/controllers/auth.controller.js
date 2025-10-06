@@ -79,11 +79,11 @@ export const loginUser = async (req, res, next) => {
             throw new Error("User not found");
         }
         if (!user.active) {
-            res.status(404).cookie("jwt", { maxAge: 0 });
+            res.status(404).cookie("jwt", { maxAge: 0 , sameSite : "None", secure:true});
             throw new Error("User Blocked");
         }
         if(user.is_google_login){
-            res.status(400).cookie('jwt',{maxAge : 0})
+            res.status(400).cookie('jwt',{maxAge : 0, sameSite : "None", secure:true})
             throw new Error('User is Logged In through Google')
         }
         console.log(email, password);
@@ -97,9 +97,10 @@ export const loginUser = async (req, res, next) => {
         return res
             .cookie("jwt", generateToken(email), {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 maxAge: 24 * 60 * 60 * 1000,
                 path: "/",
+                sameSite : 'None'
             })
             .status(200)
             .json({
@@ -118,7 +119,7 @@ export const loginUser = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
     try {
-        res.cookie("jwt", "", { maxAge: 0 });
+        res.cookie("jwt", "", { maxAge: 0, sameSite : "None", secure:true });
         res.status(200).json({
             message: "Logged Out Successful",
             status: "success",
@@ -355,6 +356,7 @@ export const resetPassword = async (req, res, next) => {
 export const getUserDetails = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
+        console.log(token)
         if (!token) {
             res.status(401);
             return next("Access Denied");
@@ -362,8 +364,19 @@ export const getUserDetails = async (req, res, next) => {
         const data = verifyToken(req.cookies.jwt);
         const user = await User.findOne({ email: data.email });
         console.log(user);
-        if (!user || user.active === false) {
-            res.status(403).cookie("jwt","", { maxAge: 0 });
+        if (!user ) {
+            res.status(403).cookie("jwt","", { maxAge: 0 , sameSite : "None", secure:true});
+            throw new Error("User Blocked");
+        }
+        if(!user.active){
+            res.status(403).cookie("jwt","", { maxAge: 0 , sameSite : "None", secure:true}).json({
+            data: {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                role: user.role,
+                active : user.active
+            }});
             throw new Error("User Blocked");
         }
         console.log(user);
@@ -373,6 +386,7 @@ export const getUserDetails = async (req, res, next) => {
                 last_name: user.last_name,
                 email: user.email,
                 role: user.role,
+                active : user.active
             },
             message: "User details ",
             status: "success",
@@ -405,14 +419,16 @@ export const googleAuth = async (req, res, next) => {
                 is_google_login : true
             });
         }
-        
+        if(!user.active){
+            res.status(401).json({message : "User Blocked", status : "error"})
+        }
         if(!user?.is_google_login){
             res.status(400).json({message : "Invalid Request : Use email and password", status : "error"})
         }
         const { _id } = user;
         const token = generateToken(email);
         res.status(200)
-            .cookie("jwt", token, { maxAge: 24 * 60 * 60 * 1000 })
+            .cookie("jwt", token, { maxAge: 24 * 60 * 60 * 1000 , sameSite : 'None', secure : true })
             .json({
                 status: "success",
                 message: "Google Login Success",

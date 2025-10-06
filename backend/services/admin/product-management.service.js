@@ -199,7 +199,7 @@ export const editProductService = async (_id, data, req) => {
     await Promise.all(
         data.variants.map(async variant => {
             if(variant._id){
-                return await ProductVariant.findByIdAndUpdate({_id : '68d0c4b274b58a496e344520'}, {$set : {color : variant.color, size : variant.size , stock : variant.stock}},{new:true})
+                return await ProductVariant.findByIdAndUpdate({_id : variant._id}, {$set : {color : variant.color, size : variant.size , stock : Number(variant.stock)}},{new:true})
             }else{
                 return await ProductVariant.create({product_id : _id , color : variant.color, size : variant.size , stock : variant.stock})
             }
@@ -208,6 +208,7 @@ export const editProductService = async (_id, data, req) => {
 
     //deleting variants
     const editedVariants = data.variants.filter(x => x._id).map(x => x._id.toString())
+    console.log(data.variants,7787)
     const deletingVariants = existingVariantId.filter(x => !editedVariants.includes(x))
     if(deletingVariants.length > 0){
         await ProductVariant.deleteMany({_id : {$in : deletingVariants}})

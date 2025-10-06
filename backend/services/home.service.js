@@ -152,7 +152,7 @@ export const getSearchDataService = async (query) => {
     const allBrands = await Brand.find({}, { name: 1, _id: 0 }).sort({
         name: 1,
     });
-    const allCategories = await Category.find({}, { name: 1, _id: 0 }).sort({
+    const allCategories = await Category.find({}, { name: 1, _id: 0, is_active : 1 }).sort({
         name: 1,
     });
     console.log(allBrands, 99998);
@@ -169,7 +169,21 @@ export const getSearchDataService = async (query) => {
                             as: "variants",
                         },
                     },
-                    { $match: filterOptions },
+                    {
+                        $lookup: {
+                            from: "categories",
+                            localField: "category_id",
+                            foreignField: "_id",
+                            as: "category",
+                        },
+                    },
+                    { $unwind: "$category" }, // make category an object instead of array
+                    {
+                        $match: {
+                            ...filterOptions,
+                            "category.is_active": true, // exclude products with inactive category
+                        },
+                    },
                     {
                         $sort: {
                             [query.sort]: query.order === "desc" ? -1 : 1,
@@ -268,7 +282,7 @@ export const getSearchDataService = async (query) => {
                 limit: { $literal: query.limit },
                 page: { $literal: query.page },
                 allBrands: { $literal: allBrands.map((x) => x?.name) },
-                allCategories: { $literal: allCategories.map((x) => x?.name) },
+                allCategories: { $literal: allCategories.filter(x=> x.is_active).map((x) => x?.name) },
                 allColors: { $arrayElemAt: ["$variantsInfo.colors", 0] },
                 allSizes: { $arrayElemAt: ["$variantsInfo.sizes", 0] },
                 minPrice: { $arrayElemAt: ["$priceInfo.minPrice", 0] },
@@ -305,23 +319,39 @@ export const getProductDataService = async (productId) => {
         },
         {
             $lookup: {
+                from: "categories",
+                localField: "category_id",
+                foreignField: "_id",
+                as: "category",
+            },
+        },
+        { $unwind: "$category" }, // convert array to object
+        {
+            $match: {
+                "category.is_active": true, // ensure category is active
+            },
+        },
+        {
+            $lookup: {
                 from: "productvariants",
-                foreignField: "product_id",
                 localField: "_id",
+                foreignField: "product_id",
                 as: "variants",
             },
         },
     ]);
-    const products = await Product.find().limit(4).lean();
-    console.log(product);
+
     if (!product[0]) {
-        throw new Error("No Product");
+        throw new Error("No Product or Category Inactive");
     }
+
+    const products = await Product.find({ is_active: true }).limit(4).lean(); // optionally add category filter
+
     return {
         ...product[0],
         images: product[0].images.map((x) => ({
             ...x,
-            url: cloudinary.url(x.url, { sercure: true }),
+            url: cloudinary.url(x.url, { secure: true }), // fixed typo 'sercure'
         })),
         ratings: [],
         products: products.map((x) => ({
