@@ -1,0 +1,28 @@
+is_validated field in users
+
+
+tunneling both frontend backend redis
+4200 8000
+
+best pratcies of git
+commit messages
+
+authorise authentication middleware
+error handling middleware
+
+input validated before controllers XSS vuln joi  => as middleware
+
+linting eslint 
+
+env for production and local
+.env.local
+.env.production
+
+totp
+google authenticator
+
+lda counter
+
+mongodb indexing , follow proper schema
+
+mongoose orm
