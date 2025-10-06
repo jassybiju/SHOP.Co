@@ -4,23 +4,22 @@ import { Loader2 } from "lucide-react";
 import { useGetCategory } from "../../../hooks/useCategoryManagement";
 
 export default function ViewCategory({ id }) {
-    const { setShowModal } = useModal();
+    const { closeModal } = useModal();
 
     const { data: brand, status } = useGetCategory(id);
     console.log(status);
-    console.log(brand)
+    console.log(brand);
     if (status !== "success") {
         return <Loader2 className=" animate-spin " />;
     }
     return (
         <>
-            <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
+            <div className="bg-white rounded-xl shadow-xl w-1/2  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Add Brand
+                    View Category{" "}
                 </h2>
 
                 <div>
-                     
                     <div className="mb-6">
                         <label
                             htmlFor="Brand-name"
@@ -33,7 +32,8 @@ export default function ViewCategory({ id }) {
                             id="Brand-name"
                             name="name"
                             value={brand.data.name}
-                            required
+                            required 
+                            disabled
                             placeholder="Enter Brand name"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3  text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         />
@@ -49,6 +49,7 @@ export default function ViewCategory({ id }) {
                         <textarea
                             id="Brand-description"
                             name="description"
+                            disabled
                             value={brand.data.description}
                             placeholder="Write a short description"
                             className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y transition min-h-[80px]"
@@ -58,7 +59,7 @@ export default function ViewCategory({ id }) {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => setShowModal(false)}
+                            onClick={()=>closeModal('view-category')}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
                         >
                             Cancel

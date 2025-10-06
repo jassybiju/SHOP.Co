@@ -1,24 +1,26 @@
-import { Navigate, Outlet } from 'react-router';
-import { useStore } from '../store/store';
-import { useEffect } from 'react';
-import { Loader } from 'lucide-react';
-import { useUser } from '../hooks/useUser';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useUser } from "../hooks/useUser"; // Your custom hook to get user
+import toast from "react-hot-toast";
 
-const RoleBasedProtectedRoute = ({ allowedRoles, children }) => {
-    const {data : user, isLoading , isError } = useUser()
+const RoleBasedProtectedRoute = ({ allowedRoles = [] }) => {
+  const { data : user, isLoading ,status} = useUser({});
+  const location = useLocation();
+    console.log(user , isLoading, status)
+  if (isLoading) return <div>Loading...</div>; // Or a spinner
 
+  // Not logged in
+  if (!user) return <Navigate to="/auth/login" replace state={{ from: location }} />;
 
-    if(isLoading) return <p>Loading User...</p>
+// Blocked user
+  if (!user.active) {
+    toast.error("Blocked User")
+    return <Navigate to="/auth/login" replace />;}
 
-    if(isError || !user) return <Navigate to={'/auth/login'} replace/>
+  // Role not allowed
+  if (!allowedRoles.includes(user.role)) return <Navigate to="/" replace />;
 
-    if(!allowedRoles.includes(user.role)){
-      return <Navigate to={'/'}  replace/>
-    }
-
-
-    return children
-    
+  // Allowed — render nested routes
+  return <Outlet />;
 };
 
-export default RoleBasedProtectedRoute
+export default RoleBasedProtectedRoute;

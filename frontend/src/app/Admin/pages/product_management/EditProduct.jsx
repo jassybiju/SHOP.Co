@@ -14,22 +14,25 @@ import {
     useEditProduct,
     useGetProduct,
 } from "../../hooks/useProductManagement";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import EditVariant from "./components/EditVariant";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";
+import useConfirmationModal from "../../hooks/useConfirmationModal";
+import Loader from "../../../../components/Loader"
 const EditProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
     const { id } = useParams();
-    const { data: product } = useGetProduct(id);
-    console.log(product);
-    const { mutate: editProduct, status } = useEditProduct();
+    const { data: product , status : DataLoadingStatus} = useGetProduct(id);
+    const navigate = useNavigate()
+   const { mutate: editProduct, status } = useEditProduct();
     const {
         register,
         handleSubmit,
         control,
         reset,
+        trigger,
         setValue,
         formState: { errors },
     } = useForm();
@@ -42,6 +45,7 @@ const EditProduct = () => {
                 value.length > 0 || "At Least one variant is required",
         },
     });
+    const confirmation = useConfirmationModal()
     const { data: { data: brands } = { data: [] } } = useGetAllBrands({
         limit: 100,
     });
@@ -54,13 +58,19 @@ const EditProduct = () => {
                 ...product.data,
                 images: product.data.images.map((x) => x.url),
             });
+            console.log(product)
             console.log({
                 ...product.data,
                 images: product.data.images.map((x) => x.url),
             });
         }
+        
         console.log(123);
     }, [product, reset]);
+
+    if(DataLoadingStatus === 'pending'){
+        return <Loader/>
+    }
 
     const onSubmit = (data) => {
         console.log(data, "----------------------");
@@ -95,20 +105,20 @@ const EditProduct = () => {
         }, onSuccess : (res)=>{
             console.log(res)
             toast.success(res.message)
+            navigate('/admin/product-management/')
         }});
         for (let i of formData.entries()) {
             console.log(i);
         }
     };
 
-    console.log(errors);
 
     return (
         <>
             <Header heading="Edit Product" goback />
             <form
                 className="mr-3 m-0 md:m-5 flex flex-wrap"
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={(e)=>{e.preventDefault();trigger().then(x => x && confirmation(handleSubmit(onSubmit)))}}
             >
                 <div className="w-[100%] md:w-[50%] xl:w-[30%] h-90  md:mr-5">
                     <ImageGroupComponent
@@ -119,7 +129,8 @@ const EditProduct = () => {
                     />
                 </div>
                 <div className="w-[100%] md:w-[40%] xl:w-[65%] md:mt-5">
-                    <InputComponent
+                    <InputComponent 
+                    required
                         label={"Product Name"}
                         register={register("name", {
                             required: "Product name is required",
@@ -127,6 +138,8 @@ const EditProduct = () => {
                         error={errors.name}
                     />
                     <InputComponent
+                    required
+
                         label={"Product Small Description"}
                         register={register("small_description", {
                             required: "Small description is required",
@@ -135,7 +148,7 @@ const EditProduct = () => {
                     />
 
                     <div className="flex w-full gap-2">
-                        <InputComponent
+                        <InputComponent required
                             label={"Price"}
                             register={register("price", {
                                 required: "Price is required",
@@ -146,7 +159,7 @@ const EditProduct = () => {
                             })}
                             error={errors.name}
                         />
-                        <InputComponent
+                        <InputComponent required
                             label={"Discount"}
                             register={register("discount", {
                                 min: {
@@ -164,7 +177,7 @@ const EditProduct = () => {
                 </div>
                 <div className="w-[100%] md:w-[100%] xl:w-[100%] md:my-5">
                     <div className="flex w-full gap-2">
-                        <InputComponent
+                        <InputComponent required
                             select
                             label={"Brand"}
                             options={brands.map((x) => ({
@@ -176,7 +189,8 @@ const EditProduct = () => {
                             })}
                             error={errors.brand_id}
                         />
-                        <InputComponent
+                        <InputComponent required 
+                        defaultValue={product?.data?.category_id}
                             select
                             label={"Category"}
                             options={categories.map((x) => ({
@@ -189,11 +203,11 @@ const EditProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent textarea label={"Description"}  register={register("description", {
+                    <InputComponent  required textarea label={"Description"}  register={register("description", {
                                 required: "Description is required",
                             })}/>
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
-                        <h1 className="font-bold ">Variant</h1>
+                        <h1 className="font-bold ">* Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">
                             {fields.map((field,index) => (
                                 <VariantComponent
@@ -203,6 +217,7 @@ const EditProduct = () => {
                                     value={{
                                         color: field.color,
                                         size: field.size,
+                                        stock : field.stock
                                     }}
                                     remove={remove}
                                     onEditVariant={(val)=> update(index,{...val})}

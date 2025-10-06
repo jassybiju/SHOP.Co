@@ -7,8 +7,8 @@ import Navbar from "../../components/Navbar";
 import toast from "react-hot-toast";
 import ProductCard from "../search/components/ProductCard";
 import BreadCrumb from "../../components/BreadCrumb";
-
-
+import InnerImageZoom from "react-inner-image-zoom";
+import ImageMagnifier from "./components/ImageMagnifier";
 
 function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
     const sizeClasses = {
@@ -72,7 +72,32 @@ const ProductPage = () => {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState("Medium");
     const [activeTab, setActiveTab] = useState("details");
+    console.log(isError);
+    const [zoomData, setZoomData] = useState({
+        transformOrigin: "center center",
+        transform: "scale(1)",
+    });
 
+    const handleMouseMove = (e) => {
+        const { left, top, width, height } =
+            e.currentTarget.getBoundingClientRect();
+
+        // Calculate mouse position relative to the image container (0 to 100%)
+        const x = ((e.pageX - left) / width) * 100;
+        const y = ((e.pageY - top) / height) * 100;
+
+        setZoomData({
+            transformOrigin: `${x}% ${y}%`,
+            transform: "scale(2.5)", // 2.5x zoom on hover
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setZoomData({
+            transformOrigin: "center center",
+            transform: "scale(1)",
+        });
+    };
     if (isLoading) {
         return <Loader2 className="animate-spin" />;
     }
@@ -84,53 +109,21 @@ const ProductPage = () => {
     }
 
     const breadcrumbItems = [
-        { label: "Home", link:"/" },
-        { label: "Search" , link : '/search'},
-        
+        { label: "Home", link: "/" },
+        { label: "Search", link: "/search" },
     ];
 
-    const relatedProducts = [
-        {
-            name: "Polo with Contrast Trims",
-            price: 212,
-            originalPrice: 242,
-            discount: 20,
-            rating: 4.0,
-            image: "https://api.builder.io/api/v1/image/assets/TEMP/2f47e10a1ee7322db5ebd680112fd0d4222b041c?width=592",
-        },
-        {
-            name: "Gradient Graphic T-shirt",
-            price: 145,
-            originalPrice: null,
-            discount: null,
-            rating: 3.5,
-            image: "https://api.builder.io/api/v1/image/assets/TEMP/a42d1769d313698469a62f240cdf7b5c498bd287?width=588",
-        },
-        {
-            name: "Polo with Tipping Details",
-            price: 180,
-            originalPrice: null,
-            discount: null,
-            rating: 4.5,
-            image: "https://api.builder.io/api/v1/image/assets/TEMP/50e7b0e4c8d80be3f1924d0b71aed47f5d0a7342?width=592",
-        },
-        {
-            name: "Black Striped T-shirt",
-            price: 120,
-            originalPrice: 150,
-            discount: 30,
-            rating: 5.0,
-            image: "https://api.builder.io/api/v1/image/assets/TEMP/4d195e0fefe30b3b6d4376c74021385f19891d59?width=592",
-        },
-    ];
-
-    const sizes = ["Medium", "Medium", "Medium", "Medium"];
     return (
         <div>
             <div className="min-h-screen bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     {/* Breadcrumb */}
-                    <BreadCrumb items={[...breadcrumbItems, {label : data.name , link : '/product/'+data._id}]} />
+                    <BreadCrumb
+                        items={[
+                            ...breadcrumbItems,
+                            { label: data.name, link: "/product/" + data._id },
+                        ]}
+                    />
 
                     {/* Main Product Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-16 mb-12 md:mb-16">
@@ -160,11 +153,18 @@ const ProductPage = () => {
                             {/* Main Image */}
                             <div className="flex-1 order-1 lg:order-2 ">
                                 <div className="aspect-square border-2 rounded-xl md:rounded-2xl overflow-hidden bg-gray-100">
-                                    <img
+                                    <ImageMagnifier
+                                        zoomScale={2}
                                         src={data.images[selectedImage].url}
-                                        alt="One Life Graphic T-shirt"
                                         className="w-full h-full object-cover"
                                     />
+                                    {/* <img style={{
+                transformOrigin: zoomData.transformOrigin,
+                transform: zoomData.transform,
+            }}
+                                        src={data.images[selectedImage].url}
+                                        alt="One Life Graphic T-shirt"
+                                    {/* /> */}
                                 </div>
                             </div>
                         </div>
@@ -182,7 +182,9 @@ const ProductPage = () => {
                             {/* Price */}
                             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                                 <span className="font-poppins text-3xl  font-bold text-black">
-                                    $     ${data.price - (data.price * (data.discount /100))}
+                                    ${" "}
+                                    {data.price -
+                                        data.price * (data.discount / 100)}
                                 </span>
                                 <span className="font-poppins text-2xl text-black opacity-50 font-bold text-gray-text line-through  ">
                                     ${data.price}
@@ -207,22 +209,31 @@ const ProductPage = () => {
                                     Select Variant
                                 </h3>
                                 <div className="flex gap-3 flex-wrap">
-                                    {data.variants?.filter(x => x.stock !== 0).map((variant, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() =>
-                                                setSelectedVariant(variant)
-                                            }
-                                            className={`border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
-                                                selectedVariant === variant
-                                                    ? "bg-gray-variant border-gray-400"
-                                                    : "bg-gray-variant  hover:border-gray-300"
-                                        } flex items-center gap-2`}
-                                        >
-                                            {variant.size} <div className="w-4  h-4 rounded-full" style={{backgroundColor : variant.color}}></div>
-                                            {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
-                                        </button>
-                                    ))}
+                                    {data.variants
+                                        ?.filter((x) => x.stock !== 0)
+                                        .map((variant, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() =>
+                                                    setSelectedVariant(variant)
+                                                }
+                                                className={`border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
+                                                    selectedVariant === variant
+                                                        ? "bg-gray-variant border-gray-400"
+                                                        : "bg-gray-variant  hover:border-gray-300"
+                                                } flex items-center gap-2`}
+                                            >
+                                                {variant.size}{" "}
+                                                <div
+                                                    className="w-4  h-4 rounded-full"
+                                                    style={{
+                                                        backgroundColor:
+                                                            variant.color,
+                                                    }}
+                                                ></div>
+                                                {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
+                                            </button>
+                                        ))}
                                 </div>
                             </div>
 
@@ -386,9 +397,11 @@ const ProductPage = () => {
                                 </div> */}
                             </div>
                         )}
-                         {activeTab === "reviews" && (
-                            <>{data?.ratings?.length == 0 && 'No ratings Yet'}</>
-)}
+                        {activeTab === "reviews" && (
+                            <>
+                                {data?.ratings?.length == 0 && "No ratings Yet"}
+                            </>
+                        )}
                     </div>
 
                     {/* You Might Also Like */}
@@ -398,7 +411,7 @@ const ProductPage = () => {
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             {data.products.map((product, index) => (
-                                <ProductCard product={product}/>
+                                <ProductCard product={product} />
                             ))}
                         </div>
                     </div>

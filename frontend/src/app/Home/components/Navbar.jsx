@@ -11,11 +11,13 @@ import { useUser } from "../../../hooks/useUser";
 import { Link, NavLink, useNavigate } from "react-router";
 import SearchProduct from "./SearchProduct";
 import Dropdown from "./DropDown";
+import useConfirmationModal from "../../Admin/hooks/useConfirmationModal";
 const Navbar = () => {
     const { mutate: logout } = useLogoutUser();
     const { data: user } = useUser();
     const navigate = useNavigate();
-    let dropdownitems = [{ label: "Logout", onClick: logout }];
+    const confirmation = useConfirmationModal()
+    let dropdownitems = [{ label: "Logout", onClick: ()=>confirmation(logout) }];
     if (user?.role === "admin") {
         dropdownitems.push({
             label: "Admin",

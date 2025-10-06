@@ -7,6 +7,11 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import { Loader } from "lucide-react";
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
+import { ModalProvider } from "./components/ModalProvider";
+
+
+import 'react-inner-image-zoom/lib/styles.min.css'
+
 const App = () => {
     
 
@@ -16,9 +21,9 @@ const App = () => {
         <>
         <ReactQueryDevtools/>
             <Toaster toastOptions={{className : "z-9999"}}/>
-            
+            <ModalProvider>
                 <RouterProvider router={router} hydrateFallback={<>Loading</>} />
-           
+           </ModalProvider>
         </>
     );
 };

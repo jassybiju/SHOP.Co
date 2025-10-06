@@ -8,6 +8,9 @@ import toast from "react-hot-toast";
 import { useStore } from "../../../../store/store";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 import { useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import { googleAuth } from "../../services/auth.service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Register = () => {
     const { mutate: registerUser, isPending } = useRegister();
@@ -35,11 +38,41 @@ const Register = () => {
         });
     };
 
+    const queryClient = useQueryClient()
+    
+    const responseGoogle = async (authResult) => {
+        console.log("Google Login")
+        try {
+            if (authResult["code"]) {
+                const result = await googleAuth(authResult.code);
+                console.log(result);
+                const email = result.data.email;
+                const first_name = result.data.first_name;
+                const token = result.data.token;
+                const obj = { email, first_name,  };
+                queryClient.setQueryData(['user'],obj)
+                navigate("/");
+            } else {
+                throw new Error(authResult);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+            console.log("Error while google login", error);
+        }
+    };
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: responseGoogle,
+        onError: responseGoogle,
+        flow: "auth-code",
+    });
+
+
     return (
-        <div className="flex h-[90vh]">
-            <AuthBanner />
+        <div className="flex h-max ">
+            <AuthBanner type='signup'/>
             {/* Right Side - Signup form */}
-            <div className="w-2/3 flex justify-center items-center bg-gray-50">
+            <div className="w-2/3 py-5 flex justify-center items-center bg-gray-50">
                 <div className="w-full max-w-md">
                     {/* Logo/Heading */}
                     <h1 className="text-2xl font-bold mb-2 text-center">
@@ -61,6 +94,7 @@ const Register = () => {
                         )}
                         <div className="flex space-x-2 w-full">
                             <Input
+                            required
                                 type="text"
                                 label="First Name"
                                 register={register("first_name", {
@@ -75,6 +109,7 @@ const Register = () => {
                             />
 
                             <Input
+                            required
                                 type="text"
                                 label="Last Name"
                                 register={register("last_name", {
@@ -90,7 +125,8 @@ const Register = () => {
                         </div>
                         <div className="flex space-x-2 w-full">
                             {/* Gender  */}
-                            <Select
+                            <Select 
+                            required
                                 label={"Select Gender"}
                                 options={[
                                     { value: "male", label: "Male" },
@@ -100,11 +136,13 @@ const Register = () => {
                                  register={register("gender", {
                                 required: "Gender is required",
                             })}
+                            error={errors.gender?.message}
                             />
 
                          
                         </div>
-                        <Input
+                        <Input 
+                        required
                             type="text"
                             label="Phone"
                             register={register("phone", {
@@ -118,6 +156,7 @@ const Register = () => {
                         />
 
                         <Input
+                        required
                             type="email"
                             label="Email"
                             register={register("email", {
@@ -131,6 +170,7 @@ const Register = () => {
                         />
 
                         <Input
+                        required
                             type="password"
                             label="Password"
                             register={register("password", {
@@ -150,6 +190,7 @@ const Register = () => {
                         />
 
                         <Input
+                        required
                             type="password"
                             label="Confirm Password"
                             register={register("confirm_password", {
@@ -173,7 +214,8 @@ const Register = () => {
                         </button>
 
                         {/* Google Signup */}
-                        <button
+                        <button 
+                            onClick={googleLogin}
                             type="button"
                             className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"
                         >

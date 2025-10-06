@@ -9,8 +9,11 @@ const InputComponent = ({
     colorPicker = false,
     textarea = false,
     readonly,
+    defaultValue,
+    required=false,
     ...rest
 }) => {
+    console.log(defaultValue)
     let input;
     if (colorPicker) {
         input = (
@@ -22,6 +25,7 @@ const InputComponent = ({
                 id={id}
                 {...register}
                 {...rest}
+                defaultValue={defaultValue}
                 disabled ={readonly}
                 className={`block w-full bg-gray-50 border ${
                     error ? "border-red-400" : "border-gray-300"
@@ -71,7 +75,7 @@ const InputComponent = ({
                 htmlFor={id}
                 className="block text-gray-700 font-medium mb-2"
             >
-                {label}
+              {required && '* '}  {label}
             </label>
             <div className="relative">
                 {input}

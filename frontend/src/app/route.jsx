@@ -14,7 +14,7 @@ import Dashboard from "./Admin/pages/Dashboard/Dashboard";
 import RoleBasedProtectedRoute from "../components/RoleBasedProtectedRoute";
 import AdminLayout from "./Layout/AdminLayout";
 import UserManagement from "./Admin/pages/user_management/UserManagement";
-import { requireAuthLoader } from "../utils/requireAuthLoader";
+import { requireAdminLoader } from "../utils/requireAdminLoader";
 import UserDetails from "./Admin/pages/user_management/UserDetails";
 import ProductManagement from "./Admin/pages/product_management/ProductManagement";
 import BrandMangement from "./Admin/pages/brand_management/BrandMangement";
@@ -28,6 +28,7 @@ import ResetPassword from "./Auth/pages/change-password/ResetPassword";
 import GoogleWrapper from "../components/GoogleWrapper";
 import ProductPage from "./Home/pages/product/ProductPage";
 import About from "./Home/pages/about/About";
+import Contact from "./Home/pages/contact/Contact";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -40,6 +41,7 @@ export const router = createBrowserRouter(
             >
                 <Route index element={<Home />}></Route>
                 <Route path="/about" element={<About />}></Route>
+                <Route path="/contact" element={<Contact />}></Route>
                 <Route path='/search' element={<SearchPage/>}></Route>
                 <Route path='/product/:id' element={<ProductPage/>}></Route>
                 {/* <Route
@@ -54,7 +56,7 @@ export const router = createBrowserRouter(
                 {/* /admin route  */}
                
                 <Route path="auth" element={<RedirectIfLoggedIn/>}>
-                    <Route path="register" element={<Register />} />
+                    <Route path="register" element={<GoogleWrapper><Register /></GoogleWrapper>} />
                     <Route path="login" element={<GoogleWrapper><Login /></GoogleWrapper>} />
                     <Route
                         path="otp-verify"
@@ -72,14 +74,13 @@ export const router = createBrowserRouter(
                         
                 </Route>
             </Route>
+        <Route element={<RoleBasedProtectedRoute allowedRoles={["admin"]}/>}>
              <Route
+               
                     path="admin"
                     element={
-                        <>
-                            <RoleBasedProtectedRoute allowedRoles={["admin"]}>
+                    
                                 <AdminLayout />
-                            </RoleBasedProtectedRoute>
-                        </>
                     }
                 >
                     <Route path="" element={<Dashboard />} />
@@ -99,6 +100,7 @@ export const router = createBrowserRouter(
                     <Route path="category-management">
                         <Route index element={<CategoryMangement />} />
                     </Route>
+                </Route>
                 </Route>
 
         </>

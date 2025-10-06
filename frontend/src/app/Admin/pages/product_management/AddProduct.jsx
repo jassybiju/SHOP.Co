@@ -1,4 +1,4 @@
-import { ImageUp, Trash2 } from "lucide-react";
+import { ImageUp, Loader, Loader2, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
 import InputComponent from "../../components/InputComponent";
@@ -37,7 +37,6 @@ const AddProduct = () => {
 
 
     const onSubmit = (data) => {
-        toast.success('Saved')
         console.log(data.name);
 
         const formData = new FormData()
@@ -81,14 +80,15 @@ const AddProduct = () => {
                     />
                 </div>
                 <div className="w-[100%] md:w-[40%] xl:w-[65%] md:mt-5">
-                    <InputComponent
+                    <InputComponent 
+                    required
                         label={"Product Name"}
                         register={register("name", {
                             required: "Product name is required",
                         })}
                         error={errors.name}
                     />
-                    <InputComponent
+                    <InputComponent required
                         label={"Product Small Description"}
                         register={register("small_description", {
                             required: "Small description is required",
@@ -97,7 +97,7 @@ const AddProduct = () => {
                     />
                 
                     <div className="flex w-full gap-2">
-                        <InputComponent
+                        <InputComponent required
                             label={"Price"}
                             register={register("price", {
                                 required: "Price is required",
@@ -106,9 +106,10 @@ const AddProduct = () => {
                                     message: "Price cannot be negative",
                                 },
                             })}
-                            error={errors.name}
+                            error={errors.price}
                         />
-                        <InputComponent
+                        <InputComponent 
+                        required
                             label={"Discount"}
                             register={register("discount", {
                                 min: {
@@ -119,6 +120,7 @@ const AddProduct = () => {
                                     value: 100,
                                     message: "Discount cannot exceed 100%",
                                 },
+                                required : "Discount is required"
                             })}
                             error={errors.discount}
                         />
@@ -126,7 +128,7 @@ const AddProduct = () => {
                 </div>
                 <div className="w-[100%] md:w-[100%] xl:w-[100%] md:my-5">
                     <div className="flex w-full gap-2">
-                        <InputComponent
+                        <InputComponent required
                             select
                             label={"Brand"}
                             options={brands.map((x) => ({
@@ -140,7 +142,7 @@ const AddProduct = () => {
                         />
                         <InputComponent
                             select
-                            
+                            required
                             label={"Category"}
                             options={categories.map((x) => ({
                                 label: x.name,
@@ -152,11 +154,11 @@ const AddProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent textarea label={"Descripiton"} register={register("description", {
+                    <InputComponent required textarea label={"Descripiton"} register={register("description", {
                                 required: "Discription is required",
                             })} error={errors.description}/>
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
-                        <h1 className="font-bold ">Variant</h1>
+                        <h1 className="font-bold ">* Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">
                             {fields.map((field, index) => (
                                 <VariantComponent
@@ -189,9 +191,9 @@ const AddProduct = () => {
                         <button 
                             disabled={status === 'pending'}
                             type="submit"
-                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
+                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                         {status}   Add Product
+                         {status == 'pending' ? <div className="flex gap-2"><Loader2 className="animate-spin"/> Adding Product</div> : "Add Product"}  
                         </button>
                     </div>
                 </div>

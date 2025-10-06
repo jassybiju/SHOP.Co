@@ -8,6 +8,7 @@ import { useModal } from '../../../../hooks/useModal';
 import AddBrand from './components/AddBrand';
 import ViewBrand from './components/ViewBrand';
 import EditBrand from './components/EditBrand';
+import ModalWrapper from '../../components/ModalWrapper';
 
 const BrandMangement = () => {
 
@@ -16,14 +17,14 @@ const BrandMangement = () => {
   const {data : brands , status} = useGetAllBrands(params)
   const { setShowModal , setModalContent , openModal } = useModal()
   const showViewBrandModal=(id)=>{
-    openModal(<ViewBrand id={id}/>)
+    openModal('view-brand',<ModalWrapper render={<ViewBrand id={id}/>}/>)
   } 
   const showEditBrandModal= (id) => {
-        openModal(<EditBrand id={id}/>)
+        openModal('edit-brand',<ModalWrapper render={<EditBrand id={id}/>}/>)
     
   }
   const showAddBrandModal = () => {
-    openModal(<AddBrand/>)
+    openModal('add-brand',<ModalWrapper render={<AddBrand/>}/>)
    
   }
 

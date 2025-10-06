@@ -9,6 +9,6 @@ export default defineConfig({
   server : {
     // host : true,
     port : 5173,
-    allowedHosts : ["bbd97aa304dac9.lhr.life"]
+    allowedHosts : ["shop.serveo.net"]
   }
 })

@@ -11,6 +11,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAddProduct, useGetProduct } from "../../hooks/useProductManagement";
 import { useParams } from "react-router";
+import Loader from '../../../../components/Loader'
 const ViewProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
     const { id } = useParams();
@@ -21,7 +22,7 @@ const ViewProduct = () => {
     });
     const { data: { data: categories } = { data: [] } } = useGetAllCategories();
 
-    if (status !== "success") return "Loading";
+    if (status !== "success") return <Loader width={50}/>;
 
     return (
         <>
@@ -95,6 +96,7 @@ const ViewProduct = () => {
                                     value={{
                                         color: field.color,
                                         size: field.size,
+                                        stock : field.stock
                                     }}
                                 />
                             ))}
@@ -105,14 +107,6 @@ const ViewProduct = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-4">
-                        <button
-                            type="submit"
-                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
-                        >
-                            Add Product
-                        </button>
-                    </div>
                 </div>
             </form>
         </>
@@ -259,6 +253,15 @@ const VariantComponent = ({ value, onAddVariant, field, remove, readonly }) => {
                             style={{ color: value.color }}
                         >
                             {value.size}
+                        </span>
+                    </div>
+                    <div className="flex items-center   gap-3">
+                        Stock :{" "}
+                        <span
+                            className={`font-bold text-[${value.color}]`}
+                            style={{ color: value.color }}
+                        >
+                            {value.stock}
                         </span>
                     </div>
                 </div>

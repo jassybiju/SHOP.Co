@@ -40,7 +40,7 @@ const AdminLayout = () => {
     ];
 
     return (
-        <ModalProvider>
+        
             <div className="flex min-h-screen">
                 {/* <ShowModal /> */}
 
@@ -56,7 +56,7 @@ const AdminLayout = () => {
                     <Outlet context={{ isOpen, setIsOpen }} />
                 </main>
             </div>
-        </ModalProvider>
+        
     );
 };
 

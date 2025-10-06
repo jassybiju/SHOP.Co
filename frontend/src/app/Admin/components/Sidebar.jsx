@@ -6,12 +6,13 @@ import React from "react";
 import { NavLink } from "react-router";
 import { useLogoutUser } from "../../Auth/hooks/useAuth";
 import { useUser } from "../../../hooks/useUser";
+import useConfirmationModal from "../hooks/useConfirmationModal";
 
 const Sidebar = ({ navList = [], isOpen, setIsOpen }) => {
   const { data: user } = useUser();
   const { mutate: logout } = useLogoutUser();
-
-  return (
+  const confirmation = useConfirmationModal()
+  return (  
     <>
       {/* Sidebar */}
       <div
@@ -63,7 +64,7 @@ const Sidebar = ({ navList = [], isOpen, setIsOpen }) => {
             </h2>
             <p className="text-sm text-gray-500">{user?.email}</p>
           </div>
-          <button onClick={logout} className="text-gray-600 hover:text-red-600">
+          <button onClick={()=>confirmation(logout)} className="text-gray-600 hover:text-red-600">
             <LogOut size={20} />
           </button>
         </div>

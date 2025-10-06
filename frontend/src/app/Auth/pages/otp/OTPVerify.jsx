@@ -34,7 +34,7 @@ const OTPVerify = () => {
                     if(type === OTP_TYPES.FORGET_PASSWORD){
                         return navigate('/auth/reset-password', {replace : true ,state : {email : email}})
                     }
-                    navigate("/home", {replace: true});
+                    navigate("/", {replace: true});
                 },
                 onError: (error) =>{
                     const errorMessage = error.response?.data?.message

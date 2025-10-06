@@ -3,9 +3,10 @@ import { useModal } from "../../../../../hooks/useModal";
 import { Loader2 } from "lucide-react";
 import ImageInput from "../ui/ImageInput";
 import { useGetBrand } from "../../../hooks/useBrandManagement";
+import { ImageComponent } from "../../product_management/components/ImageComponent";
 
 export default function ViewBrand({ id }) {
-    const { setShowModal } = useModal();
+    const { closeModal } = useModal();
 
     const { data: brand, status } = useGetBrand(id);
     console.log(status);
@@ -15,13 +16,13 @@ export default function ViewBrand({ id }) {
     }
     return (
         <>
-            <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
+            <div className="bg-white rounded-xl shadow-xl w-1/2 h-[98vh]  m-10 p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Add Brand
+                    View Brand
                 </h2>
 
                 <div>
-                     <ImageInput previewImg={brand.data.image} readonly  />
+                     <ImageComponent previewImg={brand.data.image} readonly size={50}  />
                     <div className="mb-6">
                         <label
                             htmlFor="Brand-name"
@@ -59,7 +60,7 @@ export default function ViewBrand({ id }) {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => setShowModal(false)}
+                            onClick={()=>closeModal('view-brand')}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
                         >
                             Cancel

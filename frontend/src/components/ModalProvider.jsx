@@ -1,23 +1,36 @@
 import { createPortal } from "react-dom";
 import { ModalContext } from "./ModalContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IsRestoringProvider } from "@tanstack/react-query";
 
 export const ModalProvider = ({ children }) => {
-    const [showModal, setShowModal] = useState(false);
-    const [modalContent, setModalContent] = useState(<>Hello</>);
+    // const [showModal, setShowModal] = useState(false);
+    // const [modalContent, setModalContent] = useState(<>Hello</>);
+    const [modals, setModals] = useState([])
 
-    const closeModal = () => {
-        document.body.style.overflow = 'auto'
-        console.log('closed')
-        setShowModal(false)
-        setModalContent(<></>)
+    useEffect(()=>{
+        console.log(modals)
+    },[modals])
+
+    const closeModal = (name) => {
+        console.log(modals)
+        console.log('closed',name)
+        setModals(prev=>prev.filter((modal)=> modal.name !== name))
+        
+        setTimeout(()=>{
+            console.log(modals.length)
+          if(modals.length <= 1)  document.body.style.overflow = 'auto'
+          console.log(modals)
+        },0)
     }
 
-    const openModal = (content) => {
+    const openModal = (name , content) => {
         document.body.style.overflow = 'hidden'
-        console.log('opened')
-        setShowModal(true)
-        setModalContent(content)
+        console.log('opened', name, content)
+        setModals(prev => [...prev, {name , content}])
+
+        console.log(modals)
+
     }
 
 
@@ -27,15 +40,12 @@ export const ModalProvider = ({ children }) => {
         <ModalContext.Provider
             value={{
                 openModal,
-                showModal,
-                setShowModal,
-                modalContent,
-                setModalContent,
                 closeModal
             }}
         > 
-            {createPortal(modalContent , document.body)}
-            {children}
+        {modals.map((modal)=>createPortal(modal.content , document.body)
+        )}
+        {children}
         </ModalContext.Provider>
     );
 };

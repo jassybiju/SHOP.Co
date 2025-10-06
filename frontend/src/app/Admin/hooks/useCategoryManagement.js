@@ -9,6 +9,7 @@ import {
     editCategory,
     getCategories,
     getCategory,
+    toggleCategoryStatus,
 } from "../services/category-management.service";
 
 export const useGetAllCategories = (params) => {
@@ -41,3 +42,11 @@ export const useEditCategory = () => {
         onSuccess: () => queryClient.invalidateQueries(["category"]),
     });
 };
+
+export const useToggleCategoryStatus = () =>{
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn : toggleCategoryStatus,
+        onSuccess : () => queryClient.invalidateQueries(['category'])
+    })
+}

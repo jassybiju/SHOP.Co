@@ -1,7 +1,7 @@
 import {ChevronRight, Eye, EyeClosed, EyeOff } from 'lucide-react'
 import { useState } from 'react';
 
-const Input = ({ label, type = "text", register, error }) => {
+const Input = ({ label, type = "text", register, error , required =false}) => {
   const [passwordView, setPasswordView] = useState(false)
   const baseClass =
     "w-[100%] p-3 text-sm text-gray-900 bg-white/80 backdrop-blur-sm border-b-2 outline-none transition-all duration-200";
@@ -15,10 +15,11 @@ const Input = ({ label, type = "text", register, error }) => {
   return (
     <div className="mb-4 w-[100%]">
       <div className='flex relative items-center'>
+
       <input 
         
         type={type === 'password' ? (passwordView  ? 'text' : 'password') : 'text'}
-        placeholder={label}
+        placeholder={label +' '+(required ? ' *' : '')}
         aria-invalid={!!error}
         {...register}
         className={`${baseClass} ${focusClass} ${errorClass}`}

@@ -3,18 +3,24 @@ import { useModal } from "../../../../../hooks/useModal";
 import { useEditBrand, useGetBrand } from "../../../hooks/useBrandManagement";
 import { useEffect } from "react";
 import ImageInput from "../ui/ImageInput";
+import toast from "react-hot-toast";
+import { ImageComponent } from "../../product_management/components/ImageComponent";
+import useConfirmationModal from "../../../hooks/useConfirmationModal";
 
 const EditBrand = ({ id }) => {
     console.log(id);
     const { data: brands, status } = useGetBrand(id);
     const {
         register,
+        setValue,
         handleSubmit,
         formState: { errors: formError },
         reset,
+        trigger
     } = useForm({ defaultValues: { name: "", description: "" } });
     const { mutate: editBrand, status: editBrandStatus } = useEditBrand();
-    const { setShowModal } = useModal();
+    const { closeModal } = useModal();
+    const confirmation = useConfirmationModal()
     useEffect(() => {
         reset({
             name: brands?.data.name,
@@ -32,9 +38,12 @@ const EditBrand = ({ id }) => {
             {
                 onError: (data) => {
                     console.log(data);
+                    toast.error(data.response.data.message)
                 },
                 onSuccess : (data) =>{
                     console.log(data)
+                    toast.success(data.message)
+                    closeModal('edit-brand')
                 }
             }
         );
@@ -45,14 +54,16 @@ const EditBrand = ({ id }) => {
     }
     return (
         <>
-            <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
+            <div className="bg-white rounded-xl shadow-xl w-1/2  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
                     Edit Brand
                 </h2>
 
-                <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <ImageInput
-                        register={register("image")}
+                <form onSubmit={(e)=>{e.preventDefault();trigger().then(x => x && confirmation(handleSubmit(onSubmit)))}} noValidate>
+                    <ImageComponent  size={50}
+                        setValue={setValue}
+                        register={register}
+                        name="image"
                         previewImg={brands?.data.image}
                     />
 
@@ -103,7 +114,7 @@ const EditBrand = ({ id }) => {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => setShowModal(false)}
+                            onClick={()=>closeModal('edit-brand')}
                             disabled={editBrandStatus === "pending"}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-800"
                         >

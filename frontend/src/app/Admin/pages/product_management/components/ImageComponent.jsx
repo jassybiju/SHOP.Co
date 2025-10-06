@@ -12,6 +12,7 @@ export const ImageComponent = ({
     registerObj,
     previewImg = "",
     readonly,
+    size=100,
     setValue = () => {},
     watch = () => {}, //chagne
 }) => {
@@ -26,7 +27,7 @@ export const ImageComponent = ({
     useEffect(()=>{
         console.log(images,888)
     },[images])
-    const { setShowModal, setModalContent } = useModal();
+    const [ showCropper, setShowCropper ] = useState(false);
     const hiddenInputRef = useRef();
 
     const updateImage = (file) => {
@@ -48,8 +49,10 @@ export const ImageComponent = ({
 
     // const onUpload = () => hiddenInputRef.current.click();
     const onUpload = () => {
-        setModalContent(<ImageCropperModal updateImage={updateImage} />);
-        setShowModal(true);
+        if(!readonly){
+        // setModalContent(<ImageCropperModal updateImage={updateImage} />);
+        setShowCropper(true);
+        }
     };
     console.log(registerObj, name);
     // const handleUploadFile = (e) => {
@@ -70,15 +73,16 @@ export const ImageComponent = ({
         <>
             <div
                 className="rounded-xl w-full h-full bg-gray-300 flex justify-center items-center flex-col"
-                onClick={onUpload}
+                type='button'
+                onClick={(e)=>{e.preventDefault(); onUpload()}}
             >
                 {preview ? (
                     <img
                         src={preview}
                         alt=""
                         style={{
-                            width: "100%",
-                            height: "100%",
+                            width: `${size}%`,
+                            height: `${size}%`,
                             objectFit: "contain",
                         }}
                     />
@@ -89,6 +93,7 @@ export const ImageComponent = ({
                     </>
                 )}
             </div>
+            {showCropper && <ImageCropperModal updateImage={updateImage} closeModal={()=>setShowCropper(false)}/>}
             <input
                 {...registerRest}
                 disabled={readonly}

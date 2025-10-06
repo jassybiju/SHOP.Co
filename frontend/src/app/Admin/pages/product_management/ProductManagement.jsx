@@ -31,7 +31,7 @@ const ProductManagement = () => {
         sort: "created at - asc",
         filter: "AllUsers",
         page: 1,
-        limit: 1,
+        limit: 4,
     });
 
     const { data: categories } = useGetAllCategories();

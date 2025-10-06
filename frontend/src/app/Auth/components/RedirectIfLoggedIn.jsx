@@ -1,27 +1,20 @@
-import { Navigate, Outlet } from "react-router";
-import { useStore } from "../../../store/store";
-import { useLoginUser } from "../hooks/useAuth";
+import { Navigate, Outlet } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
-import Loader from "../../../components/Loader";
 
 const RedirectIfLoggedIn = () => {
-    const {data , isLoading} = useUser()
-    const {isPending} = useLoginUser()
-    console.log(data)  
+  const { data : user, isLoading, status } = useUser();
+  console.log(user, isLoading, status)
+  if (isLoading) {
+    return <div>Loading...</div>; // or your loader
+  }
 
-    // if(isLoading){
-    //   return <Loader/>
-    // }
-    // if user is logging it would stop protection 
-    if( isPending){
-      return <Loader/>
-    }
-    if(!data ){
-      return   <Outlet/>
-    }else{
-        return <Navigate to='/admin' replace/>
-    }
+  if (user) {
+    // If the user is logged in, redirect to their dashboard
+    return <Navigate to="/" replace />;
+  }
 
-  
+  // If not logged in, render the nested routes (login/register)
+  return <Outlet />;
 };
+
 export default RedirectIfLoggedIn;

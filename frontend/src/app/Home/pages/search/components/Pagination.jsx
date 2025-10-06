@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight, MoveLeft, MoveRight } from "lucide-react";
 
 const Pagination = ({ page, pages, onPageChange }) => {
-    if(pages === 0) "No Entries"
+    console.log(pages)
+    if(pages === 0)return "No Entries"
     return (
         <div>
             {/* <div className="border-t border-black/10 pt-8">

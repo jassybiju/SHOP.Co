@@ -66,7 +66,7 @@ function ProductCard({ product }) {
                                     </span>
                                 </div>
                                 <div className="font-poppins font-bold text-xl">
-                                    ${product.price - (product.price * (product.discount /100))}
+                                    ${product.price - (product.price * (product.discount /100))} <span className="strike text-lg text-gray-500 line-through decoration-2">${product.price}</span>
                                 </div>
                             </div>
     </Link>

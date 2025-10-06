@@ -19,6 +19,7 @@ import Pagination from "./components/Pagination";
 import { useSearchParams } from "react-router";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useThrottle } from "../../../../hooks/useThrottle";
+import MultiRangeSlider from "./components/MultiRangeSlider"
 
 // const Slider = ()=>(<>SLider</>)
 
@@ -78,6 +79,7 @@ const SearchPage = () => {
         price_min: throttleRange[0],
         price_max: throttleRange[1],
     });
+    console.log(data)
     useEffect(() => {
         console.log(priceRange, 123);
     }, [priceRange]);
@@ -188,8 +190,8 @@ const SearchPage = () => {
                                 <div className="flex items-center gap-3">
                                     <button
                                         className="text-black/60 text-sm"
-                                        // onClick={() =>
-                                        //     setParams({
+                                        onClick={() =>
+                                             setSearchParams({})}
                                         //         q: "",
                                         //         sort: "createdAt",
                                         //         order: "desc",
@@ -233,7 +235,7 @@ const SearchPage = () => {
                                 </div>
                                 {filterToggle.category && (
                                     <div className="space-y-4 mb-6">
-                                        {data.allCategories.map((category) => (
+                                        {data?.allCategories.map((category) => (
                                             <div
                                                 key={category}
                                                 className="flex items-center gap-3"
@@ -302,8 +304,8 @@ const SearchPage = () => {
                                 {filterToggle.price && (
                                     <div className="space-y-4">
                                         <div className="flex justify-between text-sm font-medium text-black">
-                                            <span>${data.minPrice}</span>
-                                            <span>${data.maxPrice}</span>
+                                            <span>${data.minPrice || 0}</span>
+                                            <span>${data.maxPrice || 1000}</span>
                                         </div>
                                         <Slider
                                             value={priceRange}
@@ -375,9 +377,9 @@ const SearchPage = () => {
                                     <div className="grid grid-cols-5 gap-4">
                                         {[
                                             ...params.color,
-                                            ...data.allColors.filter(
+                                            ...(data?.allColors?.length ? data.allColors.filter(
                                                 (x) => !params.color.includes(x)
-                                            ),
+                                            ) : ["#000000", "#FFFFFF", "#FF0000", "#0000FF"]),
                                         ].map((color) => (
                                             <button
                                                 key={color}
@@ -457,7 +459,7 @@ const SearchPage = () => {
                                 </div>
                                 {filterToggle.size && (
                                     <div className="flex flex-wrap gap-2">
-                                        {data.allSizes.sort().map((size) => (
+                                        {(data?.allSizes ? data.allSizes : ['M','XL']).sort().map((size) => (
                                             <button
                                                 key={size}
                                                 className={`px-4 py-2 bg-[#F0F0F0] text-black/60 text-sm font-medium rounded-full border border-[#F0F0F0] hover:bg-black/70 hover:text-white transition-colors ${

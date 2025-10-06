@@ -4,7 +4,8 @@ import { getHomeDataService } from "../services/home.service"
 
 export const useHome = ()=>{
     return useQuery({
-        queryFn : getHomeDataService
+        queryFn : getHomeDataService,
+        queryKey : ['Home']
     })
 }
 

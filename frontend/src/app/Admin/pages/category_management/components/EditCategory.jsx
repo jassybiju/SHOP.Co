@@ -6,6 +6,8 @@ import {
     useGetCategory,
 } from "../../../hooks/useCategoryManagement";
 import toast from "react-hot-toast";
+import useConfirmationModal from "../../../hooks/useConfirmationModal";
+import { Loader2 } from "lucide-react";
 // import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const EditCategory = ({ id }) => {
@@ -16,9 +18,12 @@ const EditCategory = ({ id }) => {
         handleSubmit,
         formState: { errors: formError },
         reset,
+        trigger,
+        
     } = useForm({ defaultValues: { name: "", description: "" } });
-    const { mutate: EditCategory } = useEditCategory();
-    const { setShowModal, closeModal, setModalContent } = useModal();
+    const { mutate: EditCategory , status : editingStatus } = useEditCategory();
+    const {  closeModal } = useModal();
+    const confirmation = useConfirmationModal()
     useEffect(() => {
         reset({
             name: brands?.data.name,
@@ -38,7 +43,7 @@ const EditCategory = ({ id }) => {
                 onSuccess: (res) => {
                     console.log(res);
                     toast.success(res.message);
-                    closeModal();
+                    closeModal('edit-category');
                 },
             }
         );
@@ -54,13 +59,13 @@ const EditCategory = ({ id }) => {
     }
     return (
         <>
-            <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
+            <div className="bg-white rounded-xl shadow-xl w-1/2  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
                     Edit Category
                 </h2>
 
                 <form
-                // onSubmit={ShowConfirmationModal} noValidate
+                 onSubmit={(e)=>{e.preventDefault();trigger().then(x=> x&& confirmation(handleSubmit(onSubmit)))}} noValidate
                 >
                     <div className="mb-6">
                         <label
@@ -109,16 +114,18 @@ const EditCategory = ({ id }) => {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={closeModal}
-                            className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
+                            disabled={editingStatus === 'pending'}
+                            onClick={()=>closeModal('edit-category')}
+                            className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-400"
                         >
                             Cancel
                         </button>
                         <button
+                            disabled={editingStatus==='pending'}
                             type="submit"
-                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
+                            className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                            Edit Category
+                           {editingStatus === 'pending' ? <div className="flex gap-2"><Loader2 className="animate-spin"/> Editing Category</div> : "Edit Category"} 
                         </button>
                     </div>
                 </form>

@@ -1,7 +1,7 @@
 import { Loader2 } from "lucide-react";
 
-const Loader = () => {
-  return <div className="w-[99vw] h-[80vh] flex justify-center items-center">
+const Loader = ({width = 99}) => {
+  return <div className=" h-[80vh] flex justify-center items-center" style={{width : `${width}vw`}}>
     <Loader2 className="animate-spin "/>
   </div>;
 };

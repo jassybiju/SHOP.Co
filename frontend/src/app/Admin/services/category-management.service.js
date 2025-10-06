@@ -22,3 +22,8 @@ export const editCategory = async({data, id}) => {
   const res = await adminAxiosInstance.put('category/'+id , data)
   return res.data
 }
+
+export const toggleCategoryStatus = async(id) =>{
+  const res = await adminAxiosInstance.patch('category/toggle/'+id)
+  return res.data
+}

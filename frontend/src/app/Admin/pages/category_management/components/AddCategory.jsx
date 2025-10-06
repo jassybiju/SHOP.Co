@@ -3,42 +3,56 @@ import { useModal } from "../../../../../hooks/useModal";
 import { useForm } from "react-hook-form";
 import { useAddCategory } from "../../../hooks/useCategoryManagement";
 import { toast } from "react-hot-toast";
+import {Loader2} from 'lucide-react'
 import { useState } from "react";
+import useConfirmationModal from "../../../hooks/useConfirmationModal";
 export default function AddCategory() {
-    const { setShowModal } = useModal();
+    const { closeModal } = useModal();
 
     const {
         register,
         handleSubmit,
         setError,
+        trigger,
         formState: { errors: formError },
     } = useForm();
-    const { mutate: addCategory } = useAddCategory();
-
-
+    const { mutate: addCategory , status } = useAddCategory();
+    const confirmation = useConfirmationModal();
     const onSubmit = (data) => {
         console.log(data);
         addCategory(data, {
             onSuccess: (data) => {
                 console.log(data);
                 toast.success(data.message);
-                setShowModal(false);
+                closeModal("add-category");
             },
             onError: (error) => {
-                
                 toast.error(error.response.data.message);
             },
         });
     };
-    
+
     return (
         <>
-            <div className="bg-white rounded-xl shadow-xl w-full  p-10 px-[10%]  outline-1">
+            <div className="bg-white rounded-xl w-1/2 shadow-xl   p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
                     Add Category
                 </h2>
 
-                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        trigger().then(
+                            (x) =>
+                                x &&
+                                confirmation(
+                                    handleSubmit(onSubmit),
+                                    "add category"
+                                )
+                        );
+                    }}
+                    noValidate
+                >
                     <p className="text-red-500">
                         {formError?.form && formError?.form.message}
                     </p>
@@ -88,9 +102,10 @@ export default function AddCategory() {
 
                     <div className="flex justify-end gap-4">
                         <button
-                            type="button"
-                            onClick={() => setShowModal(false)}
-                            className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
+                            type="button" 
+                            disabled={status === "pending"}
+                            onClick={() => closeModal("add-category")}
+                            className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-400"
                         >
                             Cancel
                         </button>
@@ -98,7 +113,7 @@ export default function AddCategory() {
                             type="submit"
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition"
                         >
-                            Add Category
+                            {status === 'pending' ? (<div className="flex gap-2"><Loader2 className='animate-spin'/>Adding Category</div>) : "Add Category"}
                         </button>
                     </div>
                 </form>

@@ -19,7 +19,7 @@ const Login = () => {
         const queryClient = useQueryClient()
 
     const [formError, setFormError] = useState("");
-    const { mutate: login } = useLoginUser();
+    const { mutate: login , status } = useLoginUser();
     const navigate = useNavigate();
     console.log("Gotcha");
     const onSubmit = (data) => {
@@ -123,11 +123,12 @@ const Login = () => {
                         </div>
 
                         {/* Login Button */}
-                        <button
+                        <button 
+                            disabled={status === 'pending'}
                             type="submit"
-                            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition"
+                            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition disabled:bg-gray-900"
                         >
-                            Login
+                            {status === 'pending' ? "Logining " : "Login" }
                         </button>
 
                         {/* Google Sign-In */}

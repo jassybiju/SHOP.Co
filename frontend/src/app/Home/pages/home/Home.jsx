@@ -23,6 +23,11 @@ import { useHome } from "../../hooks/useHome";
 import ProductCard from "../search/components/ProductCard";
 import { Link } from "react-router";
 import Loader from "../../../../components/Loader";
+import zara_logo from '../../../../assets/zara_logo.png'
+import prada_logo from '../../../../assets/prada_logo.png'
+import gucci_logo from '../../../../assets/gucci_logo.png'
+import calvin_logo from '../../../../assets/Calvin_logo.png'
+import versace_logo from '../../../../assets/versace_logo.png'
 
 export default function Home() {
     const { data : res, status } = useHome();
@@ -74,9 +79,9 @@ export default function Home() {
                                 individuality and cater to your sense of style.
                             </p>
 
-                            <button className="bg-black text-white hover:bg-gray-800 rounded-full px-14 py-6 text-lg font-poppins">
+                            <Link to={'/search'} className="bg-black text-white hover:bg-gray-800 rounded-full px-14 py-6 text-lg font-poppins">
                                 Shop Now
-                            </button>
+                            </Link>
 
                             {/* Stats */}
                             <div className="flex flex-wrap items-center gap-8 pt-8">
@@ -129,32 +134,32 @@ export default function Home() {
 
             {/* Brand Logos */}
             <section className="bg-black py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-center space-x-8 md:space-x-16 flex-wrap gap-y-8">
-                        <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTY3IiBoZWlnaHQ9IjI3IiB2aWV3Qm94PSIwIDAgMTY3IDI3IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUwLjE3OSAwLjUxNDMyMkgxNjYuNDgyVjIuNTUyMDdDMTY2LjAwOCAyLjQyNzM0IDE2NS41MTMgMi4zNjMwNCAxNjUuMDEzIDIuMzYxNjRIMTU1LjY0MlYxMS44ODM2SDE2NC43NThDMTY1LjQxMyAxMS44ODM2IDE2NS45OTYgMTEuODI3MiAxNjYuNDgxIDExLjczMTFWMTMuNzU5OUMxNjYuMDY4IDEzLjY4NCAxNjUuNDk5IDEzLjY0NTUgMTY0Ljc5NCAxMy42NDU1SDE1NS42NDJWMjMuNDkxM0gxNjQuNzMzQzE2NS4yMzIgMjMuNDkxMyAxNjUuODI2IDIzLjQzNDMgMTY2LjQ4MSAyMy4zMTA0VjI1LjUwMDZIMTUwLjIwM0MxNTAuMzMzIDI1LjExNTQgMTUwLjM5OSAyNC43MTg1IDE1MC4zOTggMjQuMzJWMS43MjMzNEMxNTAuMzk4IDEuMjI4NTcgMTUwLjMyNSAwLjgxOTIzIDE1MC4xNzkgMC41MTQzMjJaTTE0Ni40MDUgNi45OTg5MUwxNDEuNjk1IDYuOTcwOTlDMTQxLjQ2NCA0Ljg5NDcyIDEzOS45NDcgMi44ODQ4OSAxMzYuNjA5IDIuNTE0NjVDMTI5LjQ1OSAyLjAwOTgyIDEyNy40NDQgOC4xNjk5NiAxMjcuNjI2IDEyLjY3NDNDMTI3LjgwOSAxNy4wMTYyIDEyOC42OTQgMjMuNjkxMiAxMzYuMDc1IDIzLjY5MTJDMTM5LjE3MSAyMy42OTEyIDE0Mi4xNDQgMjEuMTk2MSAxNDIuMDQ3IDE5LjA5MTlMMTQ2LjQwNSAxOS4wNjRDMTQ2LjA4OSAyMy40MDU4IDEzOS43NDEgMjUuOTE5NCAxMzYuNzE4IDI2LjAwNTRDMTI2LjM4OSAyNi4yODE4IDEyMi4wNjYgMjAuODgyMyAxMjEuODQ4IDEzLjE3OEMxMjEuNjU0IDYuMTk5NzkgMTI1LjI5NiAwIDEzNS41MDQgMEMxNDQuMjQ0IDAuMDk1NDkzIDE0NS45MzEgNC4xNTE5OSAxNDYuNDA1IDYuOTk4OTFaTTcyLjk0MDggMjIuNjYyNkw3Ni4wNjExIDIwLjYxNTNDNzcuNjg3IDIyLjcyMDEgNzkuMDIyNSAyMy42ODEyIDgyLjI1MTcgMjMuNjgxMkM4NS41Mjg2IDIzLjY4MTIgODguMjg1IDIyLjExOTggODguMjg1IDE5LjM1ODhDODguMjg1IDE3Ljk5NjggODcuNTgwMiAxNi44ODI3IDg2LjE4NDkgMTYuMDQ1MUM4NS41NTI4IDE1LjY1NDIgODMuOTUxIDE0Ljk3ODQgODEuNDI1OSAxNC4wMzU4Qzc3LjY1MDcgMTIuNjE3NCA3My45NzMxIDEwLjc2OTUgNzMuOTczMSA3LjA1NjQzQzczLjk3MzEgMi4zNzExMyA3OS4wNDY3IDAuMzA0OTA4IDg0LjM5OTUgMC4xNTE4OTVDODcuNTY4MSAwLjA1Njk2MDggOTEuNTAxNCAxLjQyOTA1IDkzLjA5MSAyLjk3MDg5TDg5LjkyMzEgNC44ODQ2Nkw4OS4zNTgxIDQuMDU3NTUgODguNTE4MSAzLjM2NTkgODcuNDkyMyAyLjg4MzEzIDg2LjQ2NjUgMi40MDAzNyA4NS4yOTMyIDIuMTQ0NTEgODQuMDk2OSAyLjE0MjczQzgwLjA1NDEgMi4xNDI3MyA3Ni44NDk4IDUuODE4MzcgODAuMiA4LjM1MTQ1QzgxLjA0OTMgOC45OTg2OCA4Mi43ODYzIDkuNzk4MzcgODUuNDMyNCA5Ljc4MDM3QzgxLjA0OTMgOC45OTg2OCA4Mi43ODYzIDkuNzk4MzcgODUuNDMyNCAx"
+                <div className=" flex justify-center w-full">
+                    <div className="flex w-[90vw]  gap-15 items-center justify-evenly  flex-nowrap ">
+                        <img 
+                            src={versace_logo}
                             alt="VERSACE"
-                            className="h-6 md:h-8 opacity-80"
+                            className="h-6 md:h-8 w-full opacity-80"
                         />
                         <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTIiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCA5MiAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzI3OF85OTc3KSI+CjxwYXRoIGQ9Ik04Ni44MTQxIDM2Ljg2ODJMN"
+                            src={zara_logo}
                             alt="ZARA"
-                            className="h-6 md:h-8 opacity-80"
+                            className="h-6 md:h-8 w-full opacity-80"
                         />
                         <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTU3IiBoZWlnaHQ9IjM2IiB2aWV3Qm94PSIwIDAgMTU3IDM2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjc4Xzk5NzkpIj4KPHBhdGggZD0iTTE0MS43OTQgMTEuMjkzNUwxNDEuNTAyIDExLjM4"
+                            src={gucci_logo}
                             alt="GUCCI"
-                            className="h-6 md:h-8 opacity-80"
+                            className="h-6 md:h-8 w-full opacity-80"
                         />
                         <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTk1IiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMTk1IDMyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjc4Xzk5ODEpIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0wLjQ4MTY4OSAwLjkwMTg3MkwzLjQxMzg2IDQuMjA4NlYyOC40MTA4TDEuMjQwNjYgMzEuNTc3NUwxNC41NTAxIDMxLjU5NzlMMTIuMTUxMiAyOC42ODRMMTEuOTAyMSAxOS45NjhMMjQuNzM1MyAyMC4wMzc2QzI4LjYyNTEgMTguNzQyNiAzMi42MjM4IDE1Ljk4MTYgMzIuODE1OSAxMC4zOTk3QzMyLjc1NDUgNC45OTA0NCAyOS40NTIgMS41MjA5OSAyNS42MTc3IDAuODMwNzI3TDAuNDgxNjg5IDAuOTAxODcyWk0xMS40MjY1IDIuNDQ5NjVWMTcuOTk3OUwyMS4yNzI4IDE4LjA2OUMyMy41MTMxIDE2LjI2MjQgMjUuMjExNSAxNC44Nzg4IDI1LjE0MzYgMTAuNTQxM0MyNS4xMTE1IDcuMDA0NDUgMjQuMzY0OSAzLjkyMDI0IDIxLjA2ODkgMi40NTA0MUwxMS40MjY1IDIuNDQ5NjVaTTM4Ljk3NTMgMC43MjU1MjRMNDEuOTA3NSA0LjAzMzAxVjI4LjIzNTJMMzkuNzM0MyAzMS40MDM0TDUzLjA0MyAzMS40MjIzTDUwLjY0NDEgMjguNTA4NEw1MC4zOTUgMTkuNzkyNEg1MC40NDgzTDY0LjE5ODIgMzEuNTIwN0w3NS42MDkxIDMxLjQyNzZMNjUuMTk0NiAyMi40MTk0SDU2LjUwMDRMNTMuNDM2IDE5LjgwOUw2My4yMjgyIDE5Ljg2MkM2Ny4xMTggMTguNTY3IDcxLjExNTkgMTUuODA2IDcxLjMwODggMTAuMjI0MUM3MS4yNDgyIDQuODE1NiA2Ny45NDU2IDEuMzQ1MzkgNjQuMTEwNiAwLjY1NTg5Mkw"
+                            src={prada_logo}
                             alt="PRADA"
-                            className="h-6 md:h-8 opacity-80"
+                            className="h-6 md:h-8 w-full opacity-80"
                         />
                         <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI3IiB2aWV3Qm94PSIwIDAgMjA4IDI3IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTE3LjEyOTUgMjMuODg3OUM5Ljg5MDg5IDIzLjg4NzkgMy43MTIyNSAxOC43Mzc3IDMuNzEyMjUgMTMuMTIwMUMzLjcxMjI1IDcuNTIzMzQgOS43NjE1NyAyLjI3MDc5IDE3LjA3NzYgMi4yNzA3OUMyMS44ODY3IDIuMjcwNzkgMjUuMzQ5NyA0LjA5NTkxIDI4LjE2ODIgNi45NTU0MkgzMS43MDk2QzMwLjY0OTYgNS40NTQ1NyAyOS41MTIyIDQuMDc1OTcgMjcuNzgwMiAzLjAwMDg0QzI0LjgwNyAxLjExNTAyIDIwLjk1NSAwIDE3LjEyOTUgMEM3Ljk1MjE5IDAgMC40ODE0NDUgNS45NDE4NSAwLjQ4MTQ0NSAxMy4xMDAyQzAuNDgxNDQ1IDIwLjI3ODQgOC4wNTYwOSAyNi4xNTk2IDE3LjE4MTUgMjYuMTU5NkMyMC45MDQxIDI2LjE1OTYgMjQuNTQ5NCAyNS4wODUzIDI3LjQ3MDcgMjMuMjgwMUMyOS4zMDY2IDIyLjEyNDMgMzAuNTk4NyAyMC42MjM1IDMxLjg0IDIuMDgxOUgzMS44NEMzMS44NCAyLjA4MTkgMzMuMTM5MyAzLjEzNzY2IDMzLjQ5MzkgMy4zNDY2NFYyMS4zMDE5SDQxLjc1NjhWMzEuNTM1NUg0MS43NTY4SDAuNzU0NDg2VjMxLjUzNTVIMC40ODE0NDVWMTguMTI3OUg4Ljk5NjQzVjkuNjQwODZIOC45OTY0M0gwLjczMjQyOVYzLjEzNzY2SDAuNzMyNDI5SDMzLjQ5MzlWMC4xNTk2OTZINDAuNjg4NUwzNy4yMjA1IDMuMTM3NjZIMzcuMjIwNVYzMS41MzU1SDAuNzMyNDI5WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg=="
+                            src={calvin_logo}
                             alt="Calvin Klein"
-                            className="h-6 md:h-8 opacity-80"
+                            className="h-6 md:h-8 w-full opacity-80"
                         />
                     </div>
                 </div>
@@ -180,7 +185,7 @@ export default function Home() {
 
                     <div className="text-center">
                         <Link 
-                        to={'search'}
+                        to={'/search?sort=createdAt&order=desc'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"
                         >
@@ -199,7 +204,7 @@ export default function Home() {
             <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <h2 className="font-bakbak text-4xl font-bold text-center mb-12">
-                        top selling
+                        Top Selling
                     </h2>
                         
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -211,7 +216,7 @@ export default function Home() {
 
                     <div className="text-center">
                         <Link 
-                            to={'/search'}
+                            to={'/search?sort=createdAt&order=desc'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"
                         >

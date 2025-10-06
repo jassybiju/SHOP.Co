@@ -14,7 +14,7 @@ const NewsLetter = () => {
                             <input
                                 type="email"
                                 placeholder="Enter your email address"
-                                className="bg-white text-black pl-12 py-3 rounded-full border-0 font-poppins"
+                                className="bg-white w-full text-black pl-12 py-3 rounded-full border-0 font-poppins"
                             />
                         </div>
                         <button className="w-full bg-white text-black hover:bg-gray-100 py-3 rounded-full font-poppins">

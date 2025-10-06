@@ -2,17 +2,16 @@ import { Trash2 } from "lucide-react";
 import { useModal } from "../../../../../hooks/useModal";
 import EditVariant from "./EditVariant";
 import AddVariant from "./AddVariant";
+import ModalWrapper from "../../../components/ModalWrapper";
 
 const VariantComponent = ({ value, onAddVariant,onEditVariant, field, remove, readonly ,index }) => {
-    const { setShowModal, setModalContent } = useModal();
+    const { openModal } = useModal();
 
     const showAddVariantModal = () => {
-        setModalContent(<AddVariant onAddVariant={onAddVariant} />);
-        setShowModal(true);
+        openModal('add-variant',<ModalWrapper render={<AddVariant onAddVariant={onAddVariant} />}/>);
     };
     const showEditVariantModal = () => {
-        setModalContent(<EditVariant onEditVariant={onEditVariant} value={field}/>)
-        setShowModal(true)
+        openModal('edit-variant',<ModalWrapper render={<EditVariant onEditVariant={onEditVariant} value={field}/>}/>)
     }
 
     return (
