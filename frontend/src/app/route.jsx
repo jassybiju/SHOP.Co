@@ -44,16 +44,8 @@ export const router = createBrowserRouter(
                 <Route path="/contact" element={<Contact />}></Route>
                 <Route path='/search' element={<SearchPage/>}></Route>
                 <Route path='/product/:id' element={<ProductPage/>}></Route>
-                {/* <Route
-                    index
-                    element={
-                        <>
-                            <AppLayout></AppLayout>
-                        </>
-                    }
-                /> */}
+               
 
-                {/* /admin route  */}
                
                 <Route path="auth" element={<RedirectIfLoggedIn/>}>
                     <Route path="register" element={<GoogleWrapper><Register /></GoogleWrapper>} />

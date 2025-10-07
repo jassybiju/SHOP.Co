@@ -13,7 +13,6 @@ import { Slider } from "./components/Slider";
 import { useSearchProduct } from "../../hooks/useSearch";
 import { useGetAllBrands } from "../../../Admin/hooks/useBrandManagement";
 import ProductCard from "./components/ProductCard";
-import Footer from "../../components/Footer";
 import { useEffect } from "react";
 import Pagination from "./components/Pagination";
 import { useSearchParams } from "react-router";
@@ -630,7 +629,6 @@ const SearchPage = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 };

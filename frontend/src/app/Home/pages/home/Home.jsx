@@ -321,9 +321,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Newsletter Section */}
-            <NewsLetter />
-            <Footer />
+                                <NewsLetter/>
         </div>
     );
 }
