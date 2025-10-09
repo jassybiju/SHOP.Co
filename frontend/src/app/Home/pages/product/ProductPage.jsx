@@ -1,3 +1,4 @@
+import React from "react";
 import { ChevronRight, Loader2, Minus, Plus, Star } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";

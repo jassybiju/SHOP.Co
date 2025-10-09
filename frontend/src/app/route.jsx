@@ -38,6 +38,7 @@ import ChangePassword from "./User/Accounts/pages/profile/components/ChangePassw
 import Address from "./User/Accounts/pages/address/Address";
 import AddAddress from "./User/Accounts/pages/address/AddAddress";
 import EditAddress from "./User/Accounts/pages/address/EditAddress";
+import Cart from "./User/pages/cart/Cart";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -94,6 +95,10 @@ export const router = createBrowserRouter(
                 </Route>
             </Route>
             <Route element={<RedirectIfNotLoggedIn />}>
+                <Route element={<AppLayout/>}>
+                <Route element={<Cart />} path="/cart"></Route>
+                
+                </Route>
                 <Route element={<AccountLayout />} path="account">
                     <Route index element={<Profile />} />
                     <Route path="edit" element={<EditProfile />}></Route>

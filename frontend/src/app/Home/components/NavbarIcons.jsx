@@ -1,3 +1,4 @@
+import React from "react";
 import { useUser } from "@/hooks/useUser";
 import SearchProduct from "./SearchProduct";
 import { Heart, ShoppingCart, User } from "lucide-react";
@@ -28,13 +29,13 @@ const NavbarIcons = () => {
             <SearchProduct />
             {user ? (
                 <div className="flex items-center space-x-3">
-                    <SearchProduct className="w-6 h-6 lg:hidden cursor-pointer" />
-                    <div className="relative cursor-pointer">
+
+                    <Link className="relative cursor-pointer" to='/cart'>
                         <ShoppingCart className="w-6 h-6" />
                         <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             4
                         </div>
-                    </div>
+                    </Link>
                     <Heart className="w-6 h-6 cursor-pointer" />
 
                     <Dropdown
