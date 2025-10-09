@@ -1,4 +1,4 @@
-import { adminAxiosInstance } from "./api/adminAxiosInstance";
+import { adminAxiosInstance } from "@/lib/axios"
 
 export const getAllUsers = async (data) => {
     console.log(data.queryKey[1])

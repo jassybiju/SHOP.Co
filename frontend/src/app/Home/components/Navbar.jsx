@@ -1,17 +1,9 @@
+import React from "react";
 import {
-    ChevronDown,
-    Heart,
-    Search,
-    ShoppingCart,
-    User,
     X,
 } from "lucide-react";
-import { useLogoutUser } from "@/app/Auth/hooks/useAuth";
 import { useUser } from "@/hooks/useUser";
-import { Link, NavLink, useNavigate } from "react-router";
-import SearchProduct from "./SearchProduct";
-import Dropdown from "./DropDown";
-import useConfirmationModal from "../../Admin/hooks/useConfirmationModal";
+import {  NavLink,  } from "react-router";
 import NavbarIcons from "./NavbarIcons";
 const Navbar = () => {
     //User data

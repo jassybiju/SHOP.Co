@@ -33,7 +33,7 @@ export const useLoginUser = () => {
         mutationFn: loginUser,
 
         onSuccess: (data) => {
-            console.log(data.role === "admin");
+            console.log(data);
             navigate("/admin");
         },
     });

@@ -1,9 +1,9 @@
 import { ImageUp, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
-import InputComponent from "../../components/InputComponent";
+import InputComponent from "../../../../components/InputComponent";
 import Dropdown from "../../components/Dropdown";
-import { useModal } from '../../../../hooks/useModal';
+import { useModal } from "../../../../hooks/useModal";
 import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
@@ -11,7 +11,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAddProduct, useGetProduct } from "../../hooks/useProductManagement";
 import { useParams } from "react-router";
-import Loader from '../../../../components/Loader'
+import Loader from "../../../../components/Loader";
 const ViewProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
     const { id } = useParams();
@@ -22,7 +22,7 @@ const ViewProduct = () => {
     });
     const { data: { data: categories } = { data: [] } } = useGetAllCategories();
 
-    if (status !== "success") return <Loader width={50}/>;
+    if (status !== "success") return <Loader width={50} />;
 
     return (
         <>
@@ -46,7 +46,7 @@ const ViewProduct = () => {
 
                     <div className="flex w-full gap-2">
                         <InputComponent
-                        readonly
+                            readonly
                             label={"Price"}
                             value={product.data.price}
                         />
@@ -96,7 +96,7 @@ const ViewProduct = () => {
                                     value={{
                                         color: field.color,
                                         size: field.size,
-                                        stock : field.stock
+                                        stock: field.stock,
                                     }}
                                 />
                             ))}
@@ -106,7 +106,6 @@ const ViewProduct = () => {
                             /> */}
                         </div>
                     </div>
-
                 </div>
             </form>
         </>
@@ -199,7 +198,6 @@ const ImageComponent = ({
             <input
                 {...registerRest}
                 disabled={readonly}
-                
                 type="file"
                 className="hidden"
                 ref={(e) => {

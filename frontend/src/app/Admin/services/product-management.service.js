@@ -1,4 +1,4 @@
-import { adminAxiosInstance } from "./api/adminAxiosInstance";
+import { adminAxiosInstance } from "@/lib/axios"
 
 export const addProduct = async (formData) => {
     const res = await adminAxiosInstance.post("product/", formData);

@@ -24,7 +24,9 @@ const userSchema = new Schema(
       type: String,
       default: "user",
     },
-
+    phone : {
+      type : String,
+    },
     gender: {
       type: String,
       enum: ["male", "female", "not disclosed"],
@@ -35,6 +37,9 @@ const userSchema = new Schema(
     },
     last_login: {
       type: Date,
+    },
+    avatar_url : {
+      type : String
     },
     is_verified: {
       type: Boolean,
@@ -61,7 +66,7 @@ userSchema.pre("save", async function (next) {
 
     //hashing password
     const hash = await bcrypt.hash(user.password, SALT_WORK_FACTOR);
-    
+    console.log(hash)
     user.password = hash;
     next();
   } catch (error) {
@@ -70,7 +75,8 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.comparePassword = async function (password) {
+  console.log(this.password)
   return await bcrypt.compare(password, this.password);
 };
 
-export const User = mongoose.model("user", userSchema);
+export const User = mongoose.model("User", userSchema);

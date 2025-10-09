@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 import { Product } from "../models/product.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import { Brand } from "../models/brand.model.js";

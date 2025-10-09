@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
+// import fs from "fs";
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_KEY,
@@ -8,7 +8,7 @@ cloudinary.config({
 
 export const uploadImages = async (req, folder) => {
     const uploadResults = [];
-    for (const file of req.files) {
+    for (const file of req?.files) {
         const result = await cloudinary.uploader.upload(file.path, {
             folder: folder,
         });

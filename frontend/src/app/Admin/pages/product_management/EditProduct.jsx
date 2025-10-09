@@ -1,9 +1,9 @@
 import { ImageUp, Loader2, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
-import InputComponent from "../../components/InputComponent";
+import InputComponent from "../../../../components/InputComponent";
 import Dropdown from "../../components/Dropdown";
-import { useModal } from '../../../../hooks/useModal';
+import { useModal } from "../../../../hooks/useModal";
 import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
@@ -20,13 +20,13 @@ import EditVariant from "./components/EditVariant";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";
 import useConfirmationModal from "../../hooks/useConfirmationModal";
-import Loader from "../../../../components/Loader"
+import Loader from "../../../../components/Loader";
 const EditProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
     const { id } = useParams();
-    const { data: product , status : DataLoadingStatus} = useGetProduct(id);
-    const navigate = useNavigate()
-   const { mutate: editProduct, status } = useEditProduct();
+    const { data: product, status: DataLoadingStatus } = useGetProduct(id);
+    const navigate = useNavigate();
+    const { mutate: editProduct, status } = useEditProduct();
     const {
         register,
         handleSubmit,
@@ -37,7 +37,7 @@ const EditProduct = () => {
         formState: { errors },
     } = useForm();
 
-    const { fields, append, remove , update } = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
         control,
         name: "variants",
         rules: {
@@ -45,7 +45,7 @@ const EditProduct = () => {
                 value.length > 0 || "At Least one variant is required",
         },
     });
-    const confirmation = useConfirmationModal()
+    const confirmation = useConfirmationModal();
     const { data: { data: brands } = { data: [] } } = useGetAllBrands({
         limit: 100,
     });
@@ -53,28 +53,28 @@ const EditProduct = () => {
 
     useEffect(() => {
         if (product?.data) {
-            console.log(product)
+            console.log(product);
             reset({
                 ...product.data,
                 images: product.data.images.map((x) => x.url),
             });
-            console.log(product)
+            console.log(product);
             console.log({
                 ...product.data,
                 images: product.data.images.map((x) => x.url),
             });
         }
-        
+
         console.log(123);
     }, [product, reset]);
 
-    if(DataLoadingStatus === 'pending'){
-        return <Loader/>
+    if (DataLoadingStatus === "pending") {
+        return <Loader />;
     }
 
     const onSubmit = (data) => {
         console.log(data, "----------------------");
-        console.log(data.description,444)
+        console.log(data.description, 444);
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("price", data.price);
@@ -86,7 +86,7 @@ const EditProduct = () => {
 
         data?.images.forEach((image) => {
             let is_new = 0;
-            console.log(image,998)
+            console.log(image, 998);
             if (image[0] instanceof File) {
                 is_new = 1;
                 formData.append("images", image[0]);
@@ -99,38 +99,48 @@ const EditProduct = () => {
 
         formData.append("variants", JSON.stringify(data.variants));
 
-        editProduct({ id, formData }, {onError : (res)=>{
-            console.log(res);
-            toast.error(res.response.data.message)
-        }, onSuccess : (res)=>{
-            console.log(res)
-            toast.success(res.message)
-            navigate('/admin/product-management/')
-        }});
+        editProduct(
+            { id, formData },
+            {
+                onError: (res) => {
+                    console.log(res);
+                    toast.error(res.response.data.message);
+                },
+                onSuccess: (res) => {
+                    console.log(res);
+                    toast.success(res.message);
+                    navigate("/admin/product-management/");
+                },
+            }
+        );
         for (let i of formData.entries()) {
             console.log(i);
         }
     };
-
 
     return (
         <>
             <Header heading="Edit Product" goback />
             <form
                 className="mr-3 m-0 md:m-5 flex flex-wrap"
-                onSubmit={(e)=>{e.preventDefault();trigger().then(x => x && confirmation(handleSubmit(onSubmit)))}}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    trigger().then(
+                        (x) => x && confirmation(handleSubmit(onSubmit))
+                    );
+                }}
             >
                 <div className="w-[100%] md:w-[50%] xl:w-[30%] h-90  md:mr-5">
                     <ImageGroupComponent
-                    setValue={setValue}
+                        setValue={setValue}
                         register={register}
                         error={errors.images}
                         value={product?.data.images.map((x) => x.url)}
                     />
                 </div>
                 <div className="w-[100%] md:w-[40%] xl:w-[65%] md:mt-5">
-                    <InputComponent 
-                    required
+                    <InputComponent
+                        required
                         label={"Product Name"}
                         register={register("name", {
                             required: "Product name is required",
@@ -138,8 +148,7 @@ const EditProduct = () => {
                         error={errors.name}
                     />
                     <InputComponent
-                    required
-
+                        required
                         label={"Product Small Description"}
                         register={register("small_description", {
                             required: "Small description is required",
@@ -148,7 +157,8 @@ const EditProduct = () => {
                     />
 
                     <div className="flex w-full gap-2">
-                        <InputComponent required
+                        <InputComponent
+                            required
                             label={"Price"}
                             register={register("price", {
                                 required: "Price is required",
@@ -159,7 +169,8 @@ const EditProduct = () => {
                             })}
                             error={errors.name}
                         />
-                        <InputComponent required
+                        <InputComponent
+                            required
                             label={"Discount"}
                             register={register("discount", {
                                 min: {
@@ -177,7 +188,8 @@ const EditProduct = () => {
                 </div>
                 <div className="w-[100%] md:w-[100%] xl:w-[100%] md:my-5">
                     <div className="flex w-full gap-2">
-                        <InputComponent required
+                        <InputComponent
+                            required
                             select
                             label={"Brand"}
                             options={brands.map((x) => ({
@@ -189,8 +201,9 @@ const EditProduct = () => {
                             })}
                             error={errors.brand_id}
                         />
-                        <InputComponent required 
-                        defaultValue={product?.data?.category_id}
+                        <InputComponent
+                            required
+                            defaultValue={product?.data?.category_id}
                             select
                             label={"Category"}
                             options={categories.map((x) => ({
@@ -203,13 +216,18 @@ const EditProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent  required textarea label={"Description"}  register={register("description", {
-                                required: "Description is required",
-                            })}/>
+                    <InputComponent
+                        required
+                        textarea
+                        label={"Description"}
+                        register={register("description", {
+                            required: "Description is required",
+                        })}
+                    />
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
                         <h1 className="font-bold ">* Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">
-                            {fields.map((field,index) => (
+                            {fields.map((field, index) => (
                                 <VariantComponent
                                     key={field.id}
                                     field={field}
@@ -217,10 +235,12 @@ const EditProduct = () => {
                                     value={{
                                         color: field.color,
                                         size: field.size,
-                                        stock : field.stock
+                                        stock: field.stock,
                                     }}
                                     remove={remove}
-                                    onEditVariant={(val)=> update(index,{...val})}
+                                    onEditVariant={(val) =>
+                                        update(index, { ...val })
+                                    }
                                 />
                             ))}
 
@@ -241,7 +261,10 @@ const EditProduct = () => {
                             type="submit"
                             className="px-6 py-3 flex bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                            {status === 'pending'  && <Loader2 className=" animate-spin "/>} Edit Product
+                            {status === "pending" && (
+                                <Loader2 className=" animate-spin " />
+                            )}{" "}
+                            Edit Product
                         </button>
                     </div>
                 </div>

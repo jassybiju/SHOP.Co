@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useModal } from "../../../../../hooks/useModal";
-import InputComponent from "../../../components/InputComponent";
+import InputComponent from "../../../../../components/InputComponent";
 import { SIZE_TYPES } from "../../../../../utils/CONSTANTS";
 import { toast } from "react-hot-toast";
 

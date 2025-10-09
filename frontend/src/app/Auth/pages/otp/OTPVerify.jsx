@@ -32,6 +32,7 @@ const OTPVerify = () => {
                     console.log(data);
                     toast.success(data.message);
                     if(type === OTP_TYPES.FORGET_PASSWORD){
+                        console.log('9999999999999')
                         return navigate('/auth/reset-password', {replace : true ,state : {email : email}})
                     }
                     navigate("/", {replace: true});

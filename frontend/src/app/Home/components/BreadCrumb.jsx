@@ -1,14 +1,14 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 
-const BreadCrumb = ({items}) => {
+const BreadCrumb = ({items, seperator}) => {
     // console.log(items)
     return (
         <nav className="flex items-center space-x-1 text-sm mb-6">
-            {items.map((item, index) => (
+            {items?.map((item, index) => (
                 <div key={index} className="flex items-center">
                     {index > 0 && (
-                        <ChevronRight className="w-4 h-4 text-gray-text mx-1 " />
+                        seperator ? seperator : <ChevronRight className="w-4 h-4 text-gray-text mx-1 " />
                     )}
                     <Link 
                     to={item.link}

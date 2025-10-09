@@ -1,4 +1,4 @@
-import { homeAxiosInstance } from "./api/homeAxiosInstance"
+import { homeAxiosInstance } from "@/lib/axios"
 
 export const getHomeDataService = async(data) => {
     const res = await homeAxiosInstance('/')

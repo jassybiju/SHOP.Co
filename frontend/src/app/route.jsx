@@ -1,3 +1,4 @@
+import React from "react";
 import {
     createBrowserRouter,
     createRoutesFromElements,
@@ -29,72 +30,109 @@ import GoogleWrapper from "../components/GoogleWrapper";
 import ProductPage from "./Home/pages/product/ProductPage";
 import About from "./Home/pages/about/About";
 import Contact from "./Home/pages/contact/Contact";
+import Profile from "./User/Accounts/pages/profile/Profile";
+import RedirectIfNotLoggedIn from "./Auth/components/RedirectIfNotLoggedIn";
+import AccountLayout from "./Layout/AccountLayout";
+import EditProfile from "./User/Accounts/pages/profile/components/EditProfile";
+import ChangePassword from "./User/Accounts/pages/profile/components/ChangePassword";
+import Address from "./User/Accounts/pages/address/Address";
+import AddAddress from "./User/Accounts/pages/address/AddAddress";
+import EditAddress from "./User/Accounts/pages/address/EditAddress";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <>
             <Route
                 path="/"
-                element={<AppLayout/>}
+                element={<AppLayout />}
                 errorElement={<>Erorr</>}
                 hydrateFallbackElement={<>Loading...</>}
             >
                 <Route index element={<Home />}></Route>
                 <Route path="/about" element={<About />}></Route>
                 <Route path="/contact" element={<Contact />}></Route>
-                <Route path='/search' element={<SearchPage/>}></Route>
-                <Route path='/product/:id' element={<ProductPage/>}></Route>
-               
+                <Route path="/search" element={<SearchPage />}></Route>
+                <Route path="/product/:id" element={<ProductPage />}></Route>
+                <Route
+                    path="auth/otp-verify"
+                    element={
+                        <RedirectIfNoOTP>
+                            <OTPVerify />
+                        </RedirectIfNoOTP>
+                    }
+                />
+                <Route
+                    path="auth/forget-password"
+                    element={<ForgetPassword />}
+                />
 
-               
-                <Route path="auth" element={<RedirectIfLoggedIn/>}>
-                    <Route path="register" element={<GoogleWrapper><Register /></GoogleWrapper>} />
-                    <Route path="login" element={<GoogleWrapper><Login /></GoogleWrapper>} />
+                <Route
+                    path="auth/reset-password"
+                    element={
+                        <>
+                            <ResetPassword />
+                        </>
+                    }
+                />
+                <Route path="auth" element={<RedirectIfLoggedIn />}>
                     <Route
-                        path="otp-verify"
+                        path="register"
                         element={
-                            <RedirectIfNoOTP>
-                                <OTPVerify />
-                            </RedirectIfNoOTP>
+                            <GoogleWrapper>
+                                <Register />
+                            </GoogleWrapper>
                         }
                     />
-                    <Route path="forget-password"element={<ForgetPassword />}/>
-                    <Route path="reset-password"element={<ResetPassword />}/>
-                </Route>
-
-                <Route path="/">
-                        
+                    <Route
+                        path="login"
+                        element={
+                            <GoogleWrapper>
+                                <Login />
+                            </GoogleWrapper>
+                        }
+                    />
                 </Route>
             </Route>
-        <Route element={<RoleBasedProtectedRoute allowedRoles={["admin"]}/>}>
-             <Route
-               
-                    path="admin"
+            <Route element={<RedirectIfNotLoggedIn />}>
+                <Route element={<AccountLayout />} path="account">
+                    <Route index element={<Profile />} />
+                    <Route path="edit" element={<EditProfile />}></Route>
+                    <Route
+                        path="edit/change-password"
+                        element={<ChangePassword />}
+                    />
+                    <Route path="address" element={<Address />} />
+                    <Route path="address/add" element={<AddAddress />} />
+                    <Route path="address/edit/:id" element={<EditAddress />} />
+
+                    <Route path="orders" element={<EditProfile />} />
+                </Route>
+                <Route
                     element={
-                    
-                                <AdminLayout />
+                        <RoleBasedProtectedRoute allowedRoles={["admin"]} />
                     }
                 >
-                    <Route path="" element={<Dashboard />} />
-                    <Route path="user-management">
-                        <Route index element={<UserManagement />} />
-                        <Route path=":id" element={<UserDetails />} />
-                    </Route>
-                    <Route path="product-management">
-                        <Route index element={<ProductManagement />} />
-                        <Route path="add" element={<AddProduct />} />
-                        <Route path="view/:id" element={<ViewProduct />} />
-                        <Route path="edit/:id" element={<EditProduct />} />
-                    </Route>
-                    <Route path="brand-management">
-                        <Route index element={<BrandMangement />} />
-                    </Route>
-                    <Route path="category-management">
-                        <Route index element={<CategoryMangement />} />
+                    <Route path="admin" element={<AdminLayout />}>
+                        <Route path="" element={<Dashboard />} />
+                        <Route path="user-management">
+                            <Route index element={<UserManagement />} />
+                            <Route path=":id" element={<UserDetails />} />
+                        </Route>
+                        <Route path="product-management">
+                            <Route index element={<ProductManagement />} />
+                            <Route path="add" element={<AddProduct />} />
+                            <Route path="view/:id" element={<ViewProduct />} />
+                            <Route path="edit/:id" element={<EditProduct />} />
+                        </Route>
+                        <Route path="brand-management">
+                            <Route index element={<BrandMangement />} />
+                        </Route>
+                        <Route path="category-management">
+                            <Route index element={<CategoryMangement />} />
+                        </Route>
                     </Route>
                 </Route>
-                </Route>
-
+            </Route>
         </>
     )
 );

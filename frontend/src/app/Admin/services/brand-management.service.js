@@ -1,4 +1,4 @@
-import { adminAxiosInstance } from "./api/adminAxiosInstance"
+import { adminAxiosInstance } from "@/lib/axios"
 
 export const getAllBrands = async(data) => {
     const res = await adminAxiosInstance.get('brand/', {params : data.queryKey[1]})

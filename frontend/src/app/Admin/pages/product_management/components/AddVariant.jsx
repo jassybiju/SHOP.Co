@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useModal } from "../../../../../hooks/useModal";
-import InputComponent from "../../../components/InputComponent";
+import InputComponent from "../../../../../components/InputComponent";
 import { SIZE_TYPES } from "../../../../../utils/CONSTANTS";
-import {toast} from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 
 const AddVariant = ({ onAddVariant }) => {
     const {
@@ -12,10 +12,10 @@ const AddVariant = ({ onAddVariant }) => {
     } = useForm();
     const { closeModal } = useModal();
     const onSubmit = (data) => {
-        console.log(data)
-        
-        closeModal('add-variant')
-        toast.success("Variant Added Succesfully")
+        console.log(data);
+
+        closeModal("add-variant");
+        toast.success("Variant Added Succesfully");
         onAddVariant(data);
     };
 
@@ -36,27 +36,34 @@ const AddVariant = ({ onAddVariant }) => {
                     label={"Size"}
                     select
                     options={SIZE_TYPES}
-                    register={register("size", {required : "Size is required"})}
+                    register={register("size", {
+                        required: "Size is required",
+                    })}
                     error={formError.size}
                 />
 
                 <InputComponent
                     colorPicker
                     label={"Color"}
-                    register={register("color", {required: "Color is required" })}
+                    register={register("color", {
+                        required: "Color is required",
+                    })}
                     error={formError.color}
                 />
-                
+
                 <InputComponent
                     label={"Stock"}
-                    register={register("stock",{required : "Stock is requried", min : {value : 0 , message : "Min value is 0"}})}
+                    register={register("stock", {
+                        required: "Stock is requried",
+                        min: { value: 0, message: "Min value is 0" },
+                    })}
                     error={formError.stock}
                 />
 
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"
-                        onClick={() => closeModal('add-variant')}
+                        onClick={() => closeModal("add-variant")}
                         className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition"
                     >
                         Cancel

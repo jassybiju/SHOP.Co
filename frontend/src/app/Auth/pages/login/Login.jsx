@@ -42,8 +42,10 @@ const Login = () => {
                 console.log(result);
                 const email = result.data.email;
                 const first_name = result.data.first_name;
+                const active = result.data.active;
+                const role = result.data.role
                 const token = result.data.token;
-                const obj = { email, first_name,  };
+                const obj = { email, first_name, active ,role };
                 queryClient.setQueryData(['user'],obj)
                 navigate("/");
             } else {

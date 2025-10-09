@@ -1,6 +1,6 @@
 import { Brand } from "../../models/brand.model.js";
-import cloudinary, { getPublicIdFromUrl, uploadImages } from "../../utils/cloudinary.js";
-import { brandFilterOptions, filterOptions } from "../../utils/CONSTANTS.js";
+import cloudinary, {  uploadImages } from "../../utils/cloudinary.js";
+import { brandFilterOptions } from "../../utils/CONSTANTS.js";
 
 export const addBrandService = async (req, res, value) => {
     const existingBrand = await Brand.findOne({ name: value.name });

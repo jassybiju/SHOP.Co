@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 
 export const checkAdminRole = async (req, res, next) => {
     try {
-        const email = res.locals.email;
+        const email = req.email;
         const user = await User.findOne({ email });
 
         if(!user){

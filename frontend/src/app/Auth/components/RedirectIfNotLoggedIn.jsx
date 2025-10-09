@@ -2,34 +2,25 @@ import { Navigate, Outlet } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { useUser } from "../../../hooks/useUser";
 import { useStore } from "../../../store/store";
+import toast from "react-hot-toast";
 
-const RedirectIfNotLoggedIn = ({ children }) => {
-  const { user, setUser, clearUser } = useStore();
-  const { data, isLoading, isError } = useUser({
-    staleTime: 0,
-    cacheTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    retry: 1,
-  });
-
-  // Update store only if user exists and is valid
-  if (data && !data.is_blocked && !data.is_deleted && !user) {
-    setUser(data);
+const RedirectIfNotLoggedIn = () => {
+  const { data : user, isLoading,  } = useUser();
+  if (isLoading) {
+    return <div>Loading...</div>; // or your loader
   }
-
-  // Clear store if fetch failed or user is blocked/deleted
-  if ((isError || (data && (data.is_blocked || data.is_deleted))) && user) {
-    clearUser();
-  }
-
-  if (isLoading) return <Loader />;
 
   if (!user) {
+    // If the user is logged in, redirect to their dashboard
+    return <Navigate to="/auth/login" replace />;
+  }
+  if(!user.active){
+    toast.error("User Blocked")
     return <Navigate to="/auth/login" replace />;
   }
 
-  return children || <Outlet />;
+  // If not logged in, render the nested routes (login/register)
+  return <Outlet />
 };
 
 export default RedirectIfNotLoggedIn;

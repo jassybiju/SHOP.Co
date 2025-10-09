@@ -1,16 +1,16 @@
-import express, { urlencoded } from "express";
 import "./utils/env.js";
+import express, { urlencoded } from "express";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import adminUserManagementRouter from "./routes/admin/user-management.routes.js";
 import brandManagementRouter from './routes/admin/brand-management.routes.js'
 import categoryManagementRouter from './routes/admin/category-management.routes.js'
 import productManagementRouter from './routes/admin/product-managment.routes.js'
-import HomeRouter from './routes/home.routes.js'
+import homeRouter from './routes/home.routes.js'
+import accountRouter from './routes/account.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-
 const PORT = process.env.PORT || 8000;
 const app = express();
 
@@ -40,7 +40,9 @@ app.use("/api/admin/brand", brandManagementRouter);
 app.use("/api/admin/category", categoryManagementRouter);
 app.use("/api/admin/product", productManagementRouter);
 
-app.use('/api/home',HomeRouter)
+app.use('/api/home',homeRouter)
+
+app.use('/api/account', accountRouter)
 
 app.use((req, res) => {
     res.status(404);

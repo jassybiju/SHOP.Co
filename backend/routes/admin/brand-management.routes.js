@@ -1,8 +1,5 @@
 import express from "express";
-import multer from "multer";
-import cloudinary from "../../utils/cloudinary.js";
 import upload from "../../middlewares/multer.js";
-import fs from "fs";
 import { addBrand, editBrand, getAllBrand, getBrand } from "../../controllers/admin/brand-management.controller.js";
 import { authenticateUser } from "../../middlewares/auth.middleware.js";
 import { checkAdminRole } from "../../middlewares/admin.middleware.js";

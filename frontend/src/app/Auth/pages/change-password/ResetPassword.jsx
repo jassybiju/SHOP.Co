@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import Input from "../../../../components/Input";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { useForgetPassword, useResetPassword } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
@@ -13,9 +13,15 @@ const ResetPassword = () => {
     } = useForm();
 
     const { mutate: resetpassword, isPending  } = useResetPassword();
-    const {state : {email} } = useLocation()
-    
+    const {state  } = useLocation()
     const navigate = useNavigate();
+    
+    if(!state){
+        toast.error("Not Allowed")
+        return <Navigate to={-1}/>
+    }
+
+    const email = state.email
     const onSubmit = (data) => {
         console.log("Email submitted:", data);
         resetpassword({...data, email}, {
@@ -41,7 +47,7 @@ const ResetPassword = () => {
                     Syn<span className="text-purple-500">apse</span>
                 </h1>
                 <h2 className="text-3xl font-bold text-center mb-20">
-                    Rest Password
+                    Reset Password
                 </h2>
 
                 {/* Instruction */}

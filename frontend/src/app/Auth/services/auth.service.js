@@ -1,48 +1,49 @@
-import { axiosInstance } from "./api/axiosInstance";
+import { authAxiosInstance } from "@/lib/axios";
 
 export const registerUser = async (data) => {
-    const res = await axiosInstance.post("/register", data);
+    const res = await authAxiosInstance.post("/register", data);
     return res.data;
 };
 
 export const loginUser = async (data) => {
     console.log(data);
-    const res = await axiosInstance.post("/login", data);
+    const res = await authAxiosInstance.post("/login", data);
+    console.log(res.data.data, 888)
     return res.data.data;
 };
 
 export const forgetPassword = async (data) => {
-    const res = await axiosInstance.post("/forget-password", data);
+    const res = await authAxiosInstance.post("/forget-password", data);
     console.log(res.data)
     return res.data;
 };
 export const verifyOtp = async (data) => {
-    const res = await axiosInstance.post("/otp/verify", data);
+    const res = await authAxiosInstance.post("/otp/verify", data);
     return res.data;
 };
 
 export const resendOtp = async (data) => {
-    const res = await axiosInstance.post("otp/resend", data);
+    const res = await authAxiosInstance.post("otp/resend", data);
     return res.data
 };
 
 export const resetPassword = async(data)=>{
     console.log(data , 21322)
-const res = await axiosInstance.patch('password/reset', data)
+const res = await authAxiosInstance.patch('password/reset', data)
     return res.data
 }
 
-export const logoutUser = () => axiosInstance.post("/logout");
+export const logoutUser = () => authAxiosInstance.post("/logout");
 
 export const fetchUser = async () => {
-    const res = await axiosInstance.get("/me", { withCredentials: true });
+    const res = await authAxiosInstance.get("/me", { withCredentials: true });
     console.log(res.data);
     return res.data.data;
 };
 
 
 export const googleAuth = async (code) => {
-    const res = await axiosInstance.get('/google?code='+code)
+    const res = await authAxiosInstance.get('/google?code='+code)
     return res.data
 }
 

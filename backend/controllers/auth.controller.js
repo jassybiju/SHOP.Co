@@ -1,7 +1,12 @@
 import { oauth2 } from "googleapis/build/src/apis/oauth2/index.js";
 import client from "../config/redisClient.js";
 import { User } from "../models/user.model.js";
-import { OTP_TYPES } from "../utils/CONSTANTS.js";
+import {
+    OTP_TYPES,
+    OTP_INVALID_TIME,
+    OTP_EXPIRY_TIME,
+    OTP_VERIFY_LIMIT,
+} from "../utils/CONSTANTS.js";
 import { oauth2Client } from "../utils/googleClient.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 import { sendOTPMail } from "../utils/nodemailer.js";
@@ -9,12 +14,7 @@ import { generateOtp } from "../utils/otp.js";
 import { printKeyValuePair } from "../utils/redis-debug.js";
 import axios from "axios";
 import { userValidator } from "../validators/userValidator.js";
-import { response } from "express";
-import { chat } from "googleapis/build/src/apis/chat/index.js";
-
-const OTP_INVALID_TIME = process.env.OTP_INVALID_TIME || 120;
-const OTP_EXPIRY_TIME = process.env.OTP_EXPIRY_TIME || 300;
-const OTP_VERIFY_LIMIT = process.env.OTP_VERIFY_LIMIT || 3;
+import cloudinary from "../utils/cloudinary.js";
 
 // Handles user registeration , If user unverified it deletes and recreates
 export const registerUser = async (req, res, next) => {
@@ -28,7 +28,7 @@ export const registerUser = async (req, res, next) => {
 
         const user = await User.findOne({ email: email });
         console.log(user, email);
-
+        console.log(value);
         if (user && user.is_verified) {
             console.log(1);
             res.status(400);
@@ -79,12 +79,20 @@ export const loginUser = async (req, res, next) => {
             throw new Error("User not found");
         }
         if (!user.active) {
-            res.status(404).cookie("jwt", { maxAge: 0 , sameSite : "None", secure:true});
+            res.status(404).cookie("jwt", {
+                maxAge: 0,
+                sameSite: "None",
+                secure: true,
+            });
             throw new Error("User Blocked");
         }
-        if(user.is_google_login){
-            res.status(400).cookie('jwt',{maxAge : 0, sameSite : "None", secure:true})
-            throw new Error('User is Logged In through Google')
+        if (user.is_google_login) {
+            res.status(400).cookie("jwt", {
+                maxAge: 0,
+                sameSite: "None",
+                secure: true,
+            });
+            throw new Error("User is Logged In through Google");
         }
         console.log(email, password);
 
@@ -100,7 +108,7 @@ export const loginUser = async (req, res, next) => {
                 secure: true,
                 maxAge: 24 * 60 * 60 * 1000,
                 path: "/",
-                sameSite : 'None'
+                sameSite: "None",
             })
             .status(200)
             .json({
@@ -110,6 +118,9 @@ export const loginUser = async (req, res, next) => {
                     last_name: user.last_name,
                     email: user.email,
                     role: user.role,
+                    avatar_url: user?.avatar_url
+                        ? cloudinary.url(user.avatar_url, { secure: true })
+                        : null,
                 },
             });
     } catch (error) {
@@ -119,7 +130,7 @@ export const loginUser = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
     try {
-        res.cookie("jwt", "", { maxAge: 0, sameSite : "None", secure:true });
+        res.cookie("jwt", "", { maxAge: 0, sameSite: "None", secure: true });
         res.status(200).json({
             message: "Logged Out Successful",
             status: "success",
@@ -148,8 +159,6 @@ export const verifyOTP = async (req, res, next) => {
         //*getting otp from redis cache
         const { otp, otp_count, otp_type, otp_invalid_time } =
             JSON.parse(cache_data);
-        console.log(otp, otp_count, otp == otp_code, otp_code);
-        console.log(cache_data);
 
         if (type !== otp_type) {
             await client.del(`OTP${email}`);
@@ -166,16 +175,17 @@ export const verifyOTP = async (req, res, next) => {
 
         //* Checking if limit exceeded
         if (otp_count >= OTP_VERIFY_LIMIT) {
- await client.set(
+            await client.set(
                 `OTP:${email}`,
                 JSON.stringify({
                     otp,
                     // otp_count:  + 1otp_count,
                     otp_type,
-                    otp_invalid_time :  Date.now(),
+                    otp_invalid_time: Date.now(),
                 }),
                 "KEEPTTL"
-            );            res.status(400);
+            );
+            res.status(400);
             throw new Error("OTP count limit reached, Resend OTP");
         }
         //res on invalid otp
@@ -222,6 +232,27 @@ export const verifyOTP = async (req, res, next) => {
                 message: "OTP Verified, Change password",
                 status: "success",
             });
+        } else if (type === OTP_TYPES.CHANGE_EMAIL) {
+            const change_email_of_user = await client.get(
+                `CHANGE_PASSWORD:${email}`
+            );
+            const user = await User.findOne({ email: change_email_of_user });
+            user.email = email;
+            user.save();
+
+            return res
+                .cookie("jwt", generateToken(email), {
+                    httpOnly: true,
+                    secure: true,
+                    maxAge: 24 * 60 * 60 * 1000,
+                    path: "/",
+                    sameSite: "None",
+                })
+                .status(200)
+                .json({
+                    message: "Email Changed Successfully",
+                    status: "success",
+                });
         }
     } catch (error) {
         console.log(error);
@@ -286,10 +317,11 @@ export const forgetPassword = async (req, res, next) => {
             res.status(400);
             throw new Error("No User found with this email Id");
         }
-        const is_verified_already_sent = await client.get(`otp_verified:${email}`);
-        if(is_verified_already_sent){
+        const is_verified_already_sent = await client.get(
+            `otp_verified:${email}`
+        );
+        if (is_verified_already_sent) {
             await client.del(`otp_verified:${email}`);
-
         }
         const otp_code = generateOtp();
         //senting otp and saving in redis cache
@@ -336,7 +368,7 @@ export const resetPassword = async (req, res, next) => {
                 throw new Error("User not found");
             }
             user.password = password;
-            user.is_google_login = false
+            user.is_google_login = false;
             await user.save();
             console.log(user);
             await client.del(`otp_verified:${email}`);
@@ -356,7 +388,7 @@ export const resetPassword = async (req, res, next) => {
 export const getUserDetails = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
-        console.log(token)
+        console.log(token);
         if (!token) {
             res.status(401);
             return next("Access Denied");
@@ -364,19 +396,30 @@ export const getUserDetails = async (req, res, next) => {
         const data = verifyToken(req.cookies.jwt);
         const user = await User.findOne({ email: data.email });
         console.log(user);
-        if (!user ) {
-            res.status(403).cookie("jwt","", { maxAge: 0 , sameSite : "None", secure:true});
+        if (!user) {
+            res.status(403).cookie("jwt", "", {
+                maxAge: 0,
+                sameSite: "None",
+                secure: true,
+            });
             throw new Error("User Blocked");
         }
-        if(!user.active){
-            res.status(403).cookie("jwt","", { maxAge: 0 , sameSite : "None", secure:true}).json({
-            data: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                role: user.role,
-                active : user.active
-            }});
+        if (!user.active) {
+            res.status(403)
+                .cookie("jwt", "", {
+                    maxAge: 0,
+                    sameSite: "None",
+                    secure: true,
+                })
+                .json({
+                    data: {
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        email: user.email,
+                        role: user.role,
+                        active: user.active,
+                    },
+                });
             throw new Error("User Blocked");
         }
         console.log(user);
@@ -385,8 +428,12 @@ export const getUserDetails = async (req, res, next) => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
+                phone: user.phone,
                 role: user.role,
-                active : user.active
+                active: user.active,
+                avatar_url: user?.avatar_url
+                    ? cloudinary.url(user.avatar_url, { secure: true })
+                    : null,
             },
             message: "User details ",
             status: "success",
@@ -416,19 +463,26 @@ export const googleAuth = async (req, res, next) => {
                 last_name,
                 email,
                 is_verified: true,
-                is_google_login : true
+                is_google_login: true,
             });
         }
-        if(!user.active){
-            res.status(401).json({message : "User Blocked", status : "error"})
+        if (!user.active) {
+            res.status(401).json({ message: "User Blocked", status: "error" });
         }
-        if(!user?.is_google_login){
-            res.status(400).json({message : "Invalid Request : Use email and password", status : "error"})
+        if (!user?.is_google_login) {
+            res.status(400).json({
+                message: "Invalid Request : Use email and password",
+                status: "error",
+            });
         }
         const { _id } = user;
         const token = generateToken(email);
         res.status(200)
-            .cookie("jwt", token, { maxAge: 24 * 60 * 60 * 1000 , sameSite : 'None', secure : true })
+            .cookie("jwt", token, {
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: "None",
+                secure: true,
+            })
             .json({
                 status: "success",
                 message: "Google Login Success",

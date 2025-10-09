@@ -14,7 +14,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const Register = () => {
     const { mutate: registerUser, isPending } = useRegister();
-    const { setOtpExpiry } = useStore();
     const {
         register,
         handleSubmit,

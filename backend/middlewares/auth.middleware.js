@@ -5,7 +5,8 @@ export const authenticateUser = (req, res, next) => {
         const cookie = req.cookies.jwt
         console.log(123)
         const data = verifyToken(cookie)
-        res.locals.email = data.email
+        console.log(data.email)
+        req.email = data.email
         next()
     } catch (error) {
         next(error)

@@ -1,0 +1,220 @@
+Folder PATH listing for volume New Volume
+Volume serial number is 7A6D-843D
+D:.
+|   App.jsx
+|   index.css
+|   main.jsx
+|   structure.txt
+|   
++---app
+|   |   route.jsx
+|   |   
+|   +---Admin
+|   |   +---components
+|   |   |       AdminPagination.jsx
+|   |   |       Dropdown.jsx
+|   |   |       Header.jsx
+|   |   |       IconCards.jsx
+|   |   |       InputComponent.jsx
+|   |   |       ModalWrapper.jsx
+|   |   |       Search.jsx
+|   |   |       Sidebar.jsx
+|   |   |       TableComponent.jsx
+|   |   |       
+|   |   +---hooks
+|   |   |       useBrandManagement.js
+|   |   |       useCategoryManagement.js
+|   |   |       useConfirmationModal.jsx
+|   |   |       useProductManagement.js
+|   |   |       useUserManagement.js
+|   |   |       
+|   |   +---pages
+|   |   |   +---brand_management
+|   |   |   |   |   BrandMangement.jsx
+|   |   |   |   |   
+|   |   |   |   +---components
+|   |   |   |   |       AddBrand.jsx
+|   |   |   |   |       EditBrand.jsx
+|   |   |   |   |       ViewBrand.jsx
+|   |   |   |   |       
+|   |   |   |   \---ui
+|   |   |   |           ImageInput.jsx
+|   |   |   |           
+|   |   |   +---category_management
+|   |   |   |   |   CategoryMangement.jsx
+|   |   |   |   |   
+|   |   |   |   \---components
+|   |   |   |           AddCategory.jsx
+|   |   |   |           EditCategory.jsx
+|   |   |   |           ViewCategory.jsx
+|   |   |   |           
+|   |   |   +---Dashboard
+|   |   |   |       Dashboard.jsx
+|   |   |   |       
+|   |   |   +---product_management
+|   |   |   |   |   AddProduct.jsx
+|   |   |   |   |   EditProduct.jsx
+|   |   |   |   |   ProductManagement.jsx
+|   |   |   |   |   ViewProduct.jsx
+|   |   |   |   |   
+|   |   |   |   +---components
+|   |   |   |   |       AddVariant.jsx
+|   |   |   |   |       EditVariant.jsx
+|   |   |   |   |       ImageComponent.jsx
+|   |   |   |   |       ImageCropper.jsx
+|   |   |   |   |       ImageCropperModal.jsx
+|   |   |   |   |       ImageGroupComponent.jsx
+|   |   |   |   |       setCanvarPreview.js
+|   |   |   |   |       VariantComponent.jsx
+|   |   |   |   |       
+|   |   |   |   \---ui
+|   |   |   |           CropModal.jsx
+|   |   |   |           ProductStateComponent.jsx
+|   |   |   |           ToggleBtn.jsx
+|   |   |   |           
+|   |   |   \---user_management
+|   |   |       |   UserDetails.jsx
+|   |   |       |   UserManagement.jsx
+|   |   |       |   
+|   |   |       \---ui
+|   |   |               UserStateComponent.jsx
+|   |   |               
+|   |   \---services
+|   |       |   brand-management.service.js
+|   |       |   category-management.service.js
+|   |       |   product-management.service.js
+|   |       |   user-management.service.js
+|   |       |   
+|   |       \---api
+|   |               adminAxiosInstance.js
+|   |               
+|   +---Auth
+|   |   +---components
+|   |   |       AuthBanner.jsx
+|   |   |       RedirectIfLoggedIn.jsx
+|   |   |       RedirectIfNotLoggedIn.jsx
+|   |   |       
+|   |   +---hooks
+|   |   |       useAuth.js
+|   |   |       
+|   |   +---pages
+|   |   |   +---change-password
+|   |   |   |       ResetPassword.jsx
+|   |   |   |       
+|   |   |   +---forget-password
+|   |   |   |       ForgetPassword.jsx
+|   |   |   |       
+|   |   |   +---login
+|   |   |   |       Login.jsx
+|   |   |   |       
+|   |   |   +---otp
+|   |   |   |       OTPVerify.jsx
+|   |   |   |       RedirectIfNoOTP.jsx
+|   |   |   |       
+|   |   |   \---register
+|   |   |           Register.jsx
+|   |   |           
+|   |   \---services
+|   |       |   auth.service.js
+|   |       |   
+|   |       \---api
+|   |               axiosInstance.js
+|   |               
+|   +---Home
+|   |   +---components
+|   |   |       BreadCrumb.jsx
+|   |   |       Dropdown.jsx
+|   |   |       Footer.jsx
+|   |   |       Navbar.jsx
+|   |   |       NavbarIcons.jsx
+|   |   |       NewsLetter.jsx
+|   |   |       SearchProduct.jsx
+|   |   |       
+|   |   +---hooks
+|   |   |       useHome.jsx
+|   |   |       useProduct.jsx
+|   |   |       useSearch.jsx
+|   |   |       
+|   |   +---pages
+|   |   |   +---about
+|   |   |   |       About.jsx
+|   |   |   |       
+|   |   |   +---contact
+|   |   |   |       Contact.jsx
+|   |   |   |       
+|   |   |   +---home
+|   |   |   |       Home.jsx
+|   |   |   |       
+|   |   |   +---product
+|   |   |   |   |   ProductPage.jsx
+|   |   |   |   |   
+|   |   |   |   \---components
+|   |   |   |           ImageMagnifier.jsx
+|   |   |   |           
+|   |   |   \---search
+|   |   |       |   SearchPage.jsx
+|   |   |       |   
+|   |   |       \---components
+|   |   |               MultiRangeSlider.jsx
+|   |   |               Pagination.jsx
+|   |   |               ProductCard.jsx
+|   |   |               Slider.jsx
+|   |   |               
+|   |   \---services
+|   |       |   home.service.js
+|   |       |   product.service.js
+|   |       |   search.service.js
+|   |       |   
+|   |       \---api
+|   |               homeAxiosInstance.js
+|   |               
+|   +---Layout
+|   |       AdminLayout.jsx
+|   |       AppLayout.jsx
+|   |       ShowModal.jsx
+|   |       
+|   \---User
+|       +---components
+|       +---hooks
+|       +---pages
+|       |   \---Accounts
+|       \---services
+|           \---api
+|                   userAxiosInstance.js
+|                   
++---assets
+|       auth_asset.png
+|       Calvin_logo.png
+|       gucci_logo.png
+|       logo.png
+|       prada_logo.png
+|       versace_logo.png
+|       zara_logo.png
+|       
++---components
+|       adminRoleLoader.js
+|       GoogleWrapper.jsx
+|       Input.jsx
+|       Loader.jsx
+|       ModalContext.jsx
+|       ModalProvider.jsx
+|       RoleBasedProtectedRoute.jsx
+|       Select.jsx
+|       
++---hooks
+|       useFetchUserRole.jsx
+|       useModal.jsx
+|       useThrottle.jsx
+|       useUser.jsx
+|       
++---lib
+|       require
+|       
++---store
+|       store.js
+|       
+\---utils
+        CONSTANTS.js
+        queryClient.js
+        requireAdminLoader.js
+        

@@ -1,6 +1,7 @@
 export const OTP_TYPES = {
     SIGN_UP: "sign-up",
     FORGET_PASSWORD: "forget-password",
+    CHANGE_EMAIL : 'change-email'
 };
 
 export const SIZE_TYPES = [

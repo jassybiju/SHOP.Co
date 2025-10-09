@@ -1,4 +1,4 @@
-import { homeAxiosInstance } from "./api/homeAxiosInstance"
+import { homeAxiosInstance } from "@/lib/axios"
 
 export const getProductService = async({queryKey}) => {
     console.log(queryKey[1].id)

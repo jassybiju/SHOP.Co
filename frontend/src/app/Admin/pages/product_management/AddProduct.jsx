@@ -1,20 +1,20 @@
 import { ImageUp, Loader, Loader2, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
-import InputComponent from "../../components/InputComponent";
+import InputComponent from "../../../../components/InputComponent";
 import Dropdown from "../../components/Dropdown";
-import { useModal } from '../../../../hooks/useModal';
+import { useModal } from "../../../../hooks/useModal";
 import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import { useForm, useFieldArray } from "react-hook-form";
 import toast from "react-hot-toast";
-import {useAddProduct} from '../../hooks/useProductManagement'
+import { useAddProduct } from "../../hooks/useProductManagement";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";
 const AddProduct = () => {
     // const [variants, setVariants] = useState([{ color: "#000", size: "M" }]);
-    const {mutate : addProduct , status} = useAddProduct()
+    const { mutate: addProduct, status } = useAddProduct();
     const {
         register,
         handleSubmit,
@@ -27,36 +27,36 @@ const AddProduct = () => {
     const { fields, append, remove, update } = useFieldArray({
         control,
         name: "variants",
-        rules: {validate :(value)=> value.length> 0 || "At Least one variant is required"},
+        rules: {
+            validate: (value) =>
+                value.length > 0 || "At Least one variant is required",
+        },
     });
     const { data: { data: brands } = { data: [] } } = useGetAllBrands({
         limit: 100,
     });
     const { data: { data: categories } = { data: [] } } = useGetAllCategories();
 
-
-
     const onSubmit = (data) => {
         console.log(data.name);
 
-        const formData = new FormData()
-        formData.append('name', data.name)
-        formData.append('price', data.price)
-        formData.append('discount', data.discount)
-        formData.append('description', data.description)
-        formData.append('small_description', data.small_description)
-        formData.append('brand_id', data.brand_id)
-        formData.append('category_id', data.category_id)
-        
-        data?.images.forEach(image => {
-            console.log(image)
-            formData.append('images',image[0])
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("price", data.price);
+        formData.append("discount", data.discount);
+        formData.append("description", data.description);
+        formData.append("small_description", data.small_description);
+        formData.append("brand_id", data.brand_id);
+        formData.append("category_id", data.category_id);
+
+        data?.images.forEach((image) => {
+            console.log(image);
+            formData.append("images", image[0]);
         });
 
-         formData.append('variants',JSON.stringify(data.variants))
-        
+        formData.append("variants", JSON.stringify(data.variants));
 
-        addProduct(formData)
+        addProduct(formData);
         // for( let i of formData.entries()){
         //     console.log(i)
         // }
@@ -80,24 +80,26 @@ const AddProduct = () => {
                     />
                 </div>
                 <div className="w-[100%] md:w-[40%] xl:w-[65%] md:mt-5">
-                    <InputComponent 
-                    required
+                    <InputComponent
+                        required
                         label={"Product Name"}
                         register={register("name", {
                             required: "Product name is required",
                         })}
                         error={errors.name}
                     />
-                    <InputComponent required
+                    <InputComponent
+                        required
                         label={"Product Small Description"}
                         register={register("small_description", {
                             required: "Small description is required",
                         })}
                         error={errors.small_description}
                     />
-                
+
                     <div className="flex w-full gap-2">
-                        <InputComponent required
+                        <InputComponent
+                            required
                             label={"Price"}
                             register={register("price", {
                                 required: "Price is required",
@@ -108,8 +110,8 @@ const AddProduct = () => {
                             })}
                             error={errors.price}
                         />
-                        <InputComponent 
-                        required
+                        <InputComponent
+                            required
                             label={"Discount"}
                             register={register("discount", {
                                 min: {
@@ -120,7 +122,7 @@ const AddProduct = () => {
                                     value: 100,
                                     message: "Discount cannot exceed 100%",
                                 },
-                                required : "Discount is required"
+                                required: "Discount is required",
                             })}
                             error={errors.discount}
                         />
@@ -128,7 +130,8 @@ const AddProduct = () => {
                 </div>
                 <div className="w-[100%] md:w-[100%] xl:w-[100%] md:my-5">
                     <div className="flex w-full gap-2">
-                        <InputComponent required
+                        <InputComponent
+                            required
                             select
                             label={"Brand"}
                             options={brands.map((x) => ({
@@ -154,9 +157,15 @@ const AddProduct = () => {
                             error={errors.category_id}
                         />
                     </div>
-                    <InputComponent required textarea label={"Descripiton"} register={register("description", {
-                                required: "Discription is required",
-                            })} error={errors.description}/>
+                    <InputComponent
+                        required
+                        textarea
+                        label={"Descripiton"}
+                        register={register("description", {
+                            required: "Discription is required",
+                        })}
+                        error={errors.description}
+                    />
                     <div className="bg-white p-5 shadow-xl rounded-2xl">
                         <h1 className="font-bold ">* Variant</h1>
                         <div className="flex w-full  gap-5 flex-wrap ">
@@ -168,16 +177,17 @@ const AddProduct = () => {
                                     value={{
                                         color: field.color,
                                         size: field.size,
-                                        stock : field.stock
+                                        stock: field.stock,
                                     }}
-                                    onEditVariant={(val)=>update(index, {...val})}
+                                    onEditVariant={(val) =>
+                                        update(index, { ...val })
+                                    }
                                     remove={remove}
                                 />
                             ))}
 
                             <VariantComponent
                                 onAddVariant={(val) => append(val)}
-
                             />
                         </div>
                         {errors.variants && (
@@ -188,12 +198,19 @@ const AddProduct = () => {
                     </div>
 
                     <div className="flex justify-end gap-4">
-                        <button 
-                            disabled={status === 'pending'}
+                        <button
+                            disabled={status === "pending"}
                             type="submit"
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                         {status == 'pending' ? <div className="flex gap-2"><Loader2 className="animate-spin"/> Adding Product</div> : "Add Product"}  
+                            {status == "pending" ? (
+                                <div className="flex gap-2">
+                                    <Loader2 className="animate-spin" /> Adding
+                                    Product
+                                </div>
+                            ) : (
+                                "Add Product"
+                            )}
                         </button>
                     </div>
                 </div>
