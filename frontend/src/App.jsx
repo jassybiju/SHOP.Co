@@ -1,30 +1,35 @@
-import { RouterProvider } from "react-router";
-import { router } from "./app/route";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast";
-import 'react-image-crop/dist/ReactCrop.css'
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
+function App() {
+  const [count, setCount] = useState(0)
 
-import { Loader } from "lucide-react";
-import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
-import { ModalProvider } from "./components/ModalProvider";
+  return (
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
+}
 
-
-import 'react-inner-image-zoom/lib/styles.min.css'
-
-const App = () => {
-    
-
-    
-    
-    return (
-        <>
-        <ReactQueryDevtools/>
-            <Toaster toastOptions={{className : "z-9999"}}/>
-            <ModalProvider>
-                <RouterProvider router={router} hydrateFallback={<>Loading</>} />
-           </ModalProvider>
-        </>
-    );
-};
-export default App;
+export default App
