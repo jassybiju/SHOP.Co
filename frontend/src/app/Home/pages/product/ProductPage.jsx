@@ -10,8 +10,10 @@ import ProductCard from "../search/components/ProductCard";
 import BreadCrumb from "../../components/BreadCrumb";
 import InnerImageZoom from "react-inner-image-zoom";
 import ImageMagnifier from "./components/ImageMagnifier";
+import { useUpdateCartItems } from "@/app/User/hooks/useCart";
 
 function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
+
     const sizeClasses = {
         sm: "w-4 h-4",
         md: "w-5 h-5",
@@ -67,38 +69,15 @@ function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
 const ProductPage = () => {
     const { id } = useParams();
     const { data, isError, error, isLoading } = useProduct(id);
-    console.log(data);
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
-    const [selectedVariant, setSelectedVariant] = useState("Medium");
+    const [selectedVariant, setSelectedVariant] = useState(null);
     const [activeTab, setActiveTab] = useState("details");
-    console.log(isError);
-    const [zoomData, setZoomData] = useState({
-        transformOrigin: "center center",
-        transform: "scale(1)",
-    });
+    console.log(selectedVariant);
 
-    const handleMouseMove = (e) => {
-        const { left, top, width, height } =
-            e.currentTarget.getBoundingClientRect();
+    const {mutate : addToCart} = useUpdateCartItems()
 
-        // Calculate mouse position relative to the image container (0 to 100%)
-        const x = ((e.pageX - left) / width) * 100;
-        const y = ((e.pageY - top) / height) * 100;
-
-        setZoomData({
-            transformOrigin: `${x}% ${y}%`,
-            transform: "scale(2.5)", // 2.5x zoom on hover
-        });
-    };
-
-    const handleMouseLeave = () => {
-        setZoomData({
-            transformOrigin: "center center",
-            transform: "scale(1)",
-        });
-    };
     if (isLoading) {
         return <Loader2 className="animate-spin" />;
     }
@@ -113,6 +92,16 @@ const ProductPage = () => {
         { label: "Home", link: "/" },
         { label: "Search", link: "/search" },
     ];
+
+    const onAddToCart = () => {
+        if(!selectedVariant) return toast.error("Variant not selected")
+        addToCart({variant_id : selectedVariant._id, quantity }, {onSuccess : (data)=>{
+    console.log(data)
+            toast.success(data.message)
+        },onError : (res)=>{
+            toast.error(res.response.data.message)
+        }})
+    }
 
     return (
         <div>
@@ -271,7 +260,7 @@ const ProductPage = () => {
 
                                 {/* Action Buttons */}
                                 <div className="space-y-3">
-                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base">
+                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base" onClick={onAddToCart}>
                                         Add to Cart
                                     </button>
                                     <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base">

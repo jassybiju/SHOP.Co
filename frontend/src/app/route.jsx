@@ -39,6 +39,7 @@ import Address from "./User/Accounts/pages/address/Address";
 import AddAddress from "./User/Accounts/pages/address/AddAddress";
 import EditAddress from "./User/Accounts/pages/address/EditAddress";
 import Cart from "./User/pages/cart/Cart";
+import Checkout from "./User/pages/checkout/Checkout";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -97,6 +98,7 @@ export const router = createBrowserRouter(
             <Route element={<RedirectIfNotLoggedIn />}>
                 <Route element={<AppLayout/>}>
                 <Route element={<Cart />} path="/cart"></Route>
+                <Route element={<Checkout />} path="/checkout"></Route>
                 
                 </Route>
                 <Route element={<AccountLayout />} path="account">

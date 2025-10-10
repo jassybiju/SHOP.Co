@@ -9,6 +9,7 @@ import productManagementRouter from './routes/admin/product-managment.routes.js'
 import homeRouter from './routes/home.routes.js'
 import accountRouter from './routes/account.routes.js'
 import cartRouter from './routes/cart.routes.js'
+import checkoutRouter from './routes/user/checkout.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -46,6 +47,8 @@ app.use('/api/home',homeRouter)
 app.use('/api/account', accountRouter)
 
 app.use('/api/cart', cartRouter)
+
+app.use('/api/checkout', checkoutRouter)
 
 
 app.use((req, res) => {

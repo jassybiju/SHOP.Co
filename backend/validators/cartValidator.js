@@ -11,16 +11,26 @@ const cartSchema = Joi.object({
         }),
     quantity: Joi.number()
         .integer()
-        .min(1)
         .max(5)
+        .invalid(0)
         .required()
         .messages({
             'number.base': 'Quantity must be a number',
             'number.integer': 'Quantity must be an integer',
-            'number.min': 'Quantity must be at least {#limit}',
-            'number.max': 'Quantity cannot exceed {#limit}',
+            'any.invalid': 'Quantity should not be zero',
             'any.required': 'Quantity is required',
         }),
 });
 
+const removeCartSchema = Joi.object({
+        cart_id: Joi.string()
+        .required()
+        .messages({
+            'string.empty': 'Cart ID is required',
+            'any.required': 'Cart ID is required',
+        }),
+  
+})
+
+export const removeCartValidator = validator(removeCartSchema)
 export const cartValidator = validator(cartSchema)
