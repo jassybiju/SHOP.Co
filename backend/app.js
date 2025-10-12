@@ -10,6 +10,7 @@ import homeRouter from './routes/home.routes.js'
 import accountRouter from './routes/account.routes.js'
 import cartRouter from './routes/cart.routes.js'
 import checkoutRouter from './routes/user/checkout.routes.js'
+import orderRouter from './routes/user/order.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -49,6 +50,7 @@ app.use('/api/account', accountRouter)
 app.use('/api/cart', cartRouter)
 
 app.use('/api/checkout', checkoutRouter)
+app.use('/api/order', orderRouter)
 
 
 app.use((req, res) => {
@@ -58,9 +60,9 @@ app.use((req, res) => {
 
 app.use((error, req, res , next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    
+
     console.log(statusCode, 12);
-    
+
     res.status(statusCode);
     console.log(error.message);
     res.json({

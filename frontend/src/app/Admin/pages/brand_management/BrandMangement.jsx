@@ -1,38 +1,46 @@
-import { useState } from 'react';
-import Header from '../../components/Header'
-import { useGetAllBrands } from '../../hooks/useBrandManagement';
-import Dropdown from '../../components/Dropdown';
-import TableComponent from '../../components/TableComponent';
-import Search from '../../components/Search';
-import { useModal } from '../../../../hooks/useModal';
-import AddBrand from './components/AddBrand';
-import ViewBrand from './components/ViewBrand';
-import EditBrand from './components/EditBrand';
-import ModalWrapper from '../../components/ModalWrapper';
+import { useState } from "react";
+import Header from "../../components/Header";
+import { useGetAllBrands } from "../../hooks/useBrandManagement";
+import Dropdown from "../../components/Dropdown";
+import TableComponent from "../../components/TableComponent";
+import Search from "../../components/Search";
+import { useModal } from "../../../../hooks/useModal";
+import AddBrand from "./components/AddBrand";
+import ViewBrand from "./components/ViewBrand";
+import EditBrand from "./components/EditBrand";
+import ModalWrapper from "../../../../components/ModalWrapper";
 
 const BrandMangement = () => {
+    // ! TODO  edit brand
+    const [params, setParams] = useState({
+        limit: "5",
+        page: "",
+        search: "",
+        filter: "",
+    });
+    const { data: brands, status } = useGetAllBrands(params);
+    const { setShowModal, setModalContent, openModal } = useModal();
+    const showViewBrandModal = (id) => {
+        openModal(
+            "view-brand",
+            <ModalWrapper render={<ViewBrand id={id} />} />
+        );
+    };
+    const showEditBrandModal = (id) => {
+        openModal(
+            "edit-brand",
+            <ModalWrapper render={<EditBrand id={id} />} />
+        );
+    };
+    const showAddBrandModal = () => {
+        openModal("add-brand", <ModalWrapper render={<AddBrand />} />);
+    };
 
-// ! TODO  edit brand
-  const [params , setParams] = useState({ limit: "5", page: "", search: "", filter: "" })
-  const {data : brands , status} = useGetAllBrands(params)
-  const { setShowModal , setModalContent , openModal } = useModal()
-  const showViewBrandModal=(id)=>{
-    openModal('view-brand',<ModalWrapper render={<ViewBrand id={id}/>}/>)
-  } 
-  const showEditBrandModal= (id) => {
-        openModal('edit-brand',<ModalWrapper render={<EditBrand id={id}/>}/>)
-    
-  }
-  const showAddBrandModal = () => {
-    openModal('add-brand',<ModalWrapper render={<AddBrand/>}/>)
-   
-  }
+    if (status !== "success") {
+        return "Loading";
+    }
 
-  if(status !== 'success'){
-    return 'Loading'
-  }
-
-   const column = [
+    const column = [
         {
             label: "Sl No",
             key: "_id",
@@ -48,11 +56,14 @@ const BrandMangement = () => {
                     {" "}
                     <button
                         className="bg-violet-600 hover:bg-violet-700 text-white py-1 px-4 rounded font-semibold text-xs"
-                        onClick={()=>showViewBrandModal(val)}
+                        onClick={() => showViewBrandModal(val)}
                     >
                         VIEW
                     </button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded font-semibold text-xs" onClick={()=>showEditBrandModal(val)}>
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded font-semibold text-xs"
+                        onClick={() => showEditBrandModal(val)}
+                    >
                         Edit
                     </button>
                 </div>
@@ -60,11 +71,27 @@ const BrandMangement = () => {
         },
     ];
     const sortOptions = [
-        {label : 'Created At - asc' , value : 'createdAt -asc' , CONST : {sort : 'createdAt', order : 'asc'}},
-        {label : 'Created At - desc' , value : 'createdAt -desc' , CONST : {sort : 'createdAt', order : 'desc'}},
-        {label : 'Name - asc' , value : 'name -asc' , CONST : {sort : 'name', order : 'asc'}},
-        {label : 'Name - desc' , value : 'name -desc' , CONST : {sort : 'name', order : 'desc'}}
-    ]
+        {
+            label: "Created At - asc",
+            value: "createdAt -asc",
+            CONST: { sort: "createdAt", order: "asc" },
+        },
+        {
+            label: "Created At - desc",
+            value: "createdAt -desc",
+            CONST: { sort: "createdAt", order: "desc" },
+        },
+        {
+            label: "Name - asc",
+            value: "name -asc",
+            CONST: { sort: "name", order: "asc" },
+        },
+        {
+            label: "Name - desc",
+            value: "name -desc",
+            CONST: { sort: "name", order: "desc" },
+        },
+    ];
 
     return (
         <div>
@@ -72,19 +99,25 @@ const BrandMangement = () => {
             <div className=" flex justify-between mx-6">
                 <div className="flex gap-5 w-[60%] ">
                     <Search
-                    value={params.search}
-                    onChange={(e) =>
-                        setParams((state) => ({
-                            ...state,
-                            search: e.target.value,
-                        }))
-                    }
+                        value={params.search}
+                        onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                search: e.target.value,
+                            }))
+                        }
                     />
                     <Dropdown
                         label="Sort by"
                         options={sortOptions}
-                        onChange={(e)=> setParams(state => ({...state , ...sortOptions.find(x => x.value === e.target.value ).CONST}))}
-                       
+                        onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                ...sortOptions.find(
+                                    (x) => x.value === e.target.value
+                                ).CONST,
+                            }))
+                        }
                     />
                 </div>
                 <button
@@ -95,7 +128,15 @@ const BrandMangement = () => {
                     Add Brand
                 </button>
             </div>
-            <TableComponent data={brands.data} column={column} pages={brands.pages} page={brands.page} onPageChange={(x) => setParams(state => ({...state,page : x }))}/>
+            <TableComponent
+                data={brands.data}
+                column={column}
+                pages={brands.pages}
+                page={brands.page}
+                onPageChange={(x) =>
+                    setParams((state) => ({ ...state, page: x }))
+                }
+            />
         </div>
     );
 };

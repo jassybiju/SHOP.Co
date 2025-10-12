@@ -16,7 +16,7 @@ export const ModalProvider = ({ children }) => {
         console.log(modals)
         console.log('closed',name)
         setModals(prev=>prev.filter((modal)=> modal.name !== name))
-        
+
         setTimeout(()=>{
             console.log(modals.length)
           if(modals.length <= 1)  document.body.style.overflow = 'auto'
@@ -34,7 +34,7 @@ export const ModalProvider = ({ children }) => {
     }
 
 
-    
+
     return (
 
         <ModalContext.Provider
@@ -42,7 +42,7 @@ export const ModalProvider = ({ children }) => {
                 openModal,
                 closeModal
             }}
-        > 
+        >
         {modals.map((modal)=>createPortal(modal.content , document.body)
         )}
         {children}

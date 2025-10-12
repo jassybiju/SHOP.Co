@@ -3,41 +3,51 @@ import Dropdown from "../../components/Dropdown";
 import Header from "../../components/Header";
 import Search from "../../components/Search";
 import TableComponent from "../../components/TableComponent";
-import { useGetAllCategories, useToggleCategoryStatus } from "../../hooks/useCategoryManagement";
+import {
+    useGetAllCategories,
+    useToggleCategoryStatus,
+} from "../../hooks/useCategoryManagement";
 import { useState } from "react";
-import AddCategory from  "./components/AddCategory";
+import AddCategory from "./components/AddCategory";
 import { useModal } from "../../../../hooks/useModal";
 import ViewCategory from "../category_management/components/ViewCategory";
 import EditCategory from "../category_management/components/EditCategory";
-import ModalWrapper from '../../components/ModalWrapper'
+import ModalWrapper from "../../../../components/ModalWrapper";
 import useConfirmationModal from "../../hooks/useConfirmationModal";
 import toast from "react-hot-toast";
 import ToggleBtn from "../product_management/ui/ToggleBtn";
 
 const CategoryMangement = () => {
-    const [params, setParams] = useState({ limit: "5", page: "", search: "", filter: "" })
-    const {openModal} = useModal()
-    const {
-        data: categories,
-        status,
-        isLoading,
-    } = useGetAllCategories(params);
-    const {mutate : toggleCategory} = useToggleCategoryStatus()
+    const [params, setParams] = useState({
+        limit: "5",
+        page: "",
+        search: "",
+        filter: "",
+    });
+    const { openModal } = useModal();
+    const { data: categories, status, isLoading } = useGetAllCategories(params);
+    const { mutate: toggleCategory } = useToggleCategoryStatus();
     const navigate = useNavigate();
-    const showConfirmation = useConfirmationModal()
+    const showConfirmation = useConfirmationModal();
     if (status == "loading" || isLoading) {
         return "Loading";
     }
-    console.log(categories)
+    console.log(categories);
     const showAddCategoryModal = () => {
-        openModal('add-category',<ModalWrapper render={<AddCategory/>}/>)
-    }
+        openModal("add-category", <ModalWrapper render={<AddCategory />} />);
+    };
     const showViewCategoryModal = (id) => {
-        openModal('view-category', <ModalWrapper render={<ViewCategory id={id}/>}/>)
-    }
-     const showEditCategoryModal = (id) => {
-        openModal('edit-category',<ModalWrapper render={<EditCategory id={id}/>} />)
-    }
+        openModal(
+            "view-category",
+            <ModalWrapper render={<ViewCategory id={id} />} />
+        );
+    };
+    const showEditCategoryModal = (id) => {
+        openModal(
+            "edit-category",
+            <ModalWrapper render={<EditCategory id={id} />} />
+        );
+    };
 
     console.log(params);
     const column = [
@@ -49,17 +59,24 @@ const CategoryMangement = () => {
         { label: "Name", key: "name" },
         { label: "Description", key: "description" },
         {
-                    label: "is_active",
-                    key: "is_active",
-                    render: (val, row) => (
-                        <ToggleBtn
-                            state={val}
-                            onClick={()=>showConfirmation(()=>toggleCategory(row._id, {
-                                onSuccess: (res) => toast.success(res.message),
-                            }), `${val ? 'block' : 'unblock'} this product `)}
-                        />
-                    ),
-                },
+            label: "is_active",
+            key: "is_active",
+            render: (val, row) => (
+                <ToggleBtn
+                    state={val}
+                    onClick={() =>
+                        showConfirmation(
+                            () =>
+                                toggleCategory(row._id, {
+                                    onSuccess: (res) =>
+                                        toast.success(res.message),
+                                }),
+                            `${val ? "block" : "unblock"} this product `
+                        )
+                    }
+                />
+            ),
+        },
         {
             label: "Actions",
             key: "_id",
@@ -68,11 +85,14 @@ const CategoryMangement = () => {
                     {" "}
                     <button
                         className="bg-violet-600 hover:bg-violet-700 text-white py-1 px-4 rounded font-semibold text-xs"
-                        onClick={()=>showViewCategoryModal(val)}
+                        onClick={() => showViewCategoryModal(val)}
                     >
                         VIEW
                     </button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded font-semibold text-xs" onClick={()=>showEditCategoryModal(val)}>
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded font-semibold text-xs"
+                        onClick={() => showEditCategoryModal(val)}
+                    >
                         Edit
                     </button>
                 </div>
@@ -81,11 +101,27 @@ const CategoryMangement = () => {
     ];
 
     const sortOptions = [
-        {label : 'Created At - asc' , value : 'createdAt -asc' , CONST : {sort : 'createdAt', order : 'asc'}},
-        {label : 'Created At - desc' , value : 'createdAt -desc' , CONST : {sort : 'createdAt', order : 'desc'}},
-        {label : 'Name - asc' , value : 'name -asc' , CONST : {sort : 'name', order : 'asc'}},
-        {label : 'Name - desc' , value : 'name -desc' , CONST : {sort : 'name', order : 'desc'}}
-    ]
+        {
+            label: "Created At - asc",
+            value: "createdAt -asc",
+            CONST: { sort: "createdAt", order: "asc" },
+        },
+        {
+            label: "Created At - desc",
+            value: "createdAt -desc",
+            CONST: { sort: "createdAt", order: "desc" },
+        },
+        {
+            label: "Name - asc",
+            value: "name -asc",
+            CONST: { sort: "name", order: "asc" },
+        },
+        {
+            label: "Name - desc",
+            value: "name -desc",
+            CONST: { sort: "name", order: "desc" },
+        },
+    ];
 
     return (
         <div>
@@ -93,18 +129,25 @@ const CategoryMangement = () => {
             <div className=" flex justify-between mx-6">
                 <div className="flex gap-5 w-[60%] ">
                     <Search
-                    value={params.search}
-                    onChange={(e) =>
-                        setParams((state) => ({
-                            ...state,
-                            search: e.target.value,
-                        }))
-                    }
+                        value={params.search}
+                        onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                search: e.target.value,
+                            }))
+                        }
                     />
                     <Dropdown
                         label="Sort by"
                         options={sortOptions}
-                        onChange={(e) => setParams((state)=>({...state,...sortOptions.find(x=>x.value===e.target.value).CONST }))}
+                        onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                ...sortOptions.find(
+                                    (x) => x.value === e.target.value
+                                ).CONST,
+                            }))
+                        }
                         // options={SortOptions}
                         // value={Object.keys(SORT_OPTION_CONSTANT).find(
                         //     (key) => SORT_OPTION_CONSTANT[key] === params.sort
@@ -125,7 +168,15 @@ const CategoryMangement = () => {
                     Add Category
                 </button>
             </div>
-            <TableComponent data={categories.data} column={column} pages={categories.pages} page={categories.page} onPageChange={(x) => setParams(state => ({...state,page : x }))}/>
+            <TableComponent
+                data={categories.data}
+                column={column}
+                pages={categories.pages}
+                page={categories.page}
+                onPageChange={(x) =>
+                    setParams((state) => ({ ...state, page: x }))
+                }
+            />
         </div>
     );
 };

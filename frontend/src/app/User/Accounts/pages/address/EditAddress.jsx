@@ -8,8 +8,12 @@ import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
-const EditAddress = () => {
-    const { id } = useParams();
+
+const EditAddress = ({id : propId}) => {
+
+        const params = useParams();
+    const id = propId || params.id
+
     const { data } = useGetAddress(id);
     const {
         register,
@@ -18,13 +22,13 @@ const EditAddress = () => {
         formState: { errors },
     } = useForm()
     console.log(errors);
-    
+
     useEffect(()=>{
         if(data?.data){
             reset(data?.data)
         }
     },[reset, data?.data])
-    
+
     const { mutate: editAddress, status } = useEditAddress();
     const onSubmit = (data) => {
         const { _id , user_id, __v , is_primary, ...rest} = data
@@ -46,7 +50,7 @@ const EditAddress = () => {
     };
 
     return (
-        <div className="w-3/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
+        <div className="w-3/5 mx-auto shadow-xl ring bg-white ring-gray-200 rounded-xl px-20 py-10 ">
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2">
                 <span>Add new Address</span> <span>Personal Information</span>
             </div>

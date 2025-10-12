@@ -26,7 +26,7 @@ const AddAddress = () => {
     };
 
     return (
-        <div className="w-3/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
+        <div className="w-3/5 mx-auto shadow-xl bg-white ring ring-gray-200 rounded-xl px-20 py-10 ">
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2">
                 <span>Add new Address</span> <span>Personal Information</span>
             </div>

@@ -10,6 +10,11 @@ export const cartAxiosInstance = axios.create({
     withCredentials: true,
 
 });
+export const checkoutAxiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URI + "checkout",
+    withCredentials: true,
+
+});
 export const homeAxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URI + "home",
     withCredentials: true,
