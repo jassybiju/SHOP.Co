@@ -3,10 +3,10 @@ import React from 'react'
 
 
 
-const Search = ({ label, onChange }) => {
+const Search = ({ label, onChange , width =100 ,className=''}) => {
 
     return (
-        <div className="w-full mx-auto">
+        <div className={"w-full mx-auto" + className} style={{width : width+"%"}}>
 
             <div className="relative">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

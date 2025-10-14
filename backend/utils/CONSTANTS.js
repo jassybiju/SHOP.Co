@@ -27,3 +27,23 @@ export const productFilterOptions = {
     AllProduct : {},
     isInActive : {is_active : false}
 }
+
+export const STATUS_TRANSITIONS = {
+    'PLACED' : ['CONFIRMED'],
+    'CONFIRMED' : ['PACKED'],
+    PACKED : ['SHIPPED'],
+    SHIPPED : ["DELIVERED" ],
+    DELIVERED : [],
+
+    'CANCELLATION_REQUESTED' : ['CANCELLED', 'CONFIRMED', 'PACKED', 'SHIPPED', 'DELIVERED', 'RETURNED'],
+    CANCELLATION_DENIED: ['CONFIRMED', 'PACKED', 'SHIPPED', 'DELIVERED', 'RETURNED'],
+
+    RETURN_REQUESTED : ['RETURNED', 'RETURN_DENIED' ],
+    RETURN_DENIED : ['DELIVERED'],
+
+    'CANCELLED': [],
+    'RETURNED': [],
+
+    'DEFAULT': ['CANCELLATION_REQUESTED', 'CANCELLED']
+
+}

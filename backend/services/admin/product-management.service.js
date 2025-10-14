@@ -158,7 +158,7 @@ export const editProductService = async (_id, data, req) => {
     const product = await Product.findOne({ _id });
     if (!product) throw new Error("No product Found");
 
-    
+
     //checking for duplicate product name
     const existingWithName = await Product.findOne({
         name: {$regex : `^${data.name}$` , $options : 'i'},
@@ -186,16 +186,16 @@ export const editProductService = async (_id, data, req) => {
         }else{
             console.log(product.images)
             return product.images[i]
-            
+
         }
     })
-    
+
 
     // getting all existed variant
     const existingVariants = await ProductVariant.find({product_id :  _id})
     const existingVariantId = existingVariants.map(e => e._id.toString())
 
-    // Updataing and creating new variants 
+    // Updataing and creating new variants
     await Promise.all(
         data.variants.map(async variant => {
             if(variant._id){

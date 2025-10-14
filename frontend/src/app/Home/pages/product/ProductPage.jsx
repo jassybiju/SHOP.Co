@@ -3,7 +3,7 @@ import { ChevronRight, Loader2, Minus, Plus, Star } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
-import { Navigate, useParams } from "react-router";
+import { Navigate, useParams , useNavigate } from "react-router";
 import Navbar from "../../components/Navbar";
 import toast from "react-hot-toast";
 import ProductCard from "../search/components/ProductCard";
@@ -68,6 +68,7 @@ function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
 
 const ProductPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate()
     const { data, isError, error, isLoading } = useProduct(id);
 
     const [selectedImage, setSelectedImage] = useState(0);
@@ -121,7 +122,7 @@ const ProductPage = () => {
                         <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
                             {/* Thumbnail Images */}
                             <div className="flex lg:flex-col gap-3 md:gap-4 order-2 lg:order-1 overflow-x-auto lg:overflow-visible">
-                                {data.images.map((image, index) => (
+                                {data?.images.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
@@ -263,7 +264,7 @@ const ProductPage = () => {
                                     <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base" onClick={onAddToCart}>
                                         Add to Cart
                                     </button>
-                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base">
+                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base" onClick={()=>{navigate('/checkout/',{state : {variant_id : selectedVariant._id , quantity}})}}>
                                         Buy Now
                                     </button>
                                 </div>

@@ -3,6 +3,7 @@ import Sidebar from "../Admin/components/Sidebar";
 import {
     LayoutDashboard,
     Package,
+    PackageXIcon,
     Shirt,
     ShoppingBag,
     User,
@@ -36,11 +37,19 @@ const AdminLayout = () => {
             label: "Category Management",
             icon: <Shirt />,
             path: "/admin/category-management/",
+        },{
+            label: "Order Management",
+            icon: <PackageXIcon />,
+            path: "/admin/order-management/",
+        },{
+            label: "Stock Management",
+            icon: <PackageXIcon />,
+            path: "/admin/stock-management/",
         },
     ];
 
     return (
-        
+
             <div className="flex min-h-screen">
                 {/* <ShowModal /> */}
 
@@ -56,7 +65,7 @@ const AdminLayout = () => {
                     <Outlet context={{ isOpen, setIsOpen }} />
                 </main>
             </div>
-        
+
     );
 };
 

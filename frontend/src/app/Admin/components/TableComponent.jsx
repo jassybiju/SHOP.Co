@@ -3,7 +3,7 @@ import AdminPagination from "./AdminPagination";
 import Pagination from "../../Home/pages/search/components/Pagination";
 
 const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) => {
-    console.log(pages)
+    console.log(data)
     return (
         <div className="bg-white shadow rounded-2xl p-4 m-4 w-max-xl overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-100">
@@ -18,7 +18,7 @@ const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) =
                 </thead>
 
                 <tbody className="divide-y divide-gray-100">
-                    {data.map((user, idx) => (
+                    {data?.map((user, idx) => (
                         <tr key={idx}>
                             {column.map((x) => (
                                 <th className="px-6 py-3 text-xs font-semibold text-black text-center">
@@ -66,7 +66,7 @@ const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) =
 
                     <Pagination page={page} pages={pages} onPageChange={onPageChange}/>
                 </div>
-            
+
         </div>
     );
 };

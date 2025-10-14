@@ -7,12 +7,12 @@ export const updateCartService = async (
     currentUser,
     { variant_id, quantity }
 ) => {
-    
+    console.log(quantity , variant_id , 123)
     const variant = await ProductVariant.findOne({ _id: variant_id }).populate({
         path: "product_id",
         populate: { path: "category_id", model: "Category" },
     });
-    console.log(variant, quantity);
+    console.log(variant.stock+quantity, quantity ,variant.stock);
     if (
         !variant.product_id.is_active ||
         !variant.product_id.category_id.is_active ||
@@ -21,9 +21,6 @@ export const updateCartService = async (
         throw new Error("Invalid request");
     }
 
-    if (variant.stock < quantity) {
-        throw new Error("Invalid Request : Insufficient stock");
-    }
 
     const user = await User.findOne({ email: currentUser });
 
@@ -32,11 +29,9 @@ export const updateCartService = async (
         variant_id: variant_id,
     });
 
-    if(!existingVariantInCart && quantity < 0){
-        throw new Error("Invalid request")
-    }
-
-    if (!existingVariantInCart && quantity > 0) {
+    if (!existingVariantInCart && quantity > 0 ) {
+        console.log(variant.stock , quantity , variant.stock >= quantity)
+        if(variant.stock < quantity) throw new Error("Insufficient Quanitty")
         console.log("xfsf");
         const cart = await Cart.create({
             quantity,
@@ -45,6 +40,14 @@ export const updateCartService = async (
         });
         return cart;
     }
+    console.log(existingVariantInCart, 998)
+    if (variant.stock < existingVariantInCart.quantity + quantity) {
+        throw new Error("Invalid Request : Insufficient stock");
+    }
+    if(!existingVariantInCart && quantity < 0){
+        throw new Error("Invalid request")
+    }
+
 
     if (existingVariantInCart.quantity + quantity > 5) {
         throw new Error("Max Items in cart");

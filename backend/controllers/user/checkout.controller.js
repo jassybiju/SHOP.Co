@@ -2,13 +2,19 @@ import { Cart } from "../../models/cart.model.js";
 import { User } from "../../models/user.model.js";
 import { Address } from "../../models/address.model.js";
 import cloudinary from "../../utils/cloudinary.js";
+import { ProductVariant } from "../../models/product_variants.model.js";
 
 export const checkoutController = async (req, res, next) => {
     try {
-        const user = await User.findOne({ email: req.email });
+        const user = req.user
+        // const buyNow = req.params?.buyNow
 
+        const {variant_id ='', quantity =0, buyNow = false} = req.query || {}
+        console.log(332 , variant_id, quantity , req.body, buyNow)
         if (!user) throw new Error("Unauthorized User");
 
+        let checkoutOutItems
+        if(!buyNow){
         const cart = await Cart.find({ user_id: user._id }).populate({
             path: "variant_id",
             populate: {
@@ -21,13 +27,11 @@ export const checkoutController = async (req, res, next) => {
             },
             select: "color size stock",
         });
-
         if (!cart || cart.length === 0) {
             throw new Error("Cart is empty");
         }
-
         console.log(cart);
-        const simplifiedCart = cart.map((x) => {
+         checkoutOutItems = cart.map((x) => {
             const variant = x.variant_id;
             const product = variant.product_id;
             const category = product.category_id;
@@ -52,15 +56,50 @@ export const checkoutController = async (req, res, next) => {
                 quantity: x.quantity,
             };
         });
-        if (simplifiedCart.find((x) => !x.is_active || x.quantity > x.stock)) {
+       }else{
+             const variant =await ProductVariant.findById(variant_id).populate({
+                path : 'product_id',
+                populate : {
+                    path : 'category_id',
+                    select : 'is_active'
+                },
+                select : 'is_active name images price discount'
+             }).lean()
+             console.log(variant)
+             if(!variant){
+                throw new Error("Invalid variant")
+             }
+             const product = variant.product_id
+             const category = product.category_id
+             console.log(product.is_active , category)
+             checkoutOutItems = [{
+                _id : variant_id,
+                variant_id : variant._id,
+                product_id : product._id,
+                name: product.name,
+                color: variant.color,
+                price: product.price,
+
+                discount: product.discount,
+                size: variant.size,
+                stock: variant.stock,
+                is_active: product.is_active && category.is_active,
+                image: cloudinary.url(product.images?.[0]?.url || null, {
+                    secure: true,
+                }),
+                quantity: quantity,
+             }]
+       }
+
+        if (checkoutOutItems.find((x) => !x.is_active || x.quantity > x.stock)) {
             throw new Error("Cart includes unavailable or blocked items");
         }
-        const subtotal = simplifiedCart.reduce(
+        const subtotal = checkoutOutItems.reduce(
             (acc, cur) => (cur.price * cur.quantity) + acc,
             0
         );
 
-        const discountApplied = simplifiedCart.reduce((acc , cur) =>acc+(cur.price * (cur.discount / 100) ) * cur.quantity, 0)
+        const discountApplied = checkoutOutItems.reduce((acc , cur) =>acc+(cur.price * (cur.discount / 100) ) * cur.quantity, 0)
         const discountedAmount = subtotal - discountApplied
 
 
@@ -74,7 +113,7 @@ export const checkoutController = async (req, res, next) => {
                 message: "Checkout created Successfully",
                 status: "success",
                 data: {
-                    cart: simplifiedCart,
+                    cart: checkoutOutItems,
                     address: address,
                     subtotal,
                     discountApplied,

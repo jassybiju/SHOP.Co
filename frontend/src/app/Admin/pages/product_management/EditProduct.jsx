@@ -1,3 +1,4 @@
+import React from "react";
 import { ImageUp, Loader2, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
@@ -45,6 +46,7 @@ const EditProduct = () => {
                 value.length > 0 || "At Least one variant is required",
         },
     });
+    console.log(errors)
     const confirmation = useConfirmationModal();
     const { data: { data: brands } = { data: [] } } = useGetAllBrands({
         limit: 100,
@@ -134,7 +136,7 @@ const EditProduct = () => {
                     <ImageGroupComponent
                         setValue={setValue}
                         register={register}
-                        error={errors.images}
+                        errors={errors.images}
                         value={product?.data.images.map((x) => x.url)}
                     />
                 </div>
@@ -145,7 +147,7 @@ const EditProduct = () => {
                         register={register("name", {
                             required: "Product name is required",
                         })}
-                        error={errors.name}
+                        errors={errors.name}
                     />
                     <InputComponent
                         required
@@ -153,7 +155,7 @@ const EditProduct = () => {
                         register={register("small_description", {
                             required: "Small description is required",
                         })}
-                        error={errors.small_description}
+                        errors={errors.small_description}
                     />
 
                     <div className="flex w-full gap-2">
@@ -167,7 +169,7 @@ const EditProduct = () => {
                                     message: "Price cannot be negative",
                                 },
                             })}
-                            error={errors.name}
+                            errors={errors.name}
                         />
                         <InputComponent
                             required
@@ -182,7 +184,7 @@ const EditProduct = () => {
                                     message: "Discount cannot exceed 100%",
                                 },
                             })}
-                            error={errors.discount}
+                            errors={errors.discount}
                         />
                     </div>
                 </div>
@@ -199,11 +201,12 @@ const EditProduct = () => {
                             register={register("brand_id", {
                                 required: "Brand is required",
                             })}
-                            error={errors.brand_id}
+                                                        value={product.data.brand_id}
+
+                            errors={errors.brand_id}
                         />
                         <InputComponent
                             required
-                            defaultValue={product?.data?.category_id}
                             select
                             label={"Category"}
                             options={categories.map((x) => ({
@@ -213,7 +216,9 @@ const EditProduct = () => {
                             register={register("category_id", {
                                 required: "Category is required",
                             })}
-                            error={errors.category_id}
+                                                        value={product.data.category_id}
+
+                            errors={errors.category_id}
                         />
                     </div>
                     <InputComponent

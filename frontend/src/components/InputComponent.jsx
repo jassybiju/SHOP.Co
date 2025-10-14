@@ -55,7 +55,7 @@ const InputComponent = ({
           errors ? "border-red-400" : "border-gray-300"
         } rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition`}
       >
-        <option value="">{label}</option>
+        <option value="">{placeholder ? placeholder : label}</option>
         {options.map((opt) => (
           <option key={opt.value || opt} value={opt.value || opt}>
             {opt.label || opt}

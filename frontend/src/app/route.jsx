@@ -40,6 +40,11 @@ import AddAddress from "./User/Accounts/pages/address/AddAddress";
 import EditAddress from "./User/Accounts/pages/address/EditAddress";
 import Cart from "./User/pages/cart/Cart";
 import Checkout from "./User/pages/checkout/Checkout";
+import Order from "./User/Accounts/pages/order/Order";
+import OrderManagement from "./Admin/pages/order_management/OrderManagement";
+import ViewOrderManagement from "./Admin/pages/order_management/ViewOrderManagemenet";
+import ViewOrder from "./User/Accounts/pages/order/ViewOrder";
+import StockManagement from "./Admin/pages/stock_management/StockManagement";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -96,10 +101,9 @@ export const router = createBrowserRouter(
                 </Route>
             </Route>
             <Route element={<RedirectIfNotLoggedIn />}>
-                <Route element={<AppLayout/>}>
-                <Route element={<Cart />} path="/cart"></Route>
-                <Route element={<Checkout />} path="/checkout"></Route>
-                
+                <Route element={<AppLayout />}>
+                    <Route element={<Cart />} path="/cart"></Route>
+                    <Route element={<Checkout />} path="/checkout"></Route>
                 </Route>
                 <Route element={<AccountLayout />} path="account">
                     <Route index element={<Profile />} />
@@ -112,7 +116,8 @@ export const router = createBrowserRouter(
                     <Route path="address/add" element={<AddAddress />} />
                     <Route path="address/edit/:id" element={<EditAddress />} />
 
-                    <Route path="orders" element={<EditProfile />} />
+                    <Route path="orders" element={<Order />} />
+                    <Route path="orders/:id" element={<ViewOrder />} />
                 </Route>
                 <Route
                     element={
@@ -136,6 +141,20 @@ export const router = createBrowserRouter(
                         </Route>
                         <Route path="category-management">
                             <Route index element={<CategoryMangement />} />
+                        </Route>
+                        <Route path="order-management">
+                            <Route index element={<OrderManagement />} />
+                            <Route
+                                path="view/:id"
+                                element={<ViewOrderManagement />}
+                            />
+                        </Route>
+                        <Route path="stock-management">
+                            <Route index element={<StockManagement />} />
+                            <Route
+                                path="view/:id"
+                                element={<ViewOrderManagement />}
+                            />
                         </Route>
                     </Route>
                 </Route>

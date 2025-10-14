@@ -20,7 +20,14 @@ const orderItemSchema = new mongoose.Schema({
         type : mongoose.Decimal128,
         min: 0,
         required : true
+    },
+    discount: {
+        type : Number,
+        min: 0,
+        max : 100,
+        required : true
     }
+
 });
 
 export const OrderItem = mongoose.model("OrderItem", orderItemSchema)

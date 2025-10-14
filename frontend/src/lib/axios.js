@@ -3,7 +3,10 @@ import axios from "axios";
 export const accountAxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URI + "account",
     withCredentials: true,
-
+});
+export const orderAxiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URI + "order",
+    withCredentials: true,
 });
 export const cartAxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URI + "cart",

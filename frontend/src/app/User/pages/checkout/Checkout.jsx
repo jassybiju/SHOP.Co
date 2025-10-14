@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCheckout } from "../../hooks/useCheckout";
 import Button from "../../components/Button";
 import BreadCrumb from "@/app/Home/components/BreadCrumb";
 import { ProductCard } from "../../components/ProductCart";
 import Loader from "@/components/Loader";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import CouponInput from "./components/CouponInput";
 import { MoveRight } from "lucide-react";
@@ -13,8 +13,12 @@ import CheckoutAddress from "./components/CheckoutAddress";
 import ModalWrapper from "@/components/ModalWrapper";
 import AddAddress from "../../Accounts/pages/address/AddAddress";
 import { useModal } from "@/hooks/useModal";
+import { usePlaceOrder } from "../../hooks/useOrder";
 const Checkout = () => {
-    const { data, status, error } = useCheckout();
+    const {state } = useLocation()
+    const { data, status, error } = useCheckout(state);
+    const { mutate: placeOrder , status : placeOrderStatus } = usePlaceOrder();
+    const [paymentMethod, setPaymentMethod] = useState("COD");
     const navigate = useNavigate();
     const { openModal, closeModal } = useModal();
     if (status === "pending") return <Loader />;
@@ -37,6 +41,24 @@ const Checkout = () => {
                 onX={() => closeModal("add-address")}
                 render={<AddAddress />}
             />
+        );
+    };
+
+    const onPlaceOrder = () => {
+        placeOrder(
+            {
+                order_items: cart.map((x) => ({
+                    variant_id: x.variant_id,
+                    quantity: x.quantity,
+                })),
+                shipping_address_id: address.filter((x) => x.is_primary)[0]._id,
+                payment_method: paymentMethod,
+            },
+            {
+                onSettled: (data) => console.log(data),
+                onError: (data) => toast.error(data.response.data.message),
+                onSuccess : (data) => toast.success(data.message)
+            }
         );
     };
 
@@ -84,24 +106,29 @@ const Checkout = () => {
                         </p>
                         Select Any Payment Methods
                         <div className="flex flex-col gap-4 my-4">
-                            {[{label:'Cash On Delivery'} , {label : "UPI"}].map((x,i) => (<>
-                            <div className="flex items-center me-4">
-                                <input
-                                    defaultChecked={i === 0}
-                                    id="inline-checked-radio"
-                                    type="radio"
-                                    value=""
-                                    name={'payment'}
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 "
-                                />
-                                <label
-                                    htmlFor={x.label}
-                                    className="ms-2 text-sm font-medium text-gray-900"
-                                >
-                                   {x.label}
-                                </label>
-                            </div>
-                            </>))}
+                            {[
+                                { label: "Cash On Delivery" },
+                                { label: "UPI" },
+                            ].map((x, i) => (
+                                <>
+                                    <div className="flex items-center me-4">
+                                        <input
+                                            defaultChecked={i === 0}
+                                            id="inline-checked-radio"
+                                            type="radio"
+                                            value=""
+                                            name={"payment"}
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 "
+                                        />
+                                        <label
+                                            htmlFor={x.label}
+                                            className="ms-2 text-sm font-medium text-gray-900"
+                                        >
+                                            {x.label}
+                                        </label>
+                                    </div>
+                                </>
+                            ))}
                             <div className="flex items-center">
                                 <input
                                     disabled
@@ -112,7 +139,7 @@ const Checkout = () => {
                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                 />
                                 <label
-                                    for="inline-disabled-radio"
+                                    htmlFor="inline-disabled-radio"
                                     className="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500"
                                 >
                                     Inline disabled
@@ -149,11 +176,17 @@ const Checkout = () => {
 
                     <CouponInput />
                     <Button
-                        onClick={() => navigate("/checkout")}
+                        onClick={onPlaceOrder}
                         className={"rounded-full w-full mt-4"}
                         label={
                             <div className="flex gap-2 justify-center">
                                 Place Order <MoveRight />{" "}
+                            </div>
+                        }
+                        disabled={placeOrderStatus === 'pending'}
+                        loadingLabel={
+                            <div className="flex gap-2 justify-center">
+                                Placing Order <MoveRight />{" "}
                             </div>
                         }
                     />
