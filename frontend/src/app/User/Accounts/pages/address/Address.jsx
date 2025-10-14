@@ -16,14 +16,14 @@ const Address = () => {
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2">
                 <span>Here you can manage your addresses</span>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
                 {addresses?.data?.map((x) => (
                     <AddressComponent data={x} key={x._id} />
                 ))}
                 {/* <AddressComponent /> */}
                 <Link
                     to={"/account/address/add"}
-                    className="bg-black px-10 py-3 rounded text-white hover:bg-gray-800"
+                    className="bg-black px-10 py-3 w-min text-nowrap rounded text-white hover:bg-gray-800"
                 >
                     Add New Address
                 </Link>

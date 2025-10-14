@@ -21,7 +21,7 @@ export const editProfileService = async (data, email, url) => {
 
     // if url exists means new image upload save or else save the old one
     user.avatar_url = url ? url : user.avatar_url;
-
+    console.log(user)
     await user.save();
 
     return user;
@@ -82,7 +82,7 @@ export const addAddressService = async (data, currentUser) => {
     }
     const noOfAddresses = await Address.find({ user_id: user._id }).lean();
     console.log(noOfAddresses.length);
-    if (noOfAddresses.some((x) => x.address_type === data.address_type)) {
+    if (noOfAddresses.some((x) => x.address_type.toUpperCase() === data.address_type.toUpperCase())) {
         throw new Error("Address Type already exists");
     }
     if (noOfAddresses.length >= 3) {
@@ -159,7 +159,7 @@ export const setToPrimaryAddressService = async (currentUser, id) => {
         address.is_primary = true;
         await address.save({ session });
         session.endSession();
-        
+
         return address
     } catch (error) {
         await session.abortTransaction();

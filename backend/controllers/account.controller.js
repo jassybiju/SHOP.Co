@@ -27,7 +27,7 @@ export const editPrfileController = async (req, res, next) => {
         const uploadUrl = await uploadImages(req, "user");
         const result = await editProfileService(value, email, uploadUrl[0]);
 
-        res.status(200).json({ status: "success", data: result });
+        res.status(200).json({ status: "success", data: result ,message : "Profile Editted Successfully"});
     } catch (error) {
         next(error);
     }
@@ -188,11 +188,11 @@ export const setToPrimaryAddressController = async(req, res, next) => {
         const currentUser = req.email
         const {id} = req.params
 
-        const address = await setToPrimaryAddressService(currentUser , id) 
+        const address = await setToPrimaryAddressService(currentUser , id)
 
         return res.status(200).json({message : "Address set as primary successful", data : address , status: "success"})
     } catch (error) {
-        
+
         next(error)
     }
 }

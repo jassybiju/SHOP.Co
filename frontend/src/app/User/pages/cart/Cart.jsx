@@ -11,6 +11,7 @@ import Loader from "@/components/Loader";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { ProductCard } from "../../components/ProductCart";
+import CouponInput from "../checkout/components/CouponInput";
 const Cart = () => {
     const { data: cart, status: getStatus } = useGetAllCart();
     const navigate = useNavigate();
@@ -18,25 +19,45 @@ const Cart = () => {
     console.log(cart);
     return (
         <div className="px-20 py-5">
-            <BreadCrumb items={[{ label: "Cart" }, { label: "a" }]} />
+            <BreadCrumb />
 
             <h1 className=" font-hero text-5xl my-10 ">Your Cart</h1>
             <div className="flex gap-10 w-full min-h-100">
                 <div className="rounded border-1 w-3/5 border-gray-400 px-10 py-10">
-                    {cart.data.map((x) => (
-                        <ProductCard key={x._id} data={x} />
+                    {cart.data.cart.map((x) => (
+                        <ProductCard key={x._id} data={x} is_blocked={x.stock ===0}/>
                     ))}
             </div>
                 <div className="w-2/5 rounded border-1 h-max border-gray-400 p-5 pb-10 text-xl px-10">
-                    <h1 className=" font-hero text-3xl  ">Cart Summary</h1>
-                    <div className="flex justify-between w-full my-5">
-                        <span>Items : </span> <span>20</span>
-                    </div>
-                    <hr />
-                    <div className="flex justify-between w-full my-5">
-                        <span>SubTotal : </span>{" "}
-                        <span className="font-bold">$20</span>
-                    </div>
+                     <h1 className="font-hero text-3xl">Order Summary</h1>
+                        <div className="flex justify-between w-full my-5">
+                            <span>Subtotal : </span>
+                            <span className="font-bold">
+                                ${cart.data.subtotal.toFixed(2)}
+                            </span>
+                        </div>
+                        <div className="flex justify-between w-full my-5">
+                            <span>Discount : </span>
+                            <span className="font-bold text-red-600">
+                                -${cart.data.discountApplied.toFixed(2)}
+                            </span>
+                        </div>
+                        <div className="flex justify-between w-full my-5">
+                            <span>Delivery Fee : </span>
+                            <span className="font-bold ">
+                                ${Number(15).toFixed(2)}
+                            </span>
+                        </div>
+                        <hr />
+                        <div className="flex justify-between w-full my-5">
+                            <span>Total : </span>
+                            <span className="font-bold">
+                                ${cart.data.total.toFixed(2)}
+                            </span>
+                        </div>
+
+                        {/* <CouponInput /> */}
+
                     <Button
                         onClick={() => navigate('/checkout')}
                         className={"rounded-full w-full"}

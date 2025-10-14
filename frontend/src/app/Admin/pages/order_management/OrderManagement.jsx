@@ -9,12 +9,45 @@ import Dropdown from "../../components/Dropdown";
 import { useGetAllOrder } from "../../hooks/useOrderManagement";
 import Loader from "@/components/Loader";
 
+const STATUS_OPTIONS = [
+    {label : "ALL Status" , value : "ALL"},
+    {label : "placed" , value : "PLACED"},
+    {label : "confirmed" , value : "CONFIRMED"},
+    {label : "CANCELLATION_REQUESTED" , value : "CANCELLATION_REQUESTED"},
+    {label : "RETURN_REQUESTED" , value : "RETURN_REQUESTED"},
+]
+
+  const sortOptions = [
+        {
+            label: "Created At - asc",
+            value: "createdAt -asc",
+            CONST: { sort: "createdAt", order: "asc" },
+        },
+        {
+            label: "Created At - desc",
+            value: "createdAt -desc",
+            CONST: { sort: "createdAt", order: "desc" },
+        },
+        {
+            label: "total - asc",
+            value: "total -asc",
+            CONST: { sort: "name", order: "asc" },
+        },
+        {
+            label: "Name - desc",
+            value: "name -desc",
+            CONST: { sort: "name", order: "desc" },
+        },
+    ];
+
+
 const OrderManagement = () => {
     const [params, setParams] = useState({
         search: "",
+        status : ""
     });
 
-    const { data: orders, status } = useGetAllOrder();
+    const { data: orders, status } = useGetAllOrder(params);
     if (status === "pending") {
         return <Loader />;
     }
@@ -52,19 +85,15 @@ const OrderManagement = () => {
                     >
                         VIEW
                     </Link>
-                    <Link
-                        className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded font-semibold text-xs"
-                        to={"edit/" + row._id}
-                    >
-                        Edit
-                    </Link>
+
                     <button
-                        className="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded font-semibold text-xs"
+                        className="bg-amber-500 hover:bg-amber-600 text-white py-1 px-4 rounded font-semibold text-xs"
+                        onClick={()=>alert(`Currently on ${row.status_history.slice(-1)[0].status} statys`)}
                     //     onClick={()=>showConfirmation(()=>toggleProduct(row._id, {
                     //     onSuccess: (res) => toast.success(res.message),
                     // }), `${row.is_active ? 'block' : 'unblock'} this product `)}
                     >
-                        Block{" "}
+                        {row.status_history.slice(-1)[0].status}
                     </button>
                 </div>
         }
@@ -103,13 +132,25 @@ const OrderManagement = () => {
                     />
                     <Dropdown
                         label="Sort by"
+                       onChange={(e) =>
+                            setParams((state) => ({
+                                ...state,
+                                ...sortOptions.find(
+                                    (x) => x.value === e.target.value
+                                ).CONST,
+                            }))
+                        }
+                        options={sortOptions}
+                    />
+                      <Dropdown
+                        label="Select Status"
                         onChange={(e) =>
                             setParams((state) => ({
                                 ...state,
-                                filter: e.target.value,
+                                status: e.target.value,
                             }))
                         }
-                        options={filterOptions}
+                        options={STATUS_OPTIONS}
                     />
                 </div>
                 <Link
@@ -123,11 +164,12 @@ const OrderManagement = () => {
             <TableComponent
                 data={orders?.data.data}
                 column={column}
-                // pages={products.pages}
+        pages={orders?.data.pages}
+        page={orders?.data.page}
                 // page={products.page}
-                // onPageChange={(x) =>
-                //     setParams((state) => ({ ...state, page: x }))
-                // }
+                onPageChange={(x) =>
+                    setParams((state) => ({ ...state, page: x }))
+                }
             />
         </div>
     );

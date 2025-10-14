@@ -74,7 +74,8 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
         setCrop(centeredCrop);
     };
 
-    const handleCrop = () => {
+    const handleCrop = (e) => {
+        e.preventDefault()
         console.log(imgRef.current);
         setCanvasPreview(
             imgRef.current, // HTMLImageElement
@@ -105,7 +106,7 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
         </button>
         <label className="block mb-3 w-fit">
           <span className="sr-only">Choose profile photo</span>
-          <input 
+          <input
           ref={InputRef}
             type="file"
             accept="image/*"
@@ -139,7 +140,7 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
               Crop Image
             </button>
           </div>
-        ) : ( <div 
+        ) : ( <div
             onClick={()=>InputRef.current.click()}
             className="bg-gray-100 rounded flex justify-center items-center"
             style={{

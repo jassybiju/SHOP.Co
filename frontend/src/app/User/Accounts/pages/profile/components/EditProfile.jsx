@@ -8,11 +8,12 @@ import {  useEditAccount } from "../../../hooks/useAccount";
 import { Loader2 } from "lucide-react";
 import AvatarImageComponent from "./AvatarImageComponent";
 import ChangeUserEmail from "./ChangeUserEmail";
+import toast from "react-hot-toast";
 
 const EditProfile = () => {
     const navigate = useNavigate();
     const { data: user } = useUser();
-    const { register, handleSubmit, errors, setValue } = useForm({
+    const { register, handleSubmit, formState :{ errors}, setValue } = useForm({
         defaultValues: {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -20,8 +21,8 @@ const EditProfile = () => {
         },
     });
     const { mutate: editAccount, status } = useEditAccount();
-
-    const onSubmit = (data) => editAccount(data);
+    console.log(errors)
+    const onSubmit = (data) => editAccount(data, {onError: (data)=>toast.error(data.response.data.message), onSuccess: (data) => toast.success(data.message)});
 
     console.log(user);
     return (
@@ -43,13 +44,15 @@ const EditProfile = () => {
                 <div className="flex gap-10">
                     <InputComponent
                         label={"First Name"}
-                        register={register("first_name")}
+                        register={register("first_name" ,{required : "First Name is requried"})}
                         width={100}
+                        errors={errors?.first_name}
                     />
                     <InputComponent
                         label={"Last Name"}
-                        register={register("last_name")}
+                        register={register("last_name", {required : "Last Name is requried"})}
                         width={100}
+                        errors={errors?.last_name}
                     />
                 </div>
                 <InputComponent
@@ -59,8 +62,9 @@ const EditProfile = () => {
                             value: /^[0-9]{10,15}$/,
                             message: "Phone must be 10–15 digits only",
                         },
+
                     })}
-                    error={errors?.phone?.message}
+                    errors={errors?.phone}
                     width={100}
                 />
                 <div className="flex justify-end">

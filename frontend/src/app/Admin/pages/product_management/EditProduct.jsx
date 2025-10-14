@@ -58,12 +58,12 @@ const EditProduct = () => {
             console.log(product);
             reset({
                 ...product.data,
-                images: product.data.images.map((x) => x.url),
+                images: product?.data?.images.map((x) => x.url),
             });
             console.log(product);
             console.log({
                 ...product.data,
-                images: product.data.images.map((x) => x.url),
+                images: product?.data?.images.map((x) => x.url),
             });
         }
 

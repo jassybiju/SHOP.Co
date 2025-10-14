@@ -1,12 +1,12 @@
 import React from "react";
 import { useRemoveCartItems, useUpdateCartItems } from "../hooks/useCart";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { BatteryWarning, LucideFileWarning, Minus, Plus, Trash2 } from "lucide-react";
 
-export const ProductCard = ({ data , disabled }) => {
+export const ProductCard = ({ data , disabled , is_blocked = false}) => {
     const { mutate: updateCartItem, status } = useUpdateCartItems();
     const { mutate: removeCartItem, status: removeStatus } =
         useRemoveCartItems();
-
+    console.log(data)
     const onAddToCart = (quantity) => {
         updateCartItem(
             { variant_id: data.variant_id, quantity },
@@ -48,7 +48,8 @@ export const ProductCard = ({ data , disabled }) => {
                         }
                     </p>
                     <p>Color : {data.color}</p>
-                    <h1 className="font-hero text-xl">${data.price}</h1>
+                    <h1 className="font-hero text-xl">${data.price} * {data.quantity}</h1>
+                    {is_blocked && <p className="text-red-500"> <BatteryWarning/> Product is out of stock</p>}
                 </div>
             </div>
            {!disabled && (

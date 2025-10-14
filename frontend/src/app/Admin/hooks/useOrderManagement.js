@@ -1,11 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getAllOrder, getOrder, updateOrderStatus } from "../services/order-management.service"
 import toast from "react-hot-toast"
 
 export const useGetAllOrder = (params) => {
     return useQuery({
         queryKey : ['admin-order', params],
-        queryFn : getAllOrder
+        queryFn : getAllOrder,
+        placeholderData : keepPreviousData
     })
 }
 

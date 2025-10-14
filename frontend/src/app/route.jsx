@@ -45,6 +45,7 @@ import OrderManagement from "./Admin/pages/order_management/OrderManagement";
 import ViewOrderManagement from "./Admin/pages/order_management/ViewOrderManagemenet";
 import ViewOrder from "./User/Accounts/pages/order/ViewOrder";
 import StockManagement from "./Admin/pages/stock_management/StockManagement";
+import OrderSuccessful from "./User/Accounts/pages/order/OrderSuccessful";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -119,6 +120,7 @@ export const router = createBrowserRouter(
                     <Route path="orders" element={<Order />} />
                     <Route path="orders/:id" element={<ViewOrder />} />
                 </Route>
+                <Route path="order/successful" element={<OrderSuccessful />} />
                 <Route
                     element={
                         <RoleBasedProtectedRoute allowedRoles={["admin"]} />

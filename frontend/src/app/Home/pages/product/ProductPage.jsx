@@ -3,7 +3,7 @@ import { ChevronRight, Loader2, Minus, Plus, Star } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
-import { Navigate, useParams , useNavigate } from "react-router";
+import { Navigate, useParams, useNavigate } from "react-router";
 import Navbar from "../../components/Navbar";
 import toast from "react-hot-toast";
 import ProductCard from "../search/components/ProductCard";
@@ -13,7 +13,6 @@ import ImageMagnifier from "./components/ImageMagnifier";
 import { useUpdateCartItems } from "@/app/User/hooks/useCart";
 
 function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
-
     const sizeClasses = {
         sm: "w-4 h-4",
         md: "w-5 h-5",
@@ -68,7 +67,7 @@ function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
 
 const ProductPage = () => {
     const { id } = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { data, isError, error, isLoading } = useProduct(id);
 
     const [selectedImage, setSelectedImage] = useState(0);
@@ -77,7 +76,7 @@ const ProductPage = () => {
     const [activeTab, setActiveTab] = useState("details");
     console.log(selectedVariant);
 
-    const {mutate : addToCart} = useUpdateCartItems()
+    const { mutate: addToCart } = useUpdateCartItems();
 
     if (isLoading) {
         return <Loader2 className="animate-spin" />;
@@ -95,14 +94,20 @@ const ProductPage = () => {
     ];
 
     const onAddToCart = () => {
-        if(!selectedVariant) return toast.error("Variant not selected")
-        addToCart({variant_id : selectedVariant._id, quantity }, {onSuccess : (data)=>{
-    console.log(data)
-            toast.success(data.message)
-        },onError : (res)=>{
-            toast.error(res.response.data.message)
-        }})
-    }
+        if (!selectedVariant) return toast.error("Variant not selected");
+        addToCart(
+            { variant_id: selectedVariant._id, quantity },
+            {
+                onSuccess: (data) => {
+                    console.log(data);
+                    toast.success(data.message);
+                },
+                onError: (res) => {
+                    toast.error(res.response.data.message);
+                },
+            }
+        );
+    };
 
     return (
         <div>
@@ -200,31 +205,32 @@ const ProductPage = () => {
                                     Select Variant
                                 </h3>
                                 <div className="flex gap-3 flex-wrap">
-                                    {data.variants
-                                        ?.filter((x) => x.stock !== 0)
-                                        .map((variant, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() =>
-                                                    setSelectedVariant(variant)
-                                                }
-                                                className={`border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
-                                                    selectedVariant === variant
-                                                        ? "bg-gray-variant border-gray-400"
-                                                        : "bg-gray-variant  hover:border-gray-300"
-                                                } flex items-center gap-2`}
-                                            >
-                                                {variant.size}{" "}
-                                                <div
-                                                    className="w-4  h-4 rounded-full"
-                                                    style={{
-                                                        backgroundColor:
-                                                            variant.color,
-                                                    }}
-                                                ></div>
-                                                {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
-                                            </button>
-                                        ))}
+                                    {data.variants.map((variant, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() =>
+                                                setSelectedVariant(variant)
+                                            }
+                                            className={` border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
+                                                selectedVariant === variant
+                                                    ? "bg-gray-variant border-gray-400"
+                                                    : "bg-gray-variant  hover:border-gray-300"
+                                            } flex items-center gap-2 ${
+                                                variant.stock === 0 &&
+                                                "bg-red-400"
+                                            }`}
+                                        >
+                                            {variant.size}{" "}
+                                            <div
+                                                className="w-4  h-4 rounded-full"
+                                                style={{
+                                                    backgroundColor:
+                                                        variant.color,
+                                                }}
+                                            ></div>
+                                            {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 
@@ -261,10 +267,28 @@ const ProductPage = () => {
 
                                 {/* Action Buttons */}
                                 <div className="space-y-3">
-                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base" onClick={onAddToCart}>
+                                    <button
+                                        className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
+                                        onClick={onAddToCart}
+                                    >
                                         Add to Cart
                                     </button>
-                                    <button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base" onClick={()=>{navigate('/checkout/',{state : {variant_id : selectedVariant._id , quantity}})}}>
+                                    <button
+                                        className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
+                                        onClick={() => {
+                                            if(selectedVariant.stock !== 0){
+                                            navigate("/checkout/", {
+                                                state: {
+                                                    variant_id:
+                                                        selectedVariant._id,
+                                                    quantity,
+                                                },
+                                            });
+                                        }else{
+                                            toast.error("Stock is empty")
+                                        }
+                                        }}
+                                    >
                                         Buy Now
                                     </button>
                                 </div>

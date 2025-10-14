@@ -33,7 +33,7 @@ const NavbarIcons = () => {
                     <Link className="relative cursor-pointer" to='/cart'>
                         <ShoppingCart className="w-6 h-6" />
                         <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                            4
+                            
                         </div>
                     </Link>
                     <Heart className="w-6 h-6 cursor-pointer" />

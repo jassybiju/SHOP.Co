@@ -46,7 +46,7 @@ export const getAllCartController = async (req, res, next) => {
                         path: "category_id",
                         select: "is_active",
                     },
-                    select: "is_active images name price",
+                    select: "is_active images name price discount",
                 },
                 select: "color size stock ",
             })
@@ -69,6 +69,7 @@ export const getAllCartController = async (req, res, next) => {
                 discount : product.discount,
                 size: variant.size,
                 stock: variant.stock,
+
                 is_active: isActive,
                 image: cloudinary.url(product.images?.[0]?.url || null, {
                     secure: true,
@@ -76,11 +77,16 @@ export const getAllCartController = async (req, res, next) => {
                 quantity: x.quantity,
             };
         });
+
+        const subtotal = simplifiedCartItems.reduce((acc,cur) => (cur.price * cur.quantity) + acc , 0 )
+        const discountApplied = simplifiedCartItems.reduce((acc, cur)=> acc +( (cur.price * (cur.discount / 100)) * cur.quantity), 0)
+        const total = subtotal - discountApplied + 15
+        console.log(simplifiedCartItems)
         return res
             .status(200)
             .json({
                 message: "Cart Items recieved Successfully",
-                data: simplifiedCartItems,
+                data: {cart : simplifiedCartItems , subtotal , discountApplied , total},
                 status: "success",
             });
     } catch (error) {

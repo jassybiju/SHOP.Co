@@ -7,6 +7,7 @@ import brandManagementRouter from './routes/admin/brand-management.routes.js'
 import categoryManagementRouter from './routes/admin/category-management.routes.js'
 import productManagementRouter from './routes/admin/product-managment.routes.js'
 import orderManagementRouter from './routes/admin/order-management.routes.js'
+import stockManagementRouter from './routes/admin/stock-management.routes.js'
 import homeRouter from './routes/home.routes.js'
 import accountRouter from './routes/account.routes.js'
 import cartRouter from './routes/cart.routes.js'
@@ -44,6 +45,7 @@ app.use("/api/admin/brand", brandManagementRouter);
 app.use("/api/admin/category", categoryManagementRouter);
 app.use("/api/admin/product", productManagementRouter);
 app.use('/api/admin/order', orderManagementRouter)
+app.use('/api/admin/stock',stockManagementRouter)
 
 app.use('/api/home',homeRouter)
 
@@ -60,7 +62,7 @@ app.use((req, res) => {
     throw new Error("PAth not found " + req.path);
 });
 
-app.use((error, req, res , next) => {
+app.use((error, req, res , next ) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
     console.log(statusCode, 12);

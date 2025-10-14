@@ -12,11 +12,11 @@ export const updateCartService = async (
         path: "product_id",
         populate: { path: "category_id", model: "Category" },
     });
-    console.log(variant.stock+quantity, quantity ,variant.stock);
+
     if (
+        !variant||
         !variant.product_id.is_active ||
-        !variant.product_id.category_id.is_active ||
-        !variant
+        !variant.product_id.category_id.is_active 
     ) {
         throw new Error("Invalid request");
     }

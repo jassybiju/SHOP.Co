@@ -158,7 +158,7 @@ const ProductManagement = () => {
                         }
                     />
                     <Dropdown
-                        label="Sort by"
+                        label="Filter by"
                         onChange={(e) =>
                             setParams((state) => ({
                                 ...state,

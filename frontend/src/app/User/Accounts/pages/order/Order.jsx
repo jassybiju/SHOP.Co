@@ -27,7 +27,7 @@ const Order = () => {
                 <span>My Orders</span>
             </div>
             <div className="flex justify-between">
-                <Search
+                {/* <Search
                     label={"Search Order by id"}
                     className="m-0"
                     width={50}
@@ -72,7 +72,7 @@ const Order = () => {
                             {option.label}
                         </option>
                     ))}
-                </select>
+                </select> */}
             </div>
             {/* Orders List */}
             <div className="flex flex-col gap-5">
@@ -180,7 +180,7 @@ const Order = () => {
                                 </div>
                             ))}
                             <div>
-                                <Link to={"/account/orders/"+order._id}>View</Link>
+                                <Link to={"/account/orders/"+order._id} className="px-5  py-2 me-4 bg-amber-400 rounded border-1 text-white">View</Link>
 
 
                                  {order.status_history.slice(-1)[0]?.status !== 'DELIVERED' ?

@@ -1,3 +1,4 @@
+import React from "react";
 import ImageCropperModal from "@/app/Admin/pages/product_management/components/ImageCropperModal";
 import { ImageUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -31,7 +32,7 @@ const AvatarImageComponent = ({
         dataTransfer.items.add(file);
         const fileList = dataTransfer.files;
         console.log(file, fileList);
-       
+
         if (hiddenInputRef.current) {
             hiddenInputRef.current.files = fileList;
             console.log(fileList, file, hiddenInputRef.current.files);
@@ -101,7 +102,7 @@ const AvatarImageComponent = ({
                     hiddenInputRef.current = e;
                 }}
                 onChange={(e) => {
-                    
+
                     registerOnChange(e);
                 }}
             />

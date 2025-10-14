@@ -34,11 +34,13 @@ const Sidebar = () => {
   return (
     <div className="w-1/4 min-w-[220px] bg-white shadow-md rounded-xl p-5">
       {/* Breadcrumb */}
-      <BreadCrumb items={[{ label: "Account" }]} />
+      <BreadCrumb  />
 
       {/* Avatar */}
       <div className="flex w-40 mx-auto flex-col items-center my-10">
-        <AvatarImageComponent readonly previewImg={user?.avatar_url}  />
+        <div className="h-40 w-40">
+        <AvatarImageComponent readonly previewImg={user?.avatar_url} size={99}  />
+        </div>
         <p className="text-lg font-semibold mt-4">
           {user?.first_name} {user?.last_name}
         </p>
@@ -53,7 +55,7 @@ const Sidebar = () => {
               <Link
                 to={`/account/${item.path}`}
                 onClick={() => setSelected(item.label)}
-                className={`block px-4 py-2 rounded-lg font-medium transition-all duration-300 
+                className={`block px-4 py-2 rounded-lg font-medium transition-all duration-300
                   ${
                     isActive(item.path)
                       ? "bg-gray-200 text-gray-900"
@@ -69,7 +71,7 @@ const Sidebar = () => {
                     prev === item.label ? "" : item.label
                   )
                 }
-                className={`w-full text-left px-4 py-2 rounded-lg font-medium transition-all duration-300 flex justify-between items-center 
+                className={`w-full text-left px-4 py-2 rounded-lg font-medium transition-all duration-300 flex justify-between items-center
                   ${
                     isParentActive(item.children)
                       ? "bg-gray-200 text-gray-900"
@@ -99,7 +101,7 @@ const Sidebar = () => {
                     key={child.label}
                     to={`/account/${child.path}`}
                     onClick={() => setSelected(item.label)}
-                    className={`px-3 py-2 rounded-md text-sm transition-colors duration-300 
+                    className={`px-3 py-2 rounded-md text-sm transition-colors duration-300
                       ${
                         isActive(child.path)
                           ? "bg-gray-200 text-gray-900"
