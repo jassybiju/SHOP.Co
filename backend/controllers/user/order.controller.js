@@ -5,12 +5,7 @@ import {
     orderSearchValidator,
     placeOrderValidator,
 } from "../../validators/orderValidator.js";
-import mongoose from "mongoose";
-import { ProductVariant } from "../../models/product_variants.model.js";
-import { Product } from "../../models/product.model.js";
-import { Cart } from "../../models/cart.model.js";
 import { createOrderService } from "../../services/user/order.service.js";
-import { parse } from "dotenv";
 import cloudinary from "../../utils/cloudinary.js";
 
 export const addOrderController = async (req, res, next) => {

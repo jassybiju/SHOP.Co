@@ -33,7 +33,7 @@ const placeOrderSchema = Joi.object({
  const orderSearchSchema = Joi.object({
     q: Joi.string().trim().min(0).max(200),
     sort: Joi.string().valid("createdAt").default("createdAt"), // TODO add valids
-    order: Joi.string().valid("asc", "desc").insensitive().default("asc"),
+    order: Joi.string().valid("asc", "desc").insensitive().default("desc"),
     status: Joi.string()
         .valid(
             "PLACED",

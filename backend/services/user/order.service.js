@@ -62,12 +62,14 @@ export const createOrderService = async (currentUser, orderData) => {
 
             // ! removing from cart
             // TODO Should i remove the number of quantity order or the full
-            const cartItem = await Cart.findOneAndDelete({
+            // * Removing the item from cart
+            await Cart.findOneAndDelete({
                 user_id: user._id,
                 variant_id: item.variant_id,
             });
 
-            const productVariant = await ProductVariant.findByIdAndUpdate(
+            // * Removing the quantity from the inventory
+            await ProductVariant.findByIdAndUpdate(
                 item.variant_id,
                 { $inc: { stock: -item.quantity } },
                 { session, new: true }

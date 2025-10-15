@@ -16,10 +16,10 @@ const Dropdown= ({items , label}) => {
   }, []);
 
   return (
-   
-     
 
-    
+
+
+
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -29,16 +29,16 @@ const Dropdown= ({items , label}) => {
               </button>
 
           {isOpen && (
-            <ul className="absolute left-0 mt-2 w-40 gap-[1px] flex flex-col  shadow-lg rounded-md bg-gray-300  z-10">
-                
-            
-            {items.map(x => (<li className="px-4 py-2 hover:bg-gray-100 bg-white cursor-pointer" onClick={x.onClick}>{x.label}</li>))}
+            <ul className="absolute right-0 mt-2 w-40 gap-[1px] flex flex-col  shadow-lg rounded-md bg-gray-300  z-10">
+
+
+            {items.map((x , i) => (<button key={i} className="px-4 py-2 hover:bg-gray-100 bg-white cursor-pointer" onClick={x.onClick}>{x.label}</button>))}
             </ul>
           )}
         </div>
 
-        
-  
+
+
   );
 };
 

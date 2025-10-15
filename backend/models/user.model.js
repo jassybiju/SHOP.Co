@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import * as bcrypt from "bcrypt";
+import { nanoid } from "nanoid";
 
 const userSchema = new Schema(
   {
@@ -48,6 +49,15 @@ const userSchema = new Schema(
     is_google_login : {
       type : Boolean,
       default : false
+    },
+    referal_id : {
+        type : String,
+        default : () => 'USR'+nanoid(6).toUpperCase(),
+        unique : true
+    },
+    reffered_by : {
+        type : mongoose.Schema.Types.ObjectId,
+        default : null
     }
   },
   { timestamps: true }
@@ -57,7 +67,7 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) {
   try {
     let user = this;
-    
+
     //checking if password is modified
     if (!user.isModified("password")) return next();
 
