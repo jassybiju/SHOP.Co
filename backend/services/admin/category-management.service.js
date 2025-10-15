@@ -1,10 +1,12 @@
+import ErrorWithStatus from "../../config/ErrorWithStatus.js";
 import { Category } from "../../models/category.model.js";
+import { HTTP_RES } from "../../utils/CONSTANTS.js";
 
 export const addCategoryService = async (value) => {
     const existinCategory = await Category.findOne({ name: {$regex : `^${value.name}$` , $options : 'i' }  });
     console.log(existinCategory)
     if (existinCategory) {
-        throw new Error("Category name exists");
+        throw new ErrorWithStatus("Category name exists",HTTP_RES.CONFLICT);
     }
     const category = await Category.create(value);
 
@@ -105,10 +107,8 @@ export const editCategoryService = async (_id, data) => {
     console.log(data, 2342);
 
     const category = await Category.findOne({ _id });
-    console.log(category, 234);
-    if (!category) {
-        throw new Error("No Category Found");
-    }
+
+    if (!category) throw new ErrorWithStatus("No Category Found",HTTP_RES.NOT_FOUND);
 
     const existingWithName = await Category.findOne({
         name: {$regex : `^${data.name}$` , $options : 'i'},
@@ -116,12 +116,11 @@ export const editCategoryService = async (_id, data) => {
     });
     // const existinCategory = await Category.findOne({ name: {$regex : `^${value.name}$` , $options : 'i' }  });
 
-    if (existingWithName) {
-        throw new Error("Category name already exists");
-    }
+    if (existingWithName)  throw new ErrorWithStatus("Category name already exists",HTTP_RES.CONFLICT);
 
     category.name = data.name;
     category.description = data.description;
+    category.discount = data.discount
 
     await category.save();
 

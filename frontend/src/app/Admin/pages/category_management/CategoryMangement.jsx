@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import Dropdown from "../../components/Dropdown";
 import Header from "../../components/Header";
 import Search from "../../components/Search";
@@ -27,7 +26,6 @@ const CategoryMangement = () => {
     const { openModal } = useModal();
     const { data: categories, status, isLoading } = useGetAllCategories(params);
     const { mutate: toggleCategory } = useToggleCategoryStatus();
-    const navigate = useNavigate();
     const showConfirmation = useConfirmationModal();
     if (status == "loading" || isLoading) {
         return "Loading";
@@ -58,6 +56,7 @@ const CategoryMangement = () => {
         },
         { label: "Name", key: "name" },
         { label: "Description", key: "description" },
+        {label : "Discount" , key : "discount" },
         {
             label: "is_active",
             key: "is_active",

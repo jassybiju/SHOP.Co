@@ -19,11 +19,10 @@ const EditCategory = ({ id }) => {
         formState: { errors: formError },
         reset,
         trigger,
-        
     } = useForm({ defaultValues: { name: "", description: "" } });
-    const { mutate: EditCategory , status : editingStatus } = useEditCategory();
-    const {  closeModal } = useModal();
-    const confirmation = useConfirmationModal()
+    const { mutate: EditCategory, status: editingStatus } = useEditCategory();
+    const { closeModal } = useModal();
+    const confirmation = useConfirmationModal();
     useEffect(() => {
         reset({
             name: brands?.data.name,
@@ -43,7 +42,7 @@ const EditCategory = ({ id }) => {
                 onSuccess: (res) => {
                     console.log(res);
                     toast.success(res.message);
-                    closeModal('edit-category');
+                    closeModal("edit-category");
                 },
             }
         );
@@ -65,7 +64,13 @@ const EditCategory = ({ id }) => {
                 </h2>
 
                 <form
-                 onSubmit={(e)=>{e.preventDefault();trigger().then(x=> x&& confirmation(handleSubmit(onSubmit)))}} noValidate
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        trigger().then(
+                            (x) => x && confirmation(handleSubmit(onSubmit))
+                        );
+                    }}
+                    noValidate
                 >
                     <div className="mb-6">
                         <label
@@ -111,21 +116,55 @@ const EditCategory = ({ id }) => {
                         </p>
                     </div>
 
+                    <div className="mb-6">
+                        <label
+                            htmlFor="Brand-name"
+                            className="block text-gray-700 font-medium mb-2"
+                        >
+                            Discount
+                        </label>
+                        <input
+                            type="text"
+                            id="Brand-name"
+                            name="name"
+                            {...register("discount", {
+                                required: "Category Discount is required ",
+                                min : {
+                                    value : 0,message : "Minimum Value should be 0"
+                                }, max : {
+                                    value : 100,message : "Maximum Value should be 100"
+                                }
+                            })}
+                            required
+                            placeholder="Enter Discount"
+                            className="block w-full bg-gray-50 border border-gray-300 rounded-lg p-3  text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                        />
+                        <p className="text-red-500">
+                            {formError?.discount && formError?.discount.message}
+                        </p>
+                    </div>
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            disabled={editingStatus === 'pending'}
-                            onClick={()=>closeModal('edit-category')}
+                            disabled={editingStatus === "pending"}
+                            onClick={() => closeModal("edit-category")}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-400"
                         >
                             Cancel
                         </button>
                         <button
-                            disabled={editingStatus==='pending'}
+                            disabled={editingStatus === "pending"}
                             type="submit"
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                           {editingStatus === 'pending' ? <div className="flex gap-2"><Loader2 className="animate-spin"/> Editing Category</div> : "Edit Category"} 
+                            {editingStatus === "pending" ? (
+                                <div className="flex gap-2">
+                                    <Loader2 className="animate-spin" /> Editing
+                                    Category
+                                </div>
+                            ) : (
+                                "Edit Category"
+                            )}
                         </button>
                     </div>
                 </form>

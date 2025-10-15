@@ -70,7 +70,7 @@ export const editCategory = async (req, res, next) => {
     }
 };
 
-export const toggleCategoryStatus = async(req,res)=>{
+export const toggleCategoryStatus = async(req,res,next)=>{
     try {
         const { id } = req.params;
 

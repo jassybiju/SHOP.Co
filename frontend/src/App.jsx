@@ -1,11 +1,9 @@
 import { RouterProvider } from "react-router";
 import { router } from "./app/route";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import 'react-image-crop/dist/ReactCrop.css'
 
 
-import { Loader } from "lucide-react";
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import { ModalProvider } from "./components/ModalProvider";
 

@@ -11,10 +11,16 @@ const categorySchema = new mongoose.Schema({
         requried : [true, "Description is required"]
     },
     is_active : {
-        type : Boolean, 
+        type : Boolean,
         default : true
+    },
+    discount : {
+        type : Number,
+        default : 0,
+        min : 0,
+        max : 100
     }
-     
+
 },{
     timestamps : true
 })
