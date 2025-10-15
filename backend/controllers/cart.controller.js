@@ -44,7 +44,7 @@ export const getAllCartController = async (req, res, next) => {
                     path: "product_id",
                     populate: {
                         path: "category_id",
-                        select: "is_active",
+                        select: "is_active discount",
                     },
                     select: "is_active images name price discount",
                 },
@@ -66,7 +66,7 @@ export const getAllCartController = async (req, res, next) => {
                 name : product.name,
                 color: variant.color,
                 price : product.price,
-                discount : product.discount,
+                discount : product.discount < category.discount ? category.discount : product.discount,
                 size: variant.size,
                 stock: variant.stock,
 

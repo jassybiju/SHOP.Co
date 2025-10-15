@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 
 const EditCategory = ({ id }) => {
     console.log(id);
-    const { data: brands, status } = useGetCategory(id);
+    const { data: category, status } = useGetCategory(id);
     const {
         register,
         handleSubmit,
@@ -25,10 +25,11 @@ const EditCategory = ({ id }) => {
     const confirmation = useConfirmationModal();
     useEffect(() => {
         reset({
-            name: brands?.data.name,
-            description: brands?.data.description,
+            name: category?.data.name,
+            description: category?.data.description,
+            discount: category?.data.discount,
         });
-    }, [brands, reset]);
+    }, [category, reset]);
 
     const onSubmit = (data) => {
         console.log(data);

@@ -26,7 +26,7 @@ export const checkoutController = async (req, res, next) => {
                     path: "product_id",
                     populate: {
                         path: "category_id",
-                        select: "is_active",
+                        select: "is_active discount",
                     },
                     select: "is_active name images price discount",
                 },
@@ -50,8 +50,7 @@ export const checkoutController = async (req, res, next) => {
                     name: product.name,
                     color: variant.color,
                     price: product.price,
-
-                    discount: product.discount,
+                    discount: product.discount < category.discount ? category.discount : product.discount,
                     size: variant.size,
                     stock: variant.stock,
                     is_active: isActive,
@@ -68,7 +67,7 @@ export const checkoutController = async (req, res, next) => {
                     path: "product_id",
                     populate: {
                         path: "category_id",
-                        select: "is_active",
+                        select: "is_active discount",
                     },
                     select: "is_active name images price discount",
                 })
@@ -89,7 +88,7 @@ export const checkoutController = async (req, res, next) => {
                     color: variant.color,
                     price: product.price,
 
-                    discount: product.discount,
+                    discount: product.discount < category.discount ? category.discount : product.discount,
                     size: variant.size,
                     stock: variant.stock,
                     is_active: product.is_active && category.is_active,
