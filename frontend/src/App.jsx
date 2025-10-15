@@ -13,10 +13,9 @@ import { ModalProvider } from "./components/ModalProvider";
 import 'react-inner-image-zoom/lib/styles.min.css'
 
 const App = () => {
-    
 
-    
-    
+
+
     return (
         <>
         <ReactQueryDevtools/>
