@@ -16,6 +16,8 @@ import orderRouter from './routes/user/order.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import ErrorWithStatus from "./config/ErrorWithStatus.js";
+import { HTTP_RES } from "./utils/CONSTANTS.js";
 const PORT = process.env.PORT || 8000;
 const app = express();
 
@@ -58,16 +60,16 @@ app.use('/api/order', orderRouter)
 
 
 app.use((req, res) => {
-    res.status(404);
-    throw new Error("PAth not found " + req.path);
+    // res.status(404);
+    throw new ErrorWithStatus("PAth not found " + req.path, HTTP_RES.NOT_FOUND);
 });
 
 app.use((error, req, res , next ) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
-    console.log(statusCode, 12);
+    console.log(statusCode, 12 , error.statusCode());
 
-    res.status(statusCode);
+    res.status(error.statusCode() || statusCode);
     console.log(error.message);
     res.json({
         message: error.message,

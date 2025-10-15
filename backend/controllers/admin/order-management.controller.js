@@ -1,8 +1,7 @@
 import { Order } from "../../models/order.model.js"
 import {OrderItem} from '../../models/order_item.model.js'
-import { getAllOrdersService } from "../../services/admin/order-management.service.js"
+import { getAllOrdersService, updateOrderStatusService } from "../../services/admin/order-management.service.js"
 import cloudinary from "../../utils/cloudinary.js"
-import { STATUS_TRANSITIONS } from "../../utils/CONSTANTS.js"
 import { orderStatusValidator } from "../../validators/orderValidator.js"
 
 export const getAllOrdersController = async(req, res, next) => {
@@ -15,7 +14,6 @@ export const getAllOrdersController = async(req, res, next) => {
     }
 }
 
-const isPhysicalStatus = (status) =>  ['PLACED', 'CONFIRMED', 'PACKED', 'SHIPPED', 'DELIVERED', 'RETURNED'].includes(status)
 
 export const getOrderController = async(req, res, next) => {
     try {
@@ -71,78 +69,11 @@ export const updateOrderStatus = async (req, res, next) => {
         if(error){
             throw error
         }
-
         const {status : newStatus, description} = value
 
-        if(["RETURN_REQUESTED", "CANCELLATION_DENIED","CANCELLATION_REQUESTED"].includes(newStatus)) throw new Error("Cannot set the specfic Status")
+        const newOrder = await updateOrderStatusService(orderId,newStatus,description)
 
-        const existingOrder = await Order.findById(orderId)
-
-        if(!existingOrder) throw new Error("Order Not Found ")
-
-        const currentStatus = existingOrder.status_history.slice(-1)[0].status
-        console.log(currentStatus)
-
-        const allowedTransitions = STATUS_TRANSITIONS[currentStatus]
-
-        if(!allowedTransitions.includes(newStatus))throw new Error("Invalid Status Transition")
-
-        const updates = {
-            $push: {}
-        }
-
-        // here admin is denying request by selecting another status
-        if(currentStatus === 'CANCELLATION_REQUESTED' && isPhysicalStatus(newStatus)){
-            updates.$push.status_history = {
-                $each : [{
-                    status : "CANCELLATION_DENIED",
-                    description : `Cancellation request denied reason : ${description}, process continued to ${newStatus}`
-                }]
-            }
-
-            const statusBeforeRequest = existingOrder.status_history.slice(-2)[0].status
-
-            const flowCheckTransition = STATUS_TRANSITIONS[statusBeforeRequest]
-            if( isPhysicalStatus(newStatus) && !flowCheckTransition.includes(newStatus)){
-                throw new Error("Invalid Denial Transition, cannot jump from " + statusBeforeRequest + ' to ' + newStatus)
-            }
-
-        }
-        const newStatusEntry = {
-            status : newStatus,
-            description : description
-        }
-
-        if(Array.isArray(updates.$push.status_history?.$each)){
-            updates.$push.status_history.$each.push(newStatusEntry)
-        }else{
-            updates.$push.status_history = newStatusEntry
-        }
-
-        if(newStatus === 'CANCELLED'){
-            updates.$set = updates.$set || {}
-            if(existingOrder.payment_status === 'PAID'){
-                updates.$set.payment_status = 'REFUNDED'
-                newStatusEntry.description = description || "Order cancelled by admin , Initiating refund"
-            }else if (["PENDING", "PROCESSING"].includes(existingOrder.payment_status)){
-                updates.$set.payment_status = 'CANCELLED'
-                newStatusEntry.description = description || "Order cancelled by admin, payment halted"
-            }
-        }
-
-        if(newStatus === 'RETURNED'){
-            updates.$set = updates.$set ||{}
-            if(existingOrder.payment_status === 'PAID'){
-                updates.$set.payment_status = 'REFUNDED'
-                newStatusEntry.description = description || "Return approved"
-            }else{
-                updates.$set.payment_status = 'CANCELLED'
-                newStatusEntry.description = description || "Return Processed"
-            }
-        }
-        const updatedOrder = await Order.findByIdAndUpdate(orderId,updates,{new : true, runValidators : true})
-
-        return res.status(200).json({message : "Order status updated successfully", status : 'success', data : updatedOrder})
+        return res.status(200).json({message : "Order status updated successfully", status : 'success', data : newOrder})
 
     }catch(error){
         next(error)
