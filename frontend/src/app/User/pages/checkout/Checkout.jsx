@@ -66,7 +66,8 @@ const Checkout = () => {
                 onSettled: (data) => console.log(data),
                 onError: (data) => toast.error(data.response.data.message),
                 onSuccess: (data) => {toast.success(data.message)
-                    navigate('/order/successful')
+                    console.log(data)
+                    navigate('/order/successful' , )
                 },
             }
         );
