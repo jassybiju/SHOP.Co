@@ -1,23 +1,23 @@
-import Search from "@/app/Admin/components/Search";
-import { ProductCard } from "@/app/User/components/ProductCart";
+// import Search from "@/app/Admin/components/Search";
+// import { ProductCard } from "@/app/User/components/ProductCart";
 import { useCancelOrder, useGetAllOrder, useReturnOrder } from "@/app/User/hooks/useOrder";
 import Loader from "@/components/Loader";
 import {Link} from 'react-router-dom'
 import useCommentModal from "@/hooks/useCommentModal";
-import React, { useState } from "react";
+import React from "react";
 
 const Order = () => {
     const { data, status } = useGetAllOrder();
-    const [params, setParams] = useState({ q: "", sort: "", order: "" });
+    // const [params, setParams] = useState({ q: "", sort: "", order: "" });
     const onClickComment = useCommentModal();
     const { mutate: cancelOrder } = useCancelOrder();
     const {mutate : returnOrder} = useReturnOrder()
     console.log(data?.data);
-    const SORT_OPTIONS = [
-        // { label: "Most Popular", sort: "popularity", order: "desc" },
-        { label: "Latest", sort: "createdAt", order: "desc" },
-        { label: "Oldest", sort: "createdAt", order: "asc" },
-    ];
+    // const SORT_OPTIONS = [
+    //     // { label: "Most Popular", sort: "popularity", order: "desc" },
+    //     { label: "Latest", sort: "createdAt", order: "desc" },
+    //     { label: "Oldest", sort: "createdAt", order: "asc" },
+    // ];
     if (status === "pending") {
         return <Loader />;
     }

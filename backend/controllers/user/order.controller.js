@@ -193,7 +193,7 @@ export const requestCancellation = async (req, res, next) => {
             {
                 $push: {
                     status_history: {
-                        status: "CANCELLATION_REQUESTED",
+                        status: "CANCELLED",
                         description: reason,
                     },
                 },

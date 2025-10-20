@@ -12,15 +12,15 @@ const Sidebar = ({ navList = [], isOpen, setIsOpen }) => {
   const { data: user } = useUser();
   const { mutate: logout } = useLogoutUser();
   const confirmation = useConfirmationModal()
-  return (  
+  return (
     <>
       {/* Sidebar */}
       <div
         className={`
-          fixed top-0 left-0 h-screen w-64 bg-white shadow-md flex flex-col
-          transform transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0 z-[100]" : "-translate-x-full"}
-           md:translate-x-0 md:w-1/4
+          relative top-0 left-0 h-screen  bg-white shadow-md flex flex-col
+          transform transition-transform duration-300 ease-in-out w-0
+          ${isOpen ? " translate-x-0 z-[100]" : "-translate-x-full w-0"}
+           md:translate-x-0 md:w-64 lg:w-96
         `}
       >
         {/* Logo */}

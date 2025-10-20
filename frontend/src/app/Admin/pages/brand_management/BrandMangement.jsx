@@ -19,7 +19,7 @@ const BrandMangement = () => {
         filter: "",
     });
     const { data: brands, status } = useGetAllBrands(params);
-    const { setShowModal, setModalContent, openModal } = useModal();
+    const {  openModal } = useModal();
     const showViewBrandModal = (id) => {
         openModal(
             "view-brand",

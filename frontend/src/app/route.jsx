@@ -46,6 +46,7 @@ import ViewOrderManagement from "./Admin/pages/order_management/ViewOrderManagem
 import ViewOrder from "./User/Accounts/pages/order/ViewOrder";
 import StockManagement from "./Admin/pages/stock_management/StockManagement";
 import OrderSuccessful from "./User/Accounts/pages/order/OrderSuccessful";
+import CouponManagement from "./Admin/pages/coupon_management/CouponManagement";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -101,6 +102,8 @@ export const router = createBrowserRouter(
                     />
                 </Route>
             </Route>
+
+            {/* ! // USER SIDE  */}
             <Route element={<RedirectIfNotLoggedIn />}>
                 <Route element={<AppLayout />}>
                     <Route element={<Cart />} path="/cart"></Route>
@@ -121,6 +124,8 @@ export const router = createBrowserRouter(
                     <Route path="orders/:id" element={<ViewOrder />} />
                 </Route>
                 <Route path="order/successful" element={<OrderSuccessful />} />
+
+               {/* // ADMIN SIDE  */}
                 <Route
                     element={
                         <RoleBasedProtectedRoute allowedRoles={["admin"]} />
@@ -157,6 +162,9 @@ export const router = createBrowserRouter(
                                 path="view/:id"
                                 element={<ViewOrderManagement />}
                             />
+                        </Route>
+                        <Route path='coupon-management'>
+                            <Route index element={<CouponManagement/>}/>
                         </Route>
                     </Route>
                 </Route>

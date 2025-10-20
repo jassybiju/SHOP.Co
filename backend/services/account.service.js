@@ -57,21 +57,20 @@ export const changeEmailService = async (email, currentUser) => {
 };
 
 export const changePasswordService = async (
-    new_password,
-    old_password,
+    newPassword,
+    oldPassword,
     currentUser
 ) => {
     const user = await User.findOne({ email: currentUser });
     if (user.is_google_login) {
         throw new Error("Incorrect Password");
     }
-    console.log(old_password);
-    const isPasswordCorrect = await user.comparePassword(old_password);
+    const isPasswordCorrect = await user.comparePassword(oldPassword);
 
     if (!isPasswordCorrect) {
         throw new Error("Incorrect Password");
     }
-    user.password = new_password;
+    user.password = newPassword;
     await user.save();
 };
 

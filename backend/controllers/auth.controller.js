@@ -15,6 +15,7 @@ import { printKeyValuePair } from "../utils/redis-debug.js";
 import axios from "axios";
 import { userValidator } from "../validators/userValidator.js";
 import cloudinary from "../utils/cloudinary.js";
+import { registerService } from "../services/auth.service.js";
 
 // Handles user registeration , If user unverified it deletes and recreates
 export const registerUser = async (req, res, next) => {
@@ -26,39 +27,7 @@ export const registerUser = async (req, res, next) => {
         }
         const { email } = req.body;
 
-        const user = await User.findOne({ email: email });
-        console.log(user, email);
-        console.log(value);
-        if (user && user.is_verified) {
-            console.log(1);
-            res.status(400);
-            throw new Error("User already exists");
-        } else if (user) {
-            await User.findOneAndDelete({ email: email });
-        }
-
-        await User.create({ ...req.body, is_verified: false });
-
-        const otp = generateOtp();
-        //senting otp and saving in redis cache
-        await Promise.all([
-            client.setEx(
-                `OTP:${email}`,
-                OTP_EXPIRY_TIME,
-                JSON.stringify({
-                    otp: otp,
-                    otp_count: 0,
-                    otp_invalid_time:
-                        new Date(Date.now()).getTime() +
-                        OTP_INVALID_TIME * 1000,
-                    otp_type: OTP_TYPES.SIGN_UP,
-                })
-            ),
-            sendOTPMail(email, otp),
-        ]);
-
-        console.log(OTP_EXPIRY_TIME, OTP_INVALID_TIME);
-
+        await registerService(email , value)
         return res.json({
             message: "OTP sent successfully",
             status: "success",

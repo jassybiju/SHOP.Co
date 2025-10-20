@@ -23,10 +23,7 @@ export const ImageComponent = ({
         setPreview(previewImg);
     }, [setPreview, previewImg]);
     console.log(images, 8881)
-    //remvoe
-    useEffect(()=>{
-        console.log(images,888)
-    },[images])
+  
     const [ showCropper, setShowCropper ] = useState(false);
     const hiddenInputRef = useRef();
 
@@ -35,7 +32,7 @@ export const ImageComponent = ({
         dataTransfer.items.add(file);
         const fileList = dataTransfer.files;
         console.log(file, fileList);
-       
+
         if (hiddenInputRef.current) {
             hiddenInputRef.current.files = fileList;
             console.log(fileList, file, hiddenInputRef.current.files);
@@ -104,7 +101,7 @@ export const ImageComponent = ({
                     hiddenInputRef.current = e;
                 }}
                 onChange={(e) => {
-                    
+
                     registerOnChange(e);
                 }}
             />

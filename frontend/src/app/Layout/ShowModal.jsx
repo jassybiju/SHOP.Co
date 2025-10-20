@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import Input from "../../components/Input";
 import { useModal } from "../../components/ModalContext";
 import { createPortal } from "react-dom";
+
 const ShowModal = () => {
     const { showModal, modalContent } = useModal();
 

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from 'react'
 
 const InputComponent = ({
@@ -15,7 +14,7 @@ const InputComponent = ({
   defaultValue,
   placeholder,
   required = false,
-  ref: customRef, // renamed to customRef to avoid confusion
+  ref: customRef,
   ...rest
 }) => {
   const registerProps = register || {};
@@ -42,7 +41,8 @@ const InputComponent = ({
         {...rest}
       />
     );
-  } else if (select) {
+  }
+   else if (select) {
     input = (
       <select
         id={id}
@@ -112,45 +112,3 @@ const InputComponent = ({
 
 export default InputComponent;
 
-
-InputComponent.propTypes = {
-  register: PropTypes.object,
-  errors: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  label: PropTypes.string,
-  id : PropTypes.string,
-  isDisabled: PropTypes.bool,
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  textarea: PropTypes.bool,
-  className: PropTypes.string,
-  readonly: PropTypes.bool,
-  placeholder : PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  select: PropTypes.bool,
-  options: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-          .isRequired,
-        label: PropTypes.string.isRequired,
-      }),
-      PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        options: PropTypes.arrayOf(
-          PropTypes.shape({
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-              .isRequired,
-            label: PropTypes.string.isRequired,
-          })
-        ),
-      }),
-    ])
-  ),
-  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  radio: PropTypes.bool,
-  colorPicker: PropTypes.bool,
-  required: PropTypes.bool,
-  type: PropTypes.string,
-  onChange: PropTypes.func,
-  labelClass: PropTypes.string,
-  ref: PropTypes.any,
-};

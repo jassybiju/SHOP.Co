@@ -38,7 +38,7 @@ const Register = () => {
     };
 
     const queryClient = useQueryClient()
-    
+
     const responseGoogle = async (authResult) => {
         console.log("Google Login")
         try {
@@ -124,7 +124,7 @@ const Register = () => {
                         </div>
                         <div className="flex space-x-2 w-full">
                             {/* Gender  */}
-                            <Select 
+                            <Select
                             required
                                 label={"Select Gender"}
                                 options={[
@@ -138,9 +138,9 @@ const Register = () => {
                             error={errors.gender?.message}
                             />
 
-                         
+
                         </div>
-                        <Input 
+                        <Input
                         required
                             type="text"
                             label="Phone"
@@ -201,6 +201,17 @@ const Register = () => {
                             error={errors.confirm_password?.message}
                         />
 
+                        <Input
+                        required
+                            type="text"
+                            label="Enter Your refferal code if you have"
+                            register={register("refferal_code", {
+
+                            })}
+                            error={errors.refferal_code?.message}
+                        />
+
+
                         {/* Create Account Button */}
                         <button
                             type="submit"
@@ -213,7 +224,7 @@ const Register = () => {
                         </button>
 
                         {/* Google Signup */}
-                        <button 
+                        <button
                             onClick={googleLogin}
                             type="button"
                             className="w-full flex items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"

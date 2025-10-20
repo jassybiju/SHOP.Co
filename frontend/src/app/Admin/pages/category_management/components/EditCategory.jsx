@@ -160,7 +160,7 @@ const EditCategory = ({ id }) => {
                         >
                             {editingStatus === "pending" ? (
                                 <div className="flex gap-2">
-                                    <Loader2 className="animate-spin" /> Editing
+                 -                   <Loader2 className="animate-spin" /> Editing
                                     Category
                                 </div>
                             ) : (

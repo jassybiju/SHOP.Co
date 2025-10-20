@@ -45,6 +45,10 @@ const AdminLayout = () => {
             label: "Stock Management",
             icon: <PackageXIcon />,
             path: "/admin/stock-management/",
+        },{
+            label: "Coupon Management",
+            icon: <PackageXIcon />,
+            path: "/admin/coupon-management/",
         },
     ];
 
@@ -61,7 +65,7 @@ const AdminLayout = () => {
                 />
 
                 {/* Main content area */}
-                <main className="flex-1 bg-gray-100 pl-96 min-h-screen">
+                <main className={`flex-1 bg-gray-100  min-h-screen ${isOpen ? 'translate-x-0 z-[100]' : '-translate-x-0'} md:translate-x-0 md:w-1/4`}>
                     <Outlet context={{ isOpen, setIsOpen }} />
                 </main>
             </div>
