@@ -4,15 +4,22 @@ import { useCancelOrder, useGetAllOrder, useReturnOrder } from "@/app/User/hooks
 import Loader from "@/components/Loader";
 import {Link} from 'react-router-dom'
 import useCommentModal from "@/hooks/useCommentModal";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import CTAButton from "./components/CTAButton";
+import Search from "@/app/Admin/components/Search";
+import Pagination from "@/app/Home/pages/search/components/Pagination";
 
 const Order = () => {
-    const { data, status } = useGetAllOrder();
-    // const [params, setParams] = useState({ q: "", sort: "", order: "" });
-    const onClickComment = useCommentModal();
-    const { mutate: cancelOrder } = useCancelOrder();
-    const {mutate : returnOrder} = useReturnOrder()
-    console.log(data?.data);
+    const [params, setParams] = useState({ q: "", sort: "", order: "", page : 1 });
+
+    const { data, status } = useGetAllOrder(params);
+
+    useEffect(()=>{
+        if(data?.data?.pages < params.page){
+            setParams(state => ({...state, page : data?.data?.pages}))
+        }
+    },[params, data?.data])
+
     // const SORT_OPTIONS = [
     //     // { label: "Most Popular", sort: "popularity", order: "desc" },
     //     { label: "Latest", sort: "createdAt", order: "desc" },
@@ -27,7 +34,7 @@ const Order = () => {
                 <span>My Orders</span>
             </div>
             <div className="flex justify-between">
-                {/* <Search
+             <Search
                     label={"Search Order by id"}
                     className="m-0"
                     width={50}
@@ -35,7 +42,7 @@ const Order = () => {
                         setParams((prev) => ({ ...prev, q: e.target.value }))
                     }
                 />
-
+{/*
                 <select
                     // onChange={(e)=>toggleSortOptions(e.target.value)}
                     value={`${params.sort}_${params.order}`}
@@ -76,7 +83,7 @@ const Order = () => {
             </div>
             {/* Orders List */}
             <div className="flex flex-col gap-5">
-                {data?.data?.map((order) => (
+                {data?.data?.data?.map((order) => (
                     <div
                         key={order._id}
                         className="w-full rounded-2xl border-2 "
@@ -120,7 +127,7 @@ const Order = () => {
                                         PAYMENT TYPE
                                     </span>
                                     <span className="font-medium text-sm">
-                                        {order.payment_method}
+                                        {order.payment_method} - {order.payment_status}
                                     </span>
                                 </div>
                             </div>
@@ -133,7 +140,7 @@ const Order = () => {
                             </div>
                         </div>
                         <div className=" p-4">
-                            {order.items.map((x) => (
+                            {order?.items.filter(x=>!x.is_cancelled).map((x) => (
                                 <div
                                     key={x._id}
                                     className={`relative bg-gray-50 shadow w-full  rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300`}
@@ -180,42 +187,15 @@ const Order = () => {
                                 </div>
                             ))}
                             <div>
-                                <Link to={"/account/orders/"+order._id} className="px-5  py-2 me-4 bg-amber-400 rounded border-1 text-white">View</Link>
+                                <button><Link to={"/account/orders/"+order._id} className="px-5  py-2 me-4 bg-amber-400 rounded border-1 text-white block">View</Link></button>
 
 
-                                 {order.status_history.slice(-1)[0]?.status !== 'DELIVERED' ?
-                                <button
-                                    className="px-3 py-2 bg-red-400 rounded border-1 text-white"
-                                    onClick={() =>
-                                        onClickComment((x) =>
-                                            cancelOrder({
-                                                id: order._id,
-                                                data: { reason: x },
-                                            })
-                                        )
-                                    }
-                                >
-                                    Cancel Order
-                                </button>
-                                 :
-   <button
-                                    className="px-3 py-2 bg-red-400 rounded border-1 text-white"
-                                    onClick={() =>
-                                        onClickComment((x) =>
-                                            returnOrder({
-                                                id: order._id,
-                                                data: { reason: x },
-                                            })
-                                        )
-                                    }
-                                >
-                                    Return Order
-                                </button>
-                                }
+                              <CTAButton status={order.status_history.slice(-1)[0]?.status} id={order._id}/>
                             </div>
                         </div>
                     </div>
                 ))}
+                <Pagination page={data?.data?.page} pages={data?.data?.pages} onPageChange={(x)=>setParams(prev => ({...prev , page : x}))} />
             </div>
         </div>
     );

@@ -57,6 +57,7 @@ const userSchema = Joi.object({
         "any.only": "Confirm password does not match password",
         "any.required": "Confirm password is required",
     }),
+    refferal_code : Joi.string().allow(null,'').optional()
 }).options({ abortEarly: false });
 
 const emailSchema = Joi.object({
@@ -73,7 +74,7 @@ const emailSchema = Joi.object({
 const changePasswordSchema = Joi.object({
     old_password: Joi.string().required().messages({
         "string.empty": "Old Password is required",
-      
+
     }),
     password: Joi.string().pattern(passwordPattern).required().messages({
         "string.empty": "Password is required",

@@ -1,5 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { addCouponService, getAllCouponService, getCouponService, validateCouponService } from "../services/couponManagement.service"
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { addCouponService, editCouponService, getAllCouponService, getCouponService, toggleCouponService, validateCouponService } from "../services/couponManagement.service"
+import toast from "react-hot-toast"
 
 export const useAddCoupon = () => {
     return useMutation({
@@ -7,10 +8,11 @@ export const useAddCoupon = () => {
     })
 }
 
-export const useGetAllCoupons = () => {
+export const useGetAllCoupons = (params) => {
     return useQuery({
-        queryKey : ['coupon'],
-        queryFn : getAllCouponService
+        queryKey : ['coupon',params],
+        queryFn : ()=>getAllCouponService(params),
+        placeholderData : keepPreviousData
     })
 }
 
@@ -24,5 +26,24 @@ export const useGetCouponById = (id) => {
 export const useValidateCoupon = () => {
     return useMutation({
         mutationFn : validateCouponService
+    })
+}
+
+export const useEditCoupon = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn : editCouponService,
+        onSuccess : ()=> queryClient.invalidateQueries(['coupon'])
+    })
+}
+
+export const useToggleCoupon = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn : toggleCouponService ,
+        onSuccess : ()=>{
+            console.log(123)
+            toast.success("Coupon toggled successfully")
+            queryClient.invalidateQueries(['coupon'])}
     })
 }

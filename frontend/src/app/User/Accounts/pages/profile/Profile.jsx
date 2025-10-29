@@ -15,12 +15,13 @@ const Profile = () => {
                 <span>Your Details</span> <span>Personal Information</span>
             </div>
             <div className="flex gap-10">
-            
+
                 <InputComponent label={"First Name"} value={user.first_name} width={100} readonly />
                 <InputComponent label={"Last Name"} value={user.last_name} width={100} readonly/>
             </div>
             <InputComponent label={"Email"} value={user.email} width={100} readonly/>
             <InputComponent label={"Phone Number"} value={user.phone || "No Number Provided"} width={100} readonly/>
+            <h1 className='font-semibold text-lg'>Refferal ID : {user.refferal_id}<span className='font-normal text-sm'>( reffer and earn existing reward)</span></h1>
             <div className="flex justify-end">
                 <Button label="Edit" onClick={()=>navigate('/account/edit')}/>
             </div>

@@ -4,7 +4,7 @@ import { TicketPercent } from "lucide-react";
 import React, { useRef } from "react";
 import toast from "react-hot-toast";
 
-const CouponInput = ({cartTotal , setDiscountData}) => {
+const CouponInput = ({cartTotal , setDiscountData , available}) => {
     const codeRef = useRef()
     const {mutate : validateCoupon , status , data , error} = useValidateCoupon()
 
@@ -37,8 +37,15 @@ const CouponInput = ({cartTotal , setDiscountData}) => {
 					id="default-search"
 					className="block w-full p-3 ps-15 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-100 focus:border-blue-500 focus-visible:ring-blue-100 outline-violet-600 "
 					placeholder={"Add Coupon Code"}
+                    list='suggestion'
 					required
 				/>
+                <datalist id='suggestion'>
+                    {available.map(x => (
+
+                    <option value={x.code}>{x.description}</option>
+                    ))}
+                </datalist>
 			</div>
 			<Button
 				className={"rounded-full text-lg text-center !p-0 w-2/5"}

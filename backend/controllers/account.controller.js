@@ -16,6 +16,8 @@ import {
     changePasswordValidator,
     emailValidator,
 } from "../validators/userValidator.js";
+import { Coupon } from "../models/coupon.model.js";
+import { HTTP_RES } from "../utils/CONSTANTS.js";
 
 export const editPrfileController = async (req, res, next) => {
     try {
@@ -193,6 +195,20 @@ export const setToPrimaryAddressController = async(req, res, next) => {
         return res.status(200).json({message : "Address set as primary successful", data : address , status: "success"})
     } catch (error) {
 
+        next(error)
+    }
+}
+
+
+export const getCouponsController = async(req, res, next) => {
+    try {
+        const user = req.user._id
+        
+        console.log(user)
+        const coupons = await Coupon.find({for_user : user.toString(), is_active : true})
+        console.log(coupons)
+        return res.status(HTTP_RES.OK).json({message : "Coupon Recieved Successfully",data : coupons , status : "success"})
+    } catch (error) {
         next(error)
     }
 }

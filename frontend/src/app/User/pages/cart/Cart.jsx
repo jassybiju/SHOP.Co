@@ -24,7 +24,7 @@ const Cart = () => {
             <h1 className=" font-hero text-5xl my-10 ">Your Cart</h1>
             <div className="flex gap-10 w-full min-h-100">
                 <div className="rounded border-1 w-3/5 border-gray-400 px-10 py-10">
-                    {cart.data.cart.map((x) => (
+                    {cart?.data?.cart.map((x) => (
                         <ProductCard key={x._id} data={x} is_blocked={x.stock ===0}/>
                     ))}
             </div>
@@ -33,19 +33,19 @@ const Cart = () => {
                         <div className="flex justify-between w-full my-5">
                             <span>Subtotal : </span>
                             <span className="font-bold">
-                                ${cart.data.subtotal.toFixed(2)}
+                                ${cart.data.subtotal}
                             </span>
                         </div>
                         <div className="flex justify-between w-full my-5">
-                            <span>Discount : </span>
+                            <span>Discount :  <span>{cart.data.discountAppliedInPercentage}</span> </span>
                             <span className="font-bold text-red-600">
-                                -${cart.data.discountApplied.toFixed(2)}
+                                -${cart.data.discountApplied}
                             </span>
                         </div>
                         <div className="flex justify-between w-full my-5">
                             <span>Delivery Fee : </span>
                             <span className="font-bold ">
-                                ${Number(15).toFixed(2)}
+                                ${cart.data.cart.length !== 0 ? Number(15).toFixed(2) : Number(0.00).toFixed(2)}
                             </span>
                         </div>
                         <hr />

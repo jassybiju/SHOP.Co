@@ -1,0 +1,52 @@
+ssh -R myapp:80:localhost:3000 serveo.net
+
+
+***??// TODO uncomment for coupons in = coupon-management.controller.js => validateCOuponController
+                              = order.service.js => createOrderService
+
+***feature 
+If payment is razorpay and payment is pending then it cant be confirmed without paying by the user
+
+
+***done quantity for returning need to do for canceling and cancelling order item
+** need to check returning also
+
+*** when adding to cart wishlist not getting removed
+
+
+ISSUES
+
+Wishlit heart globally change make user
+price range filtering not working
+
+add to cart blocking
+
+coupon display
+razorpay on playment after palced error
+
+check orderitems in Order.jsx and vieworder.jsx cancelled display
+
+***PENDING TO DO FIRST
+
+Change color of icon if product is in Wishlist
+
+Return for specific product
+
+
+List active coupons at user side
+
+ Show discount and coupons deduction in sales report
+ Overall discount
+ order success page - buttons to redirect the user to the order details page and the continue shopping page
+
+Add coupon discount in order summary
+
+Round off price in wallet
+On cancel and return restock of quantity not happening
+Search, Category filtering - should be combined price filter
+
+Offers are not getting updated in wishlist
+
+Sales report 
+
+

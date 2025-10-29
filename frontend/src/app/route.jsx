@@ -47,6 +47,11 @@ import ViewOrder from "./User/Accounts/pages/order/ViewOrder";
 import StockManagement from "./Admin/pages/stock_management/StockManagement";
 import OrderSuccessful from "./User/Accounts/pages/order/OrderSuccessful";
 import CouponManagement from "./Admin/pages/coupon_management/CouponManagement";
+import Wallet from "./User/Accounts/pages/wallet/Wallet";
+import SalesReport from "./Admin/pages/saleReport/salesReport";
+import Coupon from "./User/Accounts/pages/coupon/Coupon";
+import Wishlist from "./User/pages/wishlist/Wishlist";
+import PaymentFailed from "./User/Accounts/pages/order/PaymentFailed";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -107,7 +112,9 @@ export const router = createBrowserRouter(
             <Route element={<RedirectIfNotLoggedIn />}>
                 <Route element={<AppLayout />}>
                     <Route element={<Cart />} path="/cart"></Route>
+                    <Route element={<Wishlist />} path="/wishlist"></Route>
                     <Route element={<Checkout />} path="/checkout"></Route>
+
                 </Route>
                 <Route element={<AccountLayout />} path="account">
                     <Route index element={<Profile />} />
@@ -120,10 +127,14 @@ export const router = createBrowserRouter(
                     <Route path="address/add" element={<AddAddress />} />
                     <Route path="address/edit/:id" element={<EditAddress />} />
 
+                    <Route path='wallet' element={<Wallet/>}/>
                     <Route path="orders" element={<Order />} />
                     <Route path="orders/:id" element={<ViewOrder />} />
+
+                    <Route path="coupon" element={<Coupon/>}></Route>
                 </Route>
                 <Route path="order/successful" element={<OrderSuccessful />} />
+                <Route path="order/failed" element={<PaymentFailed />} />
 
                {/* // ADMIN SIDE  */}
                 <Route
@@ -165,6 +176,10 @@ export const router = createBrowserRouter(
                         </Route>
                         <Route path='coupon-management'>
                             <Route index element={<CouponManagement/>}/>
+                        </Route>
+                        <Route path="sales-report">
+                            <Route index element={<SalesReport/>}/>
+
                         </Route>
                     </Route>
                 </Route>

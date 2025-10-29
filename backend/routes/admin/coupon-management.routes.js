@@ -1,5 +1,5 @@
 import express from 'express'
-import { addCouponController, getAllCouponsController, getCouponByIdController, validateCouponController } from '../../controllers/admin/coupon-management.controller.js'
+import { addCouponController, editCouponController, getAllCouponsController, getCouponByIdController, toggleCouponController, validateCouponController } from '../../controllers/admin/coupon-management.controller.js'
 import { authenticateUser } from '../../middlewares/auth.middleware.js'
 import { checkAdminRole } from '../../middlewares/admin.middleware.js'
 
@@ -12,6 +12,8 @@ router.use(checkAdminRole)
 router.post('/',addCouponController)
 router.get('/',getAllCouponsController)
 router.get('/:id',getCouponByIdController)
+router.put('/:id',editCouponController)
+router.patch('/:id/toggle' ,toggleCouponController)
 
 router.post("/validate",validateCouponController)
 

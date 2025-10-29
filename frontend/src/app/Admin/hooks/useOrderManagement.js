@@ -1,6 +1,6 @@
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { getAllOrder, getOrder, updateOrderStatus } from "../services/order-management.service"
+import { getAllOrder, getOrder, returnOrderItemStatus, updateOrderStatus } from "../services/order-management.service"
 import toast from "react-hot-toast"
 
 export const useGetAllOrder = (params) => {
@@ -23,6 +23,15 @@ export const useUpdateOrderStatus = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn : updateOrderStatus,
+        onSuccess :(data)=>{ queryClient.invalidateQueries({queryKey : ['admin-order']});
+        toast.success(data.message)
+    },onError: (res) => toast.error(res.response.data.message)
+    })
+}
+export const useReturnOrderItemStatus = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn : returnOrderItemStatus,
         onSuccess :(data)=>{ queryClient.invalidateQueries({queryKey : ['admin-order']});
         toast.success(data.message)
     },onError: (res) => toast.error(res.response.data.message)

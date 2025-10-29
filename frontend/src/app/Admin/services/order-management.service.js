@@ -18,3 +18,9 @@ export const updateOrderStatus = async({id,data}) => {
     return res.data
 
 }
+
+export const returnOrderItemStatus = async({id,itemId,data}) => {
+    const res = await adminAxiosInstance.patch(`order/${id}/${itemId}/return` , data)
+    return res.data
+
+}

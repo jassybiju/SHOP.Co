@@ -51,3 +51,8 @@ export const setAsPrimaryAddress = async(id) => {
    const res = await accountAxiosInstance.patch('address/set-as-primary/'+id)
    return res.data
 }
+
+export const getUserCoupons = async() => {
+    const res = await accountAxiosInstance.get('coupons')
+    return res.data
+}

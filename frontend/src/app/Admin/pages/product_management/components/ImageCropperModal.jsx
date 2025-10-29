@@ -137,7 +137,7 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
             <button
               className="text-white font-mono text-xs py-2 px-4 rounded-2xl mt-4 bg-sky-500 hover:bg-sky-600"
               onClick={handleCrop}>
-              Crop Image
+              Upload Image
             </button>
           </div>
         ) : ( <div

@@ -26,8 +26,25 @@ const orderItemSchema = new mongoose.Schema({
         min: 0,
         max : 100,
         required : true
+    },
+    is_cancelled : {
+        type : Boolean,
+        default : false
+    },
+    is_returned : {
+        type : Boolean,
+        default : false
+    },
+    status : {
+        enum : ['DELIVERED', "RETURN_REQUESTED", "RETURN_DENIED","RETURNED","PLACED",'CANCELLED'],
+        type : String,
+        default : "PLACED"
+    },
+    return_reason : {
+        type : String, default : null
     }
-
+},{
+    timestamps : true
 });
 
 export const OrderItem = mongoose.model("OrderItem", orderItemSchema)

@@ -6,6 +6,7 @@ import { useModal } from "@/hooks/useModal";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const getTodayString = () => {
     const today = new Date();
@@ -21,7 +22,7 @@ const AddCoupon = () => {
     const confirmation = useConfirmationModal();
     const { data } = useGetAllUsers();
     const { mutate: addCoupon } = useAddCoupon();
-
+    // const navigate = useNavigate()
     const usersOption = data?.data.map((x) => ({
         label: `${x.first_name} ${x.last_name}`,
         value: x._id,
@@ -40,6 +41,7 @@ const AddCoupon = () => {
         console.log(data)
         addCoupon(data, {onSuccess : (data) =>{
             toast.success(data.message)
+            closeModal('add-coupon')
         },onError : (res) => toast.error(res.response.data.message)});
     };
     return (
@@ -160,12 +162,12 @@ const AddCoupon = () => {
                                 label={"Total Usage Limit"}
                                 type="number"
                                 register={register("usage_limit", {
-                                    required: "Usage Limit is required",
+                                    // required: "Usage Limit is required",
                                     valueAsNumber: true,
 
                                     validate: (value) => {
                                         if (forUserValue) {
-                                            if (value !== 1) {
+                                            if (value !== 1 ) {
                                                 return "Usage Limit should be 1 if For User is selected";
                                             }
                                         } else {

@@ -1,10 +1,12 @@
 import useConfirmationModal from "@/app/Admin/hooks/useConfirmationModal";
-import { useGetCouponById } from "@/app/Admin/hooks/useCouponManagement";
+import { useEditCoupon, useGetCouponById } from "@/app/Admin/hooks/useCouponManagement";
 import { useGetAllUsers } from "@/app/Admin/hooks/useUserManagement";
 import InputComponent from "@/components/InputComponent";
 import { useModal } from "@/hooks/useModal";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const getTodayString = () => {
     const today = new Date();
@@ -24,7 +26,7 @@ const EditCoupon = ({id}) => {
         watch,
         reset
     } = useForm();
-    const editingStatus = false;
+    const {mutate : editCoupon , status : editingStatus} = useEditCoupon()
     const forUserValue = watch("for_user");
 
     const confirmation = useConfirmationModal();
@@ -34,7 +36,7 @@ const EditCoupon = ({id}) => {
 
     useEffect(()=>{
         if(couponData?.data){
-            reset(couponData?.data)
+            reset({...couponData?.data,expiry_date : new Date(couponData?.data.expiry_date).toISOString().slice(0,16)})
         }
     },[couponData, reset])
 
@@ -42,9 +44,16 @@ const EditCoupon = ({id}) => {
         label: `${x.first_name} ${x.last_name}`,
         value: x._id,
     }));
-
+    console.log(couponData?.data)
     const onSubmit = (data) => {
-        console.log(data);
+        const {_id ,used_count ,is_deleted, is_active ,createdAt ,updatedAt ,__v , ...rest} = data
+        editCoupon({id, data : rest},{onSuccess : (data)=> {
+            console.log(data)
+            toast.success(data.message)
+            closeModal()
+        },onError : (res) => {
+            toast.error(res.response.data.message)
+        }});
     };
     return (
         <>

@@ -27,7 +27,8 @@ const Sidebar = () => {
       ],
     },
     { label: "My Orders", path: "orders" },
-    { label: "My Wishlist", path: "wishlist" },
+    // { label: "My Wishlist", path: "wishlist" },
+    { label: "My Coupons", path: "coupon" },
     { label: "Wallet", path: "wallet" },
   ];
 

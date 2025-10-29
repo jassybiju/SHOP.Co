@@ -13,6 +13,7 @@ const orderSchema = new mongoose.Schema(
         },
         coupon_id: {
             type: mongoose.Schema.Types.ObjectId,
+            ref : "Coupon"
         },
         total_amount: {
             default: 0,
@@ -26,23 +27,23 @@ const orderSchema = new mongoose.Schema(
         },
         payment_method: {
             type: String,
-            enum: ["COD", "ONLINE"],
+            enum: ["COD", "RAZORPAY","WALLET"],
             required: true,
         },
         payment_status: {
             type: String,
             enum: [
                 "PAID",
-                "PROCESSING",
                 "FAILED",
                 "REFUNDED",
-                "CANCELLED",
                 "PENDING",
+                "CANCELLED"
             ],
             default: "PENDING",
         },
         transaction_id: {
             type: mongoose.Schema.Types.ObjectId,
+            ref : "Transaction",
         },
         shipping_address_id: {
             ref: "Address",
@@ -54,7 +55,7 @@ const orderSchema = new mongoose.Schema(
         //     enum : ['PLACED', 'CONFIRMED', 'PACKED', 'SHIPPED', 'DELIVERED', "CANCELLED", "RETURNED", "REFUNDED"]
 
         // },
-     
+
         status_history: [
             {
                 status: {
@@ -82,6 +83,11 @@ const orderSchema = new mongoose.Schema(
                 },
             },
         ],
+        cancelled_at : {
+            type : Date,
+            default : null,
+            index : { expireAfterSeconds : 60 }
+        }
     },
     {
         timestamps: true,
@@ -89,3 +95,5 @@ const orderSchema = new mongoose.Schema(
 );
 
 export const Order = mongoose.model("Order", orderSchema);
+
+

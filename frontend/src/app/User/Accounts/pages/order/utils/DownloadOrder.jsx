@@ -14,6 +14,7 @@ console.log(order)
         doc.text(`Order ID : ${order._id}`,10,50)
 
             doc.save(`invoice_${order._id}.pdf`);
+            console.log('downloaded successfully')
         toast.success("Invoice Downloaded successfuly")
     }
 

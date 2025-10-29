@@ -1,7 +1,8 @@
 import Joi from "joi";
 import { validator } from "../validator.js";
 const couponSchema = Joi.object({
-    code: Joi.string().allow(null).empty('').optional().alphanum().min(7).max(9).uppercase().messages({
+    code: Joi.string().allow(null).empty('').optional().pattern(/^[A-Z0-9-]+$/)
+.min(7).max(9).uppercase().messages({
         "string.min": "Coupon code must be at least 7 characters long",
         "string.max": "Coupon code must be at most 9 characters",
     }),
@@ -58,7 +59,7 @@ const couponSchema = Joi.object({
     for_user: Joi.string()
        .allow(null)
         .empty('')
-        .strip()     // Removes the key if null, empty string, or undefined.
+   // Removes the key if null, empty string, or undefined.
          .optional()  // Ensures Joi treats it as not required
         .pattern(/^[0-9a-fA-F]{24}$/) // Value MUST be a valid ObjectId format if present
         .messages({

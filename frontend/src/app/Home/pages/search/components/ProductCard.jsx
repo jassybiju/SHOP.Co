@@ -1,3 +1,4 @@
+import { useAddWishlistItems } from "@/app/User/hooks/useWishlist";
 import { Heart, Star } from "lucide-react";
 import { Link } from "react-router";
 
@@ -34,7 +35,13 @@ function StarRating({ rating }) {
 
 function ProductCard({ product }) {
 //   console.log(product.images[0]?.url)
-  
+    const {mutate : addToWishlist} = useAddWishlistItems()
+
+    const handleWishlist = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        addToWishlist(product._id)
+    }
   return (
     <Link className="group" to={'/product/'+product._id}>
   <div className="group cursor-pointer w-full">
@@ -44,8 +51,8 @@ function ProductCard({ product }) {
                                         alt="T-shirt with Tape Details"
                                         className="w-full h-full object-cover"
                                     />
-                                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
-                                        <Heart className="w-5 h-5" />
+                                    <button onClick={handleWishlist} className="absolute z-10 top-4 right-4 p-2 bg-white cursor-all-scroll rounded-full shadow-md hover:shadow-lg transition-shadow">
+                                        <Heart className="w-5 h-5" color="red" fill={product?.wishlist?.length === 1 ? 'red' : 'white'} />
                                     </button>
                                 </div>
                                 <h3 className="font-poppins font-bold text-lg mb-2 uppercase">

@@ -50,15 +50,16 @@ const userSchema = new Schema(
       type : Boolean,
       default : false
     },
-    referal_id : {
+    refferal_id : {
         type : String,
         default : () => 'USR'+nanoid(6).toUpperCase(),
         unique : true
     },
     reffered_by : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User',
-        default : null
+        type : String,
+        ref : 'user',
+        default : null,
+
     }
   },
   { timestamps: true }

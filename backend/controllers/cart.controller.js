@@ -6,7 +6,8 @@ import {
 import { User } from "../models/user.model.js";
 import { Cart } from "../models/cart.model.js";
 import cloudinary from "../utils/cloudinary.js";
-export const updateCartController = async (req, res, next) => {
+import { toFixedNum } from "../utils/toFixedNum.js";
+export const  updateCartController = async (req, res, next) => {
     try {
         const currentUser = req.email;
         const { value, error } = cartValidator(req.body);
@@ -78,15 +79,18 @@ export const getAllCartController = async (req, res, next) => {
             };
         });
 
-        const subtotal = simplifiedCartItems.reduce((acc,cur) => (cur.price * cur.quantity) + acc , 0 )
-        const discountApplied = simplifiedCartItems.reduce((acc, cur)=> acc +( (cur.price * (cur.discount / 100)) * cur.quantity), 0)
-        const total = subtotal - discountApplied + 15
-        console.log(simplifiedCartItems)
+        const subtotal = toFixedNum( simplifiedCartItems.reduce((acc,cur) => (cur.price * cur.quantity) + acc , 0 ))
+
+        const discountApplied = toFixedNum(simplifiedCartItems.reduce((acc, cur)=>{console.log(acc);return acc +( (cur.price * (cur.discount / 100)) * cur.quantity)}, 0))
+        const discountAppliedInPercentage = toFixedNum((discountApplied / subtotal) * 100 )
+        const total = subtotal - discountApplied +(simplifiedCartItems.length === 0 ? 0 : 15)
+        console.log(subtotal , discountApplied , total , simplifiedCartItems , 778)
+        // console.log(simplifiedCartItems)
         return res
             .status(200)
             .json({
                 message: "Cart Items recieved Successfully",
-                data: {cart : simplifiedCartItems , subtotal , discountApplied , total},
+                data: {cart : simplifiedCartItems , subtotal , discountApplied , total, discountAppliedInPercentage},
                 status: "success",
             });
     } catch (error) {

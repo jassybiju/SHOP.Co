@@ -68,7 +68,7 @@ function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
 const ProductPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data, isError, error, isLoading } = useProduct(id);
+    const { data, isError, error, isLoading, status } = useProduct(id);
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
@@ -78,9 +78,11 @@ const ProductPage = () => {
 
     const { mutate: addToCart } = useUpdateCartItems();
 
-    if (isLoading) {
+    if (isLoading || status !== 'success') {
         return <Loader2 className="animate-spin" />;
     }
+
+    console.log(data)
 
     if (isError) {
         console.log(error);
@@ -127,7 +129,7 @@ const ProductPage = () => {
                         <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
                             {/* Thumbnail Images */}
                             <div className="flex lg:flex-col gap-3 md:gap-4 order-2 lg:order-1 overflow-x-auto lg:overflow-visible">
-                                {data?.images.map((image, index) => (
+                                {data?.images?.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
@@ -151,7 +153,7 @@ const ProductPage = () => {
                                 <div className="aspect-square border-2 rounded-xl md:rounded-2xl overflow-hidden bg-gray-100">
                                     <ImageMagnifier
                                         zoomScale={2}
-                                        src={data.images[selectedImage].url}
+                                        src={data?.images?.[selectedImage]?.url}
                                         className="w-full h-full object-cover"
                                     />
                                     {/* <img style={{
@@ -179,8 +181,8 @@ const ProductPage = () => {
                             <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                                 <span className="font-poppins text-3xl  font-bold text-black">
                                     ${" "}
-                                    {data.price -
-                                        data.price * (data.discount / 100)}
+                                    {(data.price -
+                                        data.price * (data.discount / 100).toFixed(2))}
                                 </span>
                                 <span className="font-poppins text-2xl text-black opacity-50 font-bold text-gray-text line-through  ">
                                     ${data.price}

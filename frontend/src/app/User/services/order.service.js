@@ -21,6 +21,15 @@ export const cancelOrder = async ({ id, data }) => {
     );
     return res.data;
 };
+
+export const cancelOrderItem = async({id ,itemId, data}) => {
+    const res = await orderAxiosInstance.patch(`${id}/${itemId}/cancel`,data)
+    return res.data
+}
+export const returnOrderItem = async({id ,itemId, data}) => {
+    const res = await orderAxiosInstance.patch(`${id}/${itemId}/return`,data)
+    return res.data
+}
 export const returnOrder = async ({ id, data }) => {
     const res = await orderAxiosInstance.patch("request-return/" + id, data);
     return res.data;

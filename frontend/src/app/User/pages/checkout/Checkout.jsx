@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import BreadCrumb from "@/app/Home/components/BreadCrumb";
 import { ProductCard } from "../../components/ProductCart";
 import Loader from "@/components/Loader";
-import { useLocation, useNavigate } from "react-router";
+import { redirect, useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import CouponInput from "./components/CouponInput";
 import { MoveRight } from "lucide-react";
@@ -12,20 +12,23 @@ import ModalWrapper from "@/components/ModalWrapper";
 import AddAddress from "../../Accounts/pages/address/AddAddress";
 import { useModal } from "@/hooks/useModal";
 import { usePlaceOrder } from "../../hooks/useOrder";
+import { displayRazorpay } from "@/utils/displayRazorpay";
+import { orderAxiosInstance } from "@/lib/axios";
 const Checkout = () => {
 	// s
 	const { state } = useLocation();
 
 	const { data, status, error } = useCheckout(state);
-	const { cart, subtotal, total, address, discountApplied, delivery_fee } = data?.data || {};
+	const { cart, subtotal, total, address, discountApplied, delivery_fee, discountAppliedInPercentage , availableCoupons } = data?.data || {};
 
 	const { mutate: placeOrder, status: placeOrderStatus } = usePlaceOrder();
 	const [paymentMethod, setPaymentMethod] = useState("COD");
-
+    const [placedOrder, setPlacedOrder] = useState(false)
 	const navigate = useNavigate();
 	const { openModal, closeModal } = useModal();
 	const [selectedAddress, setSelectedAddress] = useState();
 	const [couponDiscount, setCouponDiscount] = useState(null);
+	useEffect(() => console.log(paymentMethod), [paymentMethod]);
 
 	// * populating address
 	useEffect(() => {
@@ -51,6 +54,7 @@ const Checkout = () => {
 	};
 
 	const onPlaceOrder = () => {
+        setPlacedOrder(true)
 		placeOrder(
 			{
 				order_items: cart.map((x) => ({
@@ -59,15 +63,44 @@ const Checkout = () => {
 				})),
 				shipping_address_id: selectedAddress,
 				payment_method: paymentMethod,
-                coupon_code : couponDiscount.code
+				coupon_code: couponDiscount?.code,
 			},
 			{
 				onSettled: (data) => console.log(data),
 				onError: (data) => toast.error(data.response.data.message),
 				onSuccess: (data) => {
 					toast.success(data.message);
-					console.log(data);
-					navigate("/order/successful");
+
+					if (data?.data?.razorpay_order) {
+                        console.log(data?.data?.razorpay_order)
+                            displayRazorpay(data.data.razorpay_order, (response) => {
+                                console.log(response);
+                                orderAxiosInstance
+                                    .post("/verify-payment", {
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                    })
+                                    .then((res) => {
+                                        console.log(res.statusText === "OK");
+                                        if (res.statusText === "OK") {
+                                            console.log(1);
+                                            return navigate("/order/successful",{state : {total_amount : data?.data?.order.total_amount, order_id : data?.data?.order._id, payment_method : data?.data?.order.payment_method}});
+                                            // return window.location.href = '/order/susccessful'
+                                        } else {
+                                            console.log(2);
+                                            return navigate("/order/payment-failed",{state : {razorpay_order_id : data.data.razorpay_order.razorpay_order_id}});
+                                            // return window.location.href = '/order/paymsent-failed'
+                                        }
+                                    })
+                                    .catch((e) => {
+                                        console.log(3);
+                                        return navigate("/order/paydment-failed");
+                                    });
+                            });
+					} else {
+						navigate("/order/successful",{state : {total_amount : data?.data?.order.total_amount, order_id : data?.data?.order._id, payment_method : data?.data?.order.payment_method}});
+					}
 				},
 			}
 		);
@@ -165,16 +198,22 @@ const Checkout = () => {
 								{[
 									{
 										label: "Cash On Delivery",
+										value: "COD",
 									},
-									{ label: "UPI" },
+									{
+										label: "RAZORPAY",
+										value: "RAZORPAY",
+									},
+									{ label: "Wallet", value : "WALLET" },
 								].map((x, i) => (
 									<>
 										<div className="flex items-center me-4">
 											<input
 												defaultChecked={i === 0}
+												onClick={(x) => setPaymentMethod(x.target.value)}
 												id="inline-checked-radio"
 												type="radio"
-												value=""
+												value={x.value}
 												name={"payment"}
 												className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 "
 											/>
@@ -207,28 +246,29 @@ const Checkout = () => {
 						<h1 className="font-hero text-3xl">Order Summary</h1>
 						<div className="flex justify-between w-full my-5">
 							<span>Subtotal : </span>
-							<span className="font-bold">${subtotal.toFixed(2)}</span>
+							<span className="font-bold">${subtotal}</span>
 						</div>
 						<div className="flex justify-between w-full my-5">
-							<span>Discount : </span>
-							<span className="font-bold text-red-600">-${discountApplied.toFixed(2)}</span>
+							<span>Discount : <span>({discountAppliedInPercentage} %)</span> </span>
+							<span className="font-bold text-red-600">-${discountApplied}</span>
 						</div>
 
-							<div className="flex justify-between w-full my-5">
-								<span>Delivery Fee : </span>
-								<span className="font-bold ">${delivery_fee.toFixed(2)}</span>
-							</div>
-						{couponDiscount ? (
 						<div className="flex justify-between w-full my-5">
-                            You saved {(couponDiscount?.discountAmount)} with {couponDiscount.code} <button onClick={()=>setCouponDiscount(null)}>remove</button>
-                            </div>
+							<span>Delivery Fee : </span>
+							<span className="font-bold ">${delivery_fee}</span>
+						</div>
+						{couponDiscount ? (
+							<div className="flex justify-between w-full my-5">
+								You saved {couponDiscount?.discountAmount} ({couponDiscount?.discountPercentageApplied}%) with {couponDiscount.code}{" "}
+								<button onClick={() => setCouponDiscount(null)}>remove</button>
+							</div>
 						) : (
-							<CouponInput cartTotal={total.toFixed(2)} setDiscountData={setCouponDiscount} />
+							<CouponInput available={availableCoupons} cartTotal={total} setDiscountData={setCouponDiscount} />
 						)}
 						<hr />
 						<div className="flex justify-between w-full my-5">
 							<span>Total : </span>
-							<span className="font-bold">${total.toFixed(2) - (couponDiscount?.discountAmount||0)}</span>
+							<span className="font-bold">${ couponDiscount?.discountedTotal ?   (couponDiscount?.discountedTotal || 0) : total}</span>
 						</div>
 
 						<Button
@@ -239,7 +279,7 @@ const Checkout = () => {
 									Place Order <MoveRight />{" "}
 								</div>
 							}
-							disabled={placeOrderStatus === "pending"}
+							disabled={placedOrder}
 							loadingLabel={
 								<div className="flex gap-2 justify-center">
 									Placing Order <MoveRight />{" "}

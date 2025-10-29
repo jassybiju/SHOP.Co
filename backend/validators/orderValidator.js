@@ -4,7 +4,7 @@ import { validator } from "./validator.js";
 const placeOrderSchema = Joi.object({
 	shipping_address_id: Joi.string().required().messages({ "any.required": "Shipping address is required" }),
     coupon_code : Joi.string().optional(),
-	payment_method: Joi.string().valid("COD", "ONLINE").required().messages({
+	payment_method: Joi.string().valid("COD", "RAZORPAY","WALLET").required().messages({
 		"any.only": "Payment method must be COD or ONLINE",
 		"any.required": "Payment method is required",
 	}),
@@ -22,9 +22,11 @@ const placeOrderSchema = Joi.object({
 });
 const orderSearchSchema = Joi.object({
 	q: Joi.string().trim().min(0).max(200),
-	sort: Joi.string().valid("createdAt").default("createdAt"), // TODO add valids
-	order: Joi.string().valid("asc", "desc").insensitive().default("desc"),
+	sort: Joi.string().valid("createdAt").empty('').default("createdAt"), // TODO add valids
+	order: Joi.string().valid("asc", "desc").empty('').insensitive().default("desc").optional(),
 	status: Joi.string().valid("PLACED", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURNED", "REFUNDED", "all").insensitive().default("all"),
+    page : Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(5),
 });
 
 const orderStatusSchema = Joi.object({

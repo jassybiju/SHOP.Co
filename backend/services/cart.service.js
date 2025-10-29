@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Cart } from "../models/cart.model.js";
 import { ProductVariant } from "../models/product_variants.model.js";
 import { User } from "../models/user.model.js";
+import { Wishlist } from "../models/wishlist.model.js";
 
 export const updateCartService = async (
     currentUser,
@@ -16,7 +17,7 @@ export const updateCartService = async (
     if (
         !variant||
         !variant.product_id.is_active ||
-        !variant.product_id.category_id.is_active 
+        !variant.product_id.category_id.is_active
     ) {
         throw new Error("Invalid request");
     }
@@ -27,12 +28,16 @@ export const updateCartService = async (
     const existingVariantInCart = await Cart.findOne({
         user_id: user._id,
         variant_id: variant_id,
+    }).populate({
+        path : "variant_id"
     });
 
     if (!existingVariantInCart && quantity > 0 ) {
         console.log(variant.stock , quantity , variant.stock >= quantity)
         if(variant.stock < quantity) throw new Error("Insufficient Quanitty")
-        console.log("xfsf");
+        console.log(variant?.product_id._id);
+        const wishlist = await Wishlist.findOneAndDelete({product_id : variant?.product_id?._id , user_id : user._id},)
+        console.log(wishlist,225)
         const cart = await Cart.create({
             quantity,
             variant_id,
@@ -53,11 +58,16 @@ export const updateCartService = async (
         throw new Error("Max Items in cart");
     }
 
+    console.log(existingVariantInCart.quantity + quantity ,existingVariantInCart.quantity, quantity,885)
     if (existingVariantInCart.quantity + quantity <= 0) {
         await Cart.deleteOne({ _id: existingVariantInCart._id });
         return {};
     }else{
         existingVariantInCart.quantity = existingVariantInCart.quantity + quantity;
+        // ! TODO : ERROR MIGHT BE HERE CHECK
+        console.log(existingVariantInCart.variant_id?.product_id,885)
+        const wishlist = await Wishlist.findOneAndDelete({product_id : existingVariantInCart.variant_id?.product_id , user_id : user._id},)
+        console.log(wishlist,787)
         await existingVariantInCart.save();
 
     }

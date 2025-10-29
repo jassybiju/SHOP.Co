@@ -1,6 +1,8 @@
 import React from "react";
 import { useRemoveCartItems, useUpdateCartItems } from "../hooks/useCart";
 import { BatteryWarning, LucideFileWarning, Minus, Plus, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Link } from "react-router";
 
 export const ProductCard = ({ data , disabled , is_blocked = false}) => {
     const { mutate: updateCartItem, status } = useUpdateCartItems();
@@ -32,7 +34,7 @@ export const ProductCard = ({ data , disabled , is_blocked = false}) => {
             }`}
         >
             {/* Left Side - Image and Info */}
-            <div className="flex h-full gap-5">
+            <Link to={'/product/'+data.product_id} className="flex h-full gap-5" >
                 <img src={data.image} alt="" className="w-35 h-35 rounded" />
                 <div className="flex flex-col justify-evenly h-full">
                     <h1 className="font-hero text-xl">{data.name}</h1>
@@ -51,7 +53,7 @@ export const ProductCard = ({ data , disabled , is_blocked = false}) => {
                     <h1 className="font-hero text-xl">${data.price} * {data.quantity}</h1>
                     {is_blocked && <p className="text-red-500"> <BatteryWarning/> Product is out of stock</p>}
                 </div>
-            </div>
+            </Link>
            {!disabled && (
 
             <div className="flex flex-col justify-between items-end h-full">

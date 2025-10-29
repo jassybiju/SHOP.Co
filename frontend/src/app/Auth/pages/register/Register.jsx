@@ -202,7 +202,7 @@ const Register = () => {
                         />
 
                         <Input
-                        required
+                        
                             type="text"
                             label="Enter Your refferal code if you have"
                             register={register("refferal_code", {

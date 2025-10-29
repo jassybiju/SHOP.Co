@@ -49,6 +49,10 @@ const AdminLayout = () => {
             label: "Coupon Management",
             icon: <PackageXIcon />,
             path: "/admin/coupon-management/",
+        },{
+            label: "Sales Report Management",
+            icon: <PackageXIcon />,
+            path: "/admin/sales-report/",
         },
     ];
 

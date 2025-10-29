@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { addAddress, changePassword, changeUserEmail, deleteAddress, editAccountDetails, editAddress, getAddress, getAddresses, setAsPrimaryAddress } from "../services/accounts.service"
+import { addAddress, changePassword, changeUserEmail, deleteAddress, editAccountDetails, editAddress, getAddress, getAddresses, getUserCoupons, setAsPrimaryAddress } from "../services/accounts.service"
 
 
 export const useEditAccount = () =>{
@@ -34,7 +34,7 @@ export const useGetAllAddress = () => {
   return useQuery({
     queryFn : getAddresses,
     queryKey : ['address', 'all']
-  }) 
+  })
 }
 
 export const useGetAddress = (id) => {
@@ -47,7 +47,7 @@ export const useGetAddress = (id) => {
 export const useDeleteAddress = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn : deleteAddress, 
+    mutationFn : deleteAddress,
         onSuccess : () => queryClient.invalidateQueries({queryKey : ['address']})
 
   })
@@ -56,7 +56,7 @@ export const useDeleteAddress = () => {
 export const useEditAddress = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn : editAddress, 
+    mutationFn : editAddress,
         onSuccess : () => queryClient.invalidateQueries({queryKey : ['address']})
 
   })
@@ -64,8 +64,15 @@ export const useEditAddress = () => {
 export const useSetAsPrimaryAddress = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn : setAsPrimaryAddress, 
+    mutationFn : setAsPrimaryAddress,
         onSuccess : () => queryClient.invalidateQueries({queryKey : ['address']})
 
   })
+}
+
+export const useGetUserCoupons = () => {
+    return useQuery({
+        queryKey : ['user-coupons'],
+        queryFn : getUserCoupons,
+    })
 }

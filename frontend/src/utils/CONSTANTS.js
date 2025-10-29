@@ -33,7 +33,7 @@ export const STATUS_TRANSITIONS_OPTIONS = {
     ],
     'SHIPPED': [
         { label: 'DELIVERED', value: 'DELIVERED' },
-        { label: 'RETURNED', value: 'RETURNED' },
+        // { label: 'RETURNED', value: 'RETURNED' },
     ],
     'DELIVERED': [
         // { label: 'RETURNED', value: 'RETURNED' },

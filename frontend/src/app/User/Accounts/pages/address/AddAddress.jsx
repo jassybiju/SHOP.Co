@@ -1,10 +1,10 @@
 import InputComponent from "@/components/InputComponent";
-import { Link } from "react-router";
+import { Link, redirect, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Button from "@/app/User/components/Button";
 import { useAddAddress } from "../../hooks/useAccount";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 
 const AddAddress = () => {
     const {
@@ -12,13 +12,14 @@ const AddAddress = () => {
         handleSubmit,
         formState: { errors },
     } = useForm();
-    console.log(errors);
+    const navigate = useNavigate()
     const {mutate : addAddress , status} = useAddAddress()
     const onSubmit = (data) => {
         console.log("Address submitted ✅", data);
         addAddress(data, {onSuccess : (data) => {
             console.log(data)
             toast.success(data.message)
+            navigate(-1)
         },onError : (res) => {
             console.log(res)
             toast.error(res.response.data.message)
@@ -28,7 +29,7 @@ const AddAddress = () => {
     return (
         <div className="w-3/5 mx-auto shadow-xl bg-white ring ring-gray-200 rounded-xl px-20 py-10 ">
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2">
-                <span>Add new Address</span> <span>Personal Information</span>
+                <span className='flex items-center gap-2'><Link to={-1}><ChevronLeft/></Link> Add new Address</span> <span>Personal Information</span>
             </div>
 
             {/* You had your <form> here, we keep it exactly here */}

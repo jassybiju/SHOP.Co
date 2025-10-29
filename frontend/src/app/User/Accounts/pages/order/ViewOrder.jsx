@@ -3,11 +3,18 @@ import Loader from "@/components/Loader";
 import React from "react";
 import { Link, useParams } from "react-router";
 import DownloadOrder from "./utils/DownloadOrder";
-import { useGetOrder } from "@/app/User/hooks/useOrder";
+import { useCancelOrderItem, useGetOrder, useReturnOrderItem } from "@/app/User/hooks/useOrder";
+import useCommentModal from "@/hooks/useCommentModal";
+import { displayRazorpay } from "@/utils/displayRazorpay";
+import { orderAxiosInstance } from "@/lib/axios";
+import toast from "react-hot-toast";
 
 const ViewOrder = () => {
 	const { id } = useParams();
 	const { data: orderData, status } = useGetOrder(id);
+    const onClickComment = useCommentModal()
+    const {mutate : cancelOrderItem} = useCancelOrderItem()
+    const {mutate : returnOrderItem} = useReturnOrderItem()
 	if (status === "pending") {
 		return <Loader />;
 	}
@@ -104,7 +111,7 @@ const ViewOrder = () => {
 									{items.map((x) => (
 										<div
 											key={x._id}
-											className={`relative bg-gray-50 shadow w-full  rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300`}
+											className={`relative ${x.is_cancelled || x.is_returned ? "bg-gray-400" : "bg-gray-50" }  shadow w-full  rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300`}
 										>
 											{/* Left Side - Image and Info */}
 											<div className="flex h-full gap-2">
@@ -127,6 +134,9 @@ const ViewOrder = () => {
 														${(x.price * x.quantity * (1 - (x.discount || 0) / 100)).toFixed(2)}{" "}
 														({x.price} * {x.quantity} {x.discount ? `- ${x.discount}%` : ""})
 													</h1>
+                                                    {x?.status || 'no defined'}
+                                                    {x?.status === 'DELIVERED' ?<button disabled={x.is_returned} onClick={()=>onClickComment(y=> returnOrderItem({id : order._id , itemId : x._id, data : {reason : y}}))}>{ x.is_returned ? "Returned " :"Return"}</button> : "" }
+                                                    {x?.status === 'PLACED' && <button disabled={x.is_cancelled} onClick={()=>onClickComment(y=> cancelOrderItem({id : order._id , itemId : x._id, data : {reason : y}}))}>{ x.is_cancelled ? "Cancelled " :"Cancel"}</button>}
 												</div>
 											</div>
 										</div>
@@ -161,8 +171,30 @@ const ViewOrder = () => {
 							</div>
 						</div>
 					</div>
+                        {orderData.data.total_amount}
 					<div className="w-2/4 flex flex-col gap-2 ">
-						<DownloadOrder order={orderData?.data} />
+						{/* <DownloadOrder order={orderData?.data} /> */}
+                        {/* {order.razorpay_order_id || "not-fding"} */}
+                        {order.payment_status !== "PAID" && order.payment_method === 'RAZORPAY' && (
+                            <button onClick={()=>displayRazorpay({id :order.razorpay_order_id , amount : (orderData.data.total_amount * 100).toFixed(2), currency : "INR"},(response)=>{
+                                console.log(response)
+                                orderAxiosInstance.post('./verify-payment',{
+                                    razorpay_order_id : response.razorpay_order_id,
+                                    razorpay_payment_id : response.razorpay_payment_id,
+                                    razorpay_signature : response.razorpay_signature
+                                }).then((res)=>{
+                                    console.log(res," Order paid")
+                                    if(res.statusText === "OK"){
+                                        toast.success("Payment Received")
+                                    }else{
+                                        toast.error('Payment Failed')
+                                    }
+                                }).catch(e=>{
+                                    console.log(e)
+                                    toast.error("Payment failed")
+                                })
+                            })}>PAY</button>
+                        )}
 						<div className="w-full rounded-2xl border-2 bg-white  ">
 							{/* ! HEADER  */}
 							<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
@@ -178,6 +210,10 @@ const ViewOrder = () => {
 								<div className="w-full flex justify-between">
 									<span className="">Discount :</span>
 									<span className="font-bold text-red-600">- ${orderData.data.discountApplied.toFixed(2)} </span>
+								</div>
+                                <div className="w-full flex justify-between">
+									<span className="">Coupon Discount :</span>
+									<span className="font-bold text-red-600">- ${orderData.data?.couponDiscountApplied?.toFixed(2)} </span>
 								</div>
 								<hr className="border-1 border-gray-500" />
 								<div className="w-full flex justify-between">

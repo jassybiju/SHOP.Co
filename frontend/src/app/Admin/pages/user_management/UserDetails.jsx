@@ -28,13 +28,13 @@ const UserDetails = () => {
               {/* <button className="bg-red-600 text-white">Block</button> */}
             </div>
         </div>
-        <div className="w-full flex justify-evenly">
-        <IconCards icon={<BadgeCent/>} value={'$450.00'} label={'Total Spent'}/>
-        <IconCards icon={<BadgeCent/>} value={'$450.00'} label={'Total Spent'}/>
-        <IconCards icon={<BadgeCent/>} value={'$450.00'} label={'Total Spent'}/>
-        
+        <div className="w-full flex justify-start px-5">
+        <IconCards icon={<BadgeCent/>} value={data.data.totalOrders} label={'Total Orders'}/>
+        {/* <IconCards icon={<BadgeCent/>} value={'$450.00'} label={'Total Spent'}/>
+        <IconCards icon={<BadgeCent/>} value={'$450.00'} label={'Total Spent'}/> */}
+
         </div>
-       
+
             <div className="m-4 bg-white rounded-2xl shadow-sm p-6 flex flex-col  items-start w-full">
   {/* Tab Header */}
             <div className="border-b border-[#F8F8FA] px-6 py-4">
@@ -52,7 +52,7 @@ const UserDetails = () => {
                 <h3 className="text-[18px] font-semibold text-[#131315] leading-[27px] font-poppins">
                   Personal Information
                 </h3>
-                
+
                 <div className="space-y-6">
                   <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
@@ -62,7 +62,7 @@ const UserDetails = () => {
                      {data.data.first_name} {data.data.last_name}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
                       Email Address
@@ -71,7 +71,7 @@ const UserDetails = () => {
                       {data.data.email}
                     </span>
                   </div>
-                  
+
                   {/* <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
                       Phone Number
@@ -88,7 +88,7 @@ const UserDetails = () => {
                 <h3 className="text-[18px] font-semibold text-[#131315] leading-[27px] font-poppins">
                   Account Details
                 </h3>
-                
+
                 <div className="space-y-6">
                   <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
@@ -98,7 +98,7 @@ const UserDetails = () => {
                       #USR-001234
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
                       Account Type
@@ -107,7 +107,7 @@ const UserDetails = () => {
                       User
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center pb-4 border-b border-[#F8F8FA]">
                     <span className="text-[14px] text-[#7E7E7E] font-medium font-poppins">
                       Verification Status

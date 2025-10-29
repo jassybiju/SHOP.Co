@@ -9,15 +9,19 @@ import productManagementRouter from './routes/admin/product-managment.routes.js'
 import orderManagementRouter from './routes/admin/order-management.routes.js'
 import stockManagementRouter from './routes/admin/stock-management.routes.js'
 import couponManagementRouter from './routes/admin/coupon-management.routes.js'
+import salesReportRouter from './routes/admin/salesReport.routes.js'
 import homeRouter from './routes/home.routes.js'
 import accountRouter from './routes/account.routes.js'
 import cartRouter from './routes/cart.routes.js'
 import checkoutRouter from './routes/user/checkout.routes.js'
 import orderRouter from './routes/user/order.routes.js'
+import walletRouter from './routes/user/wallet.routes.js'
+import wishlistRouter from './routes/user/wishlist.routes.js'
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import ErrorWithStatus from "./config/ErrorWithStatus.js";
+import Razorpay from 'razorpay'
 import { HTTP_RES } from "./utils/CONSTANTS.js";
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -50,15 +54,15 @@ app.use("/api/admin/product", productManagementRouter);
 app.use('/api/admin/order', orderManagementRouter)
 app.use('/api/admin/stock',stockManagementRouter)
 app.use('/api/admin/coupon',couponManagementRouter)
+app.use('/api/admin/report',salesReportRouter)
 
 app.use('/api/home',homeRouter)
-
 app.use('/api/account', accountRouter)
-
 app.use('/api/cart', cartRouter)
-
 app.use('/api/checkout', checkoutRouter)
 app.use('/api/order', orderRouter)
+app.use('/api/wallet',walletRouter)
+app.use('/api/wishlist',wishlistRouter)
 
 
 app.use((req, res) => {
@@ -70,8 +74,8 @@ app.use((error, req, res , next ) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
     // console.log(statusCode, 12 , error.statusCode());
-
-    res.status(error?.statusCode?.() || statusCode);
+    console.log(error.message)
+    res.status(error?.status || statusCode);
     console.log(error.message);
     res.json({
         message: error.message,
