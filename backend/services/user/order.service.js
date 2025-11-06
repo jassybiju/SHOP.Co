@@ -28,11 +28,16 @@ export const createOrderService = async (currentUser, orderData) => {
 			coupon = await Coupon.findOne({ code: orderData.coupon_code });
 			if (!coupon) throw new ErrorWithStatus("Coupon not found", HTTP_RES.NOT_FOUND);
 			if (coupon.expiry_date < new Date()) throw new ErrorWithStatus("Coupon Expired", HTTP_RES.BAD_REQUEST);
-			if (coupon.for_user && !user._id.equals(coupon.for_user)) throw new ErrorWithStatus("User Not authorized to use the coupon", HTTP_RES.UNAUTHORIZED);
+			if (coupon.for_user && !user._id.equals(coupon.for_user))
+				throw new ErrorWithStatus("User Not authorized to use the coupon", HTTP_RES.UNAUTHORIZED);
 			const couponUsageCount = await CouponUsage.find({ coupon_id: coupon._id }).countDocuments();
-            console.log(couponUsageCount , 44565)
-			const userCouponUsage = await CouponUsage.find({ coupon_id: coupon._id, user_id: user._id }).countDocuments();
-			if (couponUsageCount >= coupon.usage_limit) throw new ErrorWithStatus("Coupon can't be used", HTTP_RES.UNPROCESSABLE_ENTITY);
+			console.log(couponUsageCount, 44565);
+			const userCouponUsage = await CouponUsage.find({
+				coupon_id: coupon._id,
+				user_id: user._id,
+			}).countDocuments();
+			if (couponUsageCount >= coupon.usage_limit)
+				throw new ErrorWithStatus("Coupon can't be used", HTTP_RES.UNPROCESSABLE_ENTITY);
 			// ! TODO UNCOMMENT
 			// if (userCouponUsage !== 0) throw new ErrorWithStatus("Coupon Already Used by user", HTTP_RES.CONFLICT);
 		}
@@ -74,7 +79,10 @@ export const createOrderService = async (currentUser, orderData) => {
 						variant_id: item.variant_id,
 						quantity: item.quantity,
 						price: product.price,
-						discount: product.discount < category.discount ? category.discount : product.discount,
+						discount:
+							product.discount < category.discount
+								? category.discount
+								: product.discount,
 						payment_status: "PENDING",
 					},
 				],
@@ -92,8 +100,14 @@ export const createOrderService = async (currentUser, orderData) => {
 			});
 
 			// * Removing the quantity from the inventory
-			await ProductVariant.findByIdAndUpdate(item.variant_id, { $inc: { stock: -item.quantity } }, { session, new: true });
-
+            // * if razorpay don't reduce the quantity
+			if (orderData.payment_method !== "RAZORPAY") {
+				await ProductVariant.findByIdAndUpdate(
+					item.variant_id,
+					{ $inc: { stock: -item.quantity } },
+					{ session, new: true }
+				);
+			}
 			total_amount += product.price * (1 - orderItem.discount / 100) * item.quantity;
 			console.log(orderItems);
 		}
@@ -102,19 +116,24 @@ export const createOrderService = async (currentUser, orderData) => {
 		order.delivery_fee = 15;
 
 		let payable_amount = toFixedNum(total_amount);
-        console.log(payable_amount)
+		console.log(payable_amount);
 		if (coupon) {
-			const discountValue = Math.min(total_amount * (coupon?.discount_percentage / 100), coupon?.max_discount_amount);
+			const discountValue = Math.min(
+				total_amount * (coupon?.discount_percentage / 100),
+				coupon?.max_discount_amount
+			);
 			payable_amount -= toFixedNum(discountValue);
 		}
-        console.log(payable_amount)
+		console.log(payable_amount);
 		order.total_amount = toFixedNum(payable_amount + order.delivery_fee);
 
 		order.status_history = [{ status: "PLACED", description: "none" }];
 
 		// * saving coupon usage instance
 		if (coupon) {
-			await CouponUsage.create([{ user_id: user._id, coupon_id: coupon._id, order_id: order._id }], { session });
+			await CouponUsage.create([{ user_id: user._id, coupon_id: coupon._id, order_id: order._id }], {
+				session,
+			});
 		}
 		// TODO :  PENDING : MAKE THE SAME FOR COD AND WALLET
 		let razorpay_order = null;
@@ -144,7 +163,8 @@ export const createOrderService = async (currentUser, orderData) => {
 			);
 		} else if (orderData.payment_method === "WALLET") {
 			const wallet = await Wallet.findOne({ user_id: user._id });
-			if (wallet.balance < order.total_amount) throw new ErrorWithStatus("Insufficient Balance", HTTP_RES.BAD_REQUEST);
+			if (wallet.balance < order.total_amount)
+				throw new ErrorWithStatus("Insufficient Balance", HTTP_RES.BAD_REQUEST);
 
 			wallet.balance -= order.total_amount;
 			transaction = await Transaction.create(

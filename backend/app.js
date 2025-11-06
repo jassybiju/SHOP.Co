@@ -3,6 +3,7 @@ import express, { urlencoded } from "express";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import adminUserManagementRouter from "./routes/admin/user-management.routes.js";
+import dashboardRouter from "./routes/admin/adminDashboard.routes.js";
 import brandManagementRouter from './routes/admin/brand-management.routes.js'
 import categoryManagementRouter from './routes/admin/category-management.routes.js'
 import productManagementRouter from './routes/admin/product-managment.routes.js'
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use('/api/admin/dashboard',dashboardRouter)
 app.use("/api/admin/user-management", adminUserManagementRouter);
 app.use("/api/admin/brand", brandManagementRouter);
 app.use("/api/admin/category", categoryManagementRouter);

@@ -1,5 +1,5 @@
 import express from 'express'
-import { addOrderController, cancelOrderItemController, getAllOrderController, getOrderById, requestCancellation, requestReturn, requestReturnItemController, verifyPayment } from '../../controllers/user/order.controller.js'
+import { addOrderController, cancelOrderItemController, cancelPayment, getAllOrderController, getOrderById, repayOrderController, requestCancellation, requestReturn, requestReturnItemController, verifyPayment } from '../../controllers/user/order.controller.js'
 import { authenticateUser } from '../../middlewares/auth.middleware.js'
 
 const router = express.Router()
@@ -16,5 +16,9 @@ router.patch('/:id/:itemId/cancel',cancelOrderItemController)
 router.patch('/request-return/:id',requestReturn)
 router.patch('/:id/:itemId/return',requestReturnItemController)
 
+router.patch('/:id/repay/', repayOrderController )
+
+router.patch('/payment-cancelled/', cancelPayment )
 router.post('/verify-payment',verifyPayment)
+
 export default router
