@@ -69,7 +69,7 @@ const AvatarImageComponent = ({
     return (
         <>
             <div
-                className="rounded-full w-full h-full bg-gray-300 flex justify-center items-center flex-col"
+                className="rounded-full w-full h-full bg-gray-300 flex justify-center text-center items-center flex-col"
                 type='button'
                 onClick={(e)=>{e.preventDefault(); onUpload()}}
             >

@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../../services/auth.service";
 import { useQueryClient } from "@tanstack/react-query";
+import { useResponsive } from "@/hooks/useResponsive";
 
 const Register = () => {
     const { mutate: registerUser, isPending } = useRegister();
@@ -20,6 +21,7 @@ const Register = () => {
         watch,
         formState: { errors },
     } = useForm();
+    const {isTab} = useResponsive()
     const [formError, setFormError] = useState('')
     const navigate = useNavigate();
 
@@ -69,9 +71,9 @@ const Register = () => {
 
     return (
         <div className="flex h-max ">
-            <AuthBanner type='signup'/>
+            { !isTab && <AuthBanner type='signup'/> }
             {/* Right Side - Signup form */}
-            <div className="w-2/3 py-5 flex justify-center items-center bg-gray-50">
+            <div className={`${isTab ? 'w-full px-15' : "w-2/3"} py-5 flex justify-center items-center bg-gray-50`}>
                 <div className="w-full max-w-md">
                     {/* Logo/Heading */}
                     <h1 className="text-2xl font-bold mb-2 text-center">
@@ -202,7 +204,7 @@ const Register = () => {
                         />
 
                         <Input
-                        
+
                             type="text"
                             label="Enter Your refferal code if you have"
                             register={register("refferal_code", {

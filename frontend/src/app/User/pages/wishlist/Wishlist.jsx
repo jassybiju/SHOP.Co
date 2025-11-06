@@ -10,17 +10,17 @@ const Wishlist = () => {
 	const navigate = useNavigate();
 	if (getStatus === "pending") return <Loader />;
 	return (
-		<div className="px-20 py-5">
+		<div className="md:px-20 px-10 py-5">
 			<BreadCrumb />
 
 			<h1 className=" font-hero text-5xl my-10 ">Your Wishlist</h1>
 			<div className="flex gap-10 w-full min-h-100">
-				<div className="rounded border-1 w-3/5 border-gray-400 px-10 py-10">
+				<div className="rounded border-1 md:w-3/5 w-full border-gray-400 md:px-10 py-10">
 					{wishlist.data.map((x) => (
 						<ProductCard key={x._id} data={x} is_blocked={x.stock === 0} />
 					))}
 				</div>
-			
+
 			</div>
 		</div>
 	);

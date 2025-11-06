@@ -1,6 +1,6 @@
 import { use, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { ChevronDown, ChevronLeft, ChevronRight, Filter, Check, Sliders } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Filter, Check, Sliders, Cross, X } from "lucide-react";
 import { forwardRef } from "react";
 import { Slider } from "./components/Slider";
 import { useSearchProduct } from "../../hooks/useSearch";
@@ -12,11 +12,14 @@ import { useSearchParams } from "react-router";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useThrottle } from "../../../../hooks/useThrottle";
 import MultiRangeSlider from "./components/MultiRangeSlider";
+import { useResponsive } from "@/hooks/useResponsive";
 
 // const Slider = ()=>(<>SLider</>)
 
 const SearchPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
+    const [isOpen , setIsOpen] = useState(false)
+    const {isTab} = useResponsive()
 	const params = {
 		q: searchParams.get("q"),
 		category: searchParams.getAll("category"),
@@ -159,7 +162,7 @@ const SearchPage = () => {
 				<BreadCrumb items={breadcrumbItems} />
 				<div className="flex gap-6 px-0">
 					{/* Filter Sidebar */}
-					<div className="w-[400px] flex-shrink-0">
+					<div className={`md:w-1/3 max-w-[400px] md:block  w-full z-1000 bg-white flex-shrink-0 ${isTab && isOpen ? 'block' : 'hidden'}`}>
 						<div className="border border-black/10 rounded-[20px] bg-white p-6">
 							{/* Filter Header */}
 							<div className="flex items-center justify-between mb-6">
@@ -184,7 +187,7 @@ const SearchPage = () => {
 									>
 										Clear All
 									</button>
-									<Filter className="w-6 h-6 text-black" />
+									 <X className="w-6 h-6 text-black md:hidden block" onClick={()=>setIsOpen(false)} />
 								</div>
 							</div>
 
@@ -474,9 +477,10 @@ const SearchPage = () => {
 							</div>
 						</div>
 					</div>
+                    <button onClick={()=>setIsOpen(prev => !prev)} className="absolute z-10000 md:hidden block bottom-10 bg-white rounded-full shadow shadow-black p-2"><Filter/></button>
 
 					{/* Main Content */}
-					<div className="flex-1">
+					<div className="flex-1 md:static absolute">
 						{/* Header */}
 						<div className="flex items-center justify-between mb-8">
 							<h1 className="text-3xl font-bold text-black">

@@ -19,11 +19,12 @@ const Checkout = () => {
 	const { state } = useLocation();
 
 	const { data, status, error } = useCheckout(state);
-	const { cart, subtotal, total, address, discountApplied, delivery_fee, discountAppliedInPercentage , availableCoupons } = data?.data || {};
+	const { cart, subtotal, total, address, discountApplied, delivery_fee, discountAppliedInPercentage, availableCoupons } =
+		data?.data || {};
 
 	const { mutate: placeOrder, status: placeOrderStatus } = usePlaceOrder();
 	const [paymentMethod, setPaymentMethod] = useState("COD");
-    const [placedOrder, setPlacedOrder] = useState(false)
+	const [placedOrder, setPlacedOrder] = useState(false);
 	const navigate = useNavigate();
 	const { openModal, closeModal } = useModal();
 	const [selectedAddress, setSelectedAddress] = useState();
@@ -50,11 +51,17 @@ const Checkout = () => {
 
 	// ! show address Modal
 	const showAddAddressModal = () => {
-		openModal("add-address", <ModalWrapper onX={() => closeModal("add-address")} render={<AddAddress />} />);
+		openModal(
+			"add-address",
+			<ModalWrapper
+				onX={() => closeModal("add-address")}
+				render={<AddAddress isModal={true} onClose={() => closeModal("add-address")} />}
+			/>
+		);
 	};
 
 	const onPlaceOrder = () => {
-        setPlacedOrder(true)
+		setPlacedOrder(true);
 		placeOrder(
 			{
 				order_items: cart.map((x) => ({
@@ -72,34 +79,68 @@ const Checkout = () => {
 					toast.success(data.message);
 
 					if (data?.data?.razorpay_order) {
-                        console.log(data?.data?.razorpay_order)
-                            displayRazorpay(data.data.razorpay_order, (response) => {
-                                console.log(response);
-                                orderAxiosInstance
-                                    .post("/verify-payment", {
-                                        razorpay_order_id: response.razorpay_order_id,
-                                        razorpay_payment_id: response.razorpay_payment_id,
-                                        razorpay_signature: response.razorpay_signature,
-                                    })
-                                    .then((res) => {
-                                        console.log(res.statusText === "OK");
-                                        if (res.statusText === "OK") {
-                                            console.log(1);
-                                            return navigate("/order/successful",{state : {total_amount : data?.data?.order.total_amount, order_id : data?.data?.order._id, payment_method : data?.data?.order.payment_method}});
-                                            // return window.location.href = '/order/susccessful'
-                                        } else {
-                                            console.log(2);
-                                            return navigate("/order/payment-failed",{state : {razorpay_order_id : data.data.razorpay_order.razorpay_order_id}});
-                                            // return window.location.href = '/order/paymsent-failed'
-                                        }
-                                    })
-                                    .catch((e) => {
-                                        console.log(3);
-                                        return navigate("/order/paydment-failed");
-                                    });
-                            });
+						console.log(data?.data?.razorpay_order);
+						displayRazorpay(
+							data.data.razorpay_order,
+							(response) => {
+								console.log(response);
+								orderAxiosInstance
+									.post("/verify-payment", {
+										razorpay_order_id: response.razorpay_order_id,
+										razorpay_payment_id: response.razorpay_payment_id,
+										razorpay_signature: response.razorpay_signature,
+									})
+									.then((res) => {
+										console.log(res.statusText === "OK");
+										if (res.statusText === "OK") {
+											console.log(1);
+											return navigate("/order/successful", {
+												state: {
+													total_amount:
+														data?.data?.order
+															.total_amount,
+													order_id: data?.data
+														?.order._id,
+													payment_method:
+														data?.data?.order
+															.payment_method,
+												},
+											});
+											// return window.location.href = '/order/susccessful'
+										} else {
+											console.log(2);
+											return navigate("/order/payment-failed", {
+												state: {
+													razorpay_order_id:
+														data.data
+															.razorpay_order
+															.razorpay_order_id,
+												},
+											});
+											// return window.location.href = '/order/paymsent-failed'
+										}
+									})
+									.catch((e) => {
+										console.log(3);
+										return navigate("/order/paydment-failed");
+									});
+							},
+							() => {
+								window.location.href = `/order/failed?orderId=${data.data.razorpay_order.id}&amount=${data.data.razorpay_order.amount.toString()}`;
+								toast.error("Payment popul closed");
+								orderAxiosInstance.patch("/payment-cancelled", {
+									razorpay_order_id: data.data.razorpay_order.id,
+								});
+							}
+						);
 					} else {
-						navigate("/order/successful",{state : {total_amount : data?.data?.order.total_amount, order_id : data?.data?.order._id, payment_method : data?.data?.order.payment_method}});
+						navigate("/order/successful", {
+							state: {
+								total_amount: data?.data?.order.total_amount,
+								order_id: data?.data?.order._id,
+								payment_method: data?.data?.order.payment_method,
+							},
+						});
 					}
 				},
 			}
@@ -123,13 +164,19 @@ const Checkout = () => {
 
 						{/* //Addres/s */}
 						<div className="rounded-xl shadow-lg border-2 border-gray-100 my-5 px-10 py-10 h-min gap-2 flex flex-col">
-							<p className="font-hero text-2xl w-full border-b-1 py-5 my-5">Delivery Address</p>
+							<p className="font-hero text-2xl w-full border-b-1 py-5 my-5">
+								Delivery Address
+							</p>
 							{address
 								.sort((a, b) => (b.is_primary === true) - (a.is_primary === true))
 								.map((data) => (
-									<div key={data._id} className="w-full border-2 rounded-lg  flex justify-between py-2 px-4">
+									<div
+										key={data._id}
+										className="w-full border-2 rounded-lg  flex justify-between py-2 px-4"
+									>
 										<div>
-											{data.first_name + " " + data.last_name} ,{data.address}
+											{data.first_name + " " + data.last_name} ,
+											{data.address}
 											<br />
 											{data.place}, {data.state}
 											,
@@ -154,7 +201,11 @@ const Checkout = () => {
 													></input>
 												) : (
 													<input
-														onClick={() => setSelectedAddress(data._id)}
+														onClick={() =>
+															setSelectedAddress(
+																data._id
+															)
+														}
 														id="default-radio-1"
 														type="radio"
 														value=""
@@ -186,13 +237,19 @@ const Checkout = () => {
 									</div>
 								))}
 							<div className="flex justify-end">
-								<Button label="Add Address" loadingLabel="Adding Address" onClick={showAddAddressModal} />
+								<Button
+									label="Add Address"
+									loadingLabel="Adding Address"
+									onClick={showAddAddressModal}
+								/>
 							</div>
 						</div>
 
 						{/* // Payment Methods */}
 						<div className="rounded-xl shadow-lg border-2 border-gray-100 bg-white px-10 py-10 my-5 h-min gap-2 flex flex-col">
-							<p className="font-hero text-2xl border-b-1 py-5 w-full my-5">Payment Method</p>
+							<p className="font-hero text-2xl border-b-1 py-5 w-full my-5">
+								Payment Method
+							</p>
 							Select Any Payment Methods
 							<div className="flex flex-col gap-4 my-4">
 								{[
@@ -204,20 +261,27 @@ const Checkout = () => {
 										label: "RAZORPAY",
 										value: "RAZORPAY",
 									},
-									{ label: "Wallet", value : "WALLET" },
+									{ label: "Wallet", value: "WALLET" },
 								].map((x, i) => (
 									<>
 										<div className="flex items-center me-4">
 											<input
 												defaultChecked={i === 0}
-												onClick={(x) => setPaymentMethod(x.target.value)}
+												onClick={(x) =>
+													setPaymentMethod(
+														x.target.value
+													)
+												}
 												id="inline-checked-radio"
 												type="radio"
 												value={x.value}
 												name={"payment"}
 												className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 "
 											/>
-											<label htmlFor={x.label} className="ms-2 text-sm font-medium text-gray-900">
+											<label
+												htmlFor={x.label}
+												className="ms-2 text-sm font-medium text-gray-900"
+											>
 												{x.label}
 											</label>
 										</div>
@@ -249,7 +313,9 @@ const Checkout = () => {
 							<span className="font-bold">${subtotal}</span>
 						</div>
 						<div className="flex justify-between w-full my-5">
-							<span>Discount : <span>({discountAppliedInPercentage} %)</span> </span>
+							<span>
+								Discount : <span>({discountAppliedInPercentage} %)</span>{" "}
+							</span>
 							<span className="font-bold text-red-600">-${discountApplied}</span>
 						</div>
 
@@ -259,16 +325,27 @@ const Checkout = () => {
 						</div>
 						{couponDiscount ? (
 							<div className="flex justify-between w-full my-5">
-								You saved {couponDiscount?.discountAmount} ({couponDiscount?.discountPercentageApplied}%) with {couponDiscount.code}{" "}
+								You saved {couponDiscount?.discountAmount} (
+								{couponDiscount?.discountPercentageApplied}%) with{" "}
+								{couponDiscount.code}{" "}
 								<button onClick={() => setCouponDiscount(null)}>remove</button>
 							</div>
 						) : (
-							<CouponInput available={availableCoupons} cartTotal={total} setDiscountData={setCouponDiscount} />
+							<CouponInput
+								available={availableCoupons}
+								cartTotal={total}
+								setDiscountData={setCouponDiscount}
+							/>
 						)}
 						<hr />
 						<div className="flex justify-between w-full my-5">
 							<span>Total : </span>
-							<span className="font-bold">${ couponDiscount?.discountedTotal ?   (couponDiscount?.discountedTotal || 0) : total}</span>
+							<span className="font-bold">
+								$
+								{couponDiscount?.discountedTotal
+									? couponDiscount?.discountedTotal || 0
+									: total}
+							</span>
 						</div>
 
 						<Button

@@ -54,6 +54,11 @@ const Wallet = () => {
         {key : "_id", label : "TYPE",},
         {key : "amount", label : "Amount",},
         {key : "order_id", label : "Order Id",},
+        {key : "", label : "METHODS" , render: (val ,row)=>{
+            if(row.razorpay_order_id) return (<>Razorpay</>)
+            else return (<>Wallet</>)
+
+        }},
         // {key : "/", label : "Order Id",},
 
         {key : "status", label : "Status",},
@@ -61,7 +66,7 @@ const Wallet = () => {
     ]
 
     return (
-		<div className="w-4/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
+		<>
 			<div className="pb-5 mb-2 flex justify-between items-center text-2xl font-semibold border-b-2">
 				<span>My Wallet</span>
 				<button className="text-lg font-normal px-5 py-3 bg-blue-600 rounded text-white" onClick={showAddMoneyModal}>Add Money</button>
@@ -74,17 +79,17 @@ const Wallet = () => {
 				</div>
 			</div>
 			<div className="w-full my-10 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-5 py-5">
-				<p>Search Transactions</p>
+				{/* <p>Search Transactions</p>
 				<div className="flex gap-2">
 					<input type="text" placeholder="Search By TXN ID..." className="ring ring-gray-400 rounded px-5 py-1" />
                     <Dropdown label={'Filter By Type'} options={walletTypeOptions} />
                     <Dropdown label={'Time Period'} options={walletTimePeriodOptions} />
                     <Dropdown label={'Sort By'} options={walletSortByOptions} />
-				</div>
+				</div> */}
 
                 <TableComponent data={data?.data?.transactions} column={column}/>
 			</div>
-		</div>
+		</>
 	);
 };
 export default Wallet;

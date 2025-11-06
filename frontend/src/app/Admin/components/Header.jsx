@@ -8,7 +8,7 @@ const Header = ({
 }) => {
     const { isOpen, setIsOpen } = useOutletContext();
     return (
-        <div className="w-full bg-white p-6 flex justify-between items-center">
+        <div className="w-full relative  bg-white p-6 flex justify-between items-center">
             <div className="flex items-center gap-3">
                 <button
                     className="md:hidden p-2 rounded-lg hover:bg-gray-100"

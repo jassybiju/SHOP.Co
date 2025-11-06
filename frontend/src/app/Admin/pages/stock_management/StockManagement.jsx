@@ -58,7 +58,7 @@ const StockManagement = () => {
 			render: (val, row) => (
 				<div className="flex w-1/2 text-nowrap items-center gap-3 px-3">
 					<img src={row?.image} className="rounded-full w-10 h-10" alt="" />
-					{val}
+					{val} {row.size}
 				</div>
 			),
 		},

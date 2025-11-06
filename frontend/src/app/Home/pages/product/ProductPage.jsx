@@ -174,7 +174,7 @@ const ProductPage = () => {
                                 <h1 className="font-hero text-2xl md:text-3xl lg:text-4xl text-black mb-3 md:mb-4">
                                     {data.name}
                                 </h1>
-                                <StarRating rating={4.5} />
+                                {/* <StarRating rating={4.5} /> */}
                             </div>
 
                             {/* Price */}
@@ -211,11 +211,11 @@ const ProductPage = () => {
                                         <button
                                             key={index}
                                             onClick={() =>
-                                                setSelectedVariant(variant)
+                                                (variant.stock !== 0) && setSelectedVariant(variant)
                                             }
                                             className={` border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
                                                 selectedVariant === variant
-                                                    ? "bg-gray-variant border-gray-400"
+                                                    ? "bg-gray-variant border-gray-800"
                                                     : "bg-gray-variant  hover:border-gray-300"
                                             } flex items-center gap-2 ${
                                                 variant.stock === 0 &&
@@ -228,6 +228,7 @@ const ProductPage = () => {
                                                 style={{
                                                     backgroundColor:
                                                         variant.color,
+                                                    border : 'black solid 1px'
                                                 }}
                                             ></div>
                                             {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
@@ -278,6 +279,7 @@ const ProductPage = () => {
                                     <button
                                         className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
                                         onClick={() => {
+                                            if(!selectedVariant) toast.error('Variant not selected')
                                             if(selectedVariant.stock !== 0){
                                             navigate("/checkout/", {
                                                 state: {

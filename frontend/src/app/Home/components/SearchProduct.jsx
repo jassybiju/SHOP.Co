@@ -37,7 +37,7 @@ const SearchProduct = () => {
 
 	// };
 	return (
-		<div className="hidden lg:flex items-center bg-gray-light rounded-full px-4 py-3 w-80">
+		<div className="  items-center bg-gray-light  sm:flex hidden rounded-full border-1 border-gray-400 py-2 px-1   md:px-4 md:py-3 w-max">
 			<Search className="w-5 h-5 text-gray-400 mr-3" />
 			<input
 				type="text"

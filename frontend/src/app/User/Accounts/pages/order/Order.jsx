@@ -2,7 +2,7 @@
 // import { ProductCard } from "@/app/User/components/ProductCart";
 import { useCancelOrder, useGetAllOrder, useReturnOrder } from "@/app/User/hooks/useOrder";
 import Loader from "@/components/Loader";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import useCommentModal from "@/hooks/useCommentModal";
 import React, { useEffect, useState } from "react";
 import CTAButton from "./components/CTAButton";
@@ -10,39 +10,37 @@ import Search from "@/app/Admin/components/Search";
 import Pagination from "@/app/Home/pages/search/components/Pagination";
 
 const Order = () => {
-    const [params, setParams] = useState({ q: "", sort: "", order: "", page : 1 });
+	const [params, setParams] = useState({ q: "", sort: "", order: "", page: 1 });
 
-    const { data, status } = useGetAllOrder(params);
+	const { data, status } = useGetAllOrder(params);
 
-    useEffect(()=>{
-        if(data?.data?.pages < params.page){
-            setParams(state => ({...state, page : data?.data?.pages}))
-        }
-    },[params, data?.data])
+	useEffect(() => {
+		if (data?.data?.pages < params.page) {
+			setParams((state) => ({ ...state, page: data?.data?.pages }));
+		}
+	}, [params, data?.data]);
 
-    // const SORT_OPTIONS = [
-    //     // { label: "Most Popular", sort: "popularity", order: "desc" },
-    //     { label: "Latest", sort: "createdAt", order: "desc" },
-    //     { label: "Oldest", sort: "createdAt", order: "asc" },
-    // ];
-    if (status === "pending") {
-        return <Loader />;
-    }
-    return (
-        <div className="w-3/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
-            <div className="pb-5 mb-5 flex justify-between text-2xl font-semibold border-b-2">
-                <span>My Orders</span>
-            </div>
-            <div className="flex justify-between">
-             <Search
-                    label={"Search Order by id"}
-                    className="m-0"
-                    width={50}
-                    onChange={(e) =>
-                        setParams((prev) => ({ ...prev, q: e.target.value }))
-                    }
-                />
-{/*
+	// const SORT_OPTIONS = [
+	//     // { label: "Most Popular", sort: "popularity", order: "desc" },
+	//     { label: "Latest", sort: "createdAt", order: "desc" },
+	//     { label: "Oldest", sort: "createdAt", order: "asc" },
+	// ];
+	if (status === "pending") {
+		return <Loader />;
+	}
+	return (
+		<>
+			<div className="pb-5 mb-5 flex justify-between text-2xl font-semibold border-b-2">
+				<span>My Orders</span>
+			</div>
+			<div className="flex justify-between">
+				<Search
+					label={"Search Order by id"}
+					className="m-0"
+					width={50}
+					onChange={(e) => setParams((prev) => ({ ...prev, q: e.target.value }))}
+				/>
+				{/*
                 <select
                     // onChange={(e)=>toggleSortOptions(e.target.value)}
                     value={`${params.sort}_${params.order}`}
@@ -80,124 +78,141 @@ const Order = () => {
                         </option>
                     ))}
                 </select> */}
-            </div>
-            {/* Orders List */}
-            <div className="flex flex-col gap-5">
-                {data?.data?.data?.map((order) => (
-                    <div
-                        key={order._id}
-                        className="w-full rounded-2xl border-2 "
-                    >
-                        {/* Order Info */}
-                        {/* ! HEADER  */}
-                        <div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-                            <div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
-                                <div className="flex flex-col">
-                                    <span className="text-gray-400 text-xs">
-                                        ORDER ID
-                                    </span>
-                                    <span className="font-medium text-sm">
-                                        {order._id}
-                                    </span>
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-gray-400 text-xs">
-                                        ORDER DATE
-                                    </span>
-                                    <span className="font-medium text-sm">
-                                        {new Date(
-                                            order.createdAt
-                                        ).toLocaleDateString("en-GB", {
-                                            day: "2-digit",
-                                            month: "short",
-                                            year: "numeric",
-                                        })}
-                                    </span>
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-gray-400 text-xs">
-                                        TOTAL AMOUNT
-                                    </span>
-                                    <span className="font-medium text-sm">
-                                        {order.total_amount.toFixed(2)}
-                                    </span>
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-gray-400 text-xs">
-                                        PAYMENT TYPE
-                                    </span>
-                                    <span className="font-medium text-sm">
-                                        {order.payment_method} - {order.payment_status}
-                                    </span>
-                                </div>
-                            </div>
+			</div>
+			{/* Orders List */}
+			<div className="flex flex-col gap-5">
+				{data?.data?.data?.map((order) => (
+					<div key={order._id} className="w-full rounded-2xl border-2 ">
+						{/* Order Info */}
+						{/* ! HEADER  */}
+						<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
+							<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+								<div className="flex flex-col">
+									<span className="text-gray-400 text-xs">ORDER ID</span>
+									<span className="font-medium text-sm">{order._id}</span>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-gray-400 text-xs">ORDER DATE</span>
+									<span className="font-medium text-sm">
+										{new Date(order.createdAt).toLocaleDateString(
+											"en-GB",
+											{
+												day: "2-digit",
+												month: "short",
+												year: "numeric",
+											}
+										)}
+									</span>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-gray-400 text-xs">
+										TOTAL AMOUNT
+									</span>
+									<span className="font-medium text-sm">
+										{order.total_amount.toFixed(2)}
+									</span>
+								</div>
+								<div className="flex flex-col">
+									<span className="text-gray-400 text-xs">
+										PAYMENT TYPE
+									</span>
+									<span className="font-medium text-sm">
+										{order.payment_method} - {order.payment_status}
+									</span>
+								</div>
+							</div>
 
-                            {/* Order Status */}
-                            <div className="flex flex-col sm:items-end justify-center bg-green-400 text-white px-4 py-2 rounded">
-                                <span className="font-medium text-sm">
-                                    {order.status_history.slice(-1)[0]?.status}
-                                </span>
-                            </div>
-                        </div>
-                        <div className=" p-4">
-                            {order?.items.filter(x=>!x.is_cancelled).map((x) => (
-                                <div
-                                    key={x._id}
-                                    className={`relative bg-gray-50 shadow w-full  rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300`}
-                                >
-                                    {/* Left Side - Image and Info */}
-                                    <div className="flex h-full gap-2">
-                                        <img
-                                            src={x.image}
-                                            alt=""
-                                            className="w-25  h-30 rounded"
-                                        />
-                                        <div className="flex flex-col justify-evenly h-full">
-                                            <h1 className=" text-auto font-semibold">
-                                                {x.name}
-                                            </h1>
-                                            <p>
-                                                Size :{" "}
-                                                {
-                                                    {
-                                                        S: "Small",
-                                                        L: "Large",
-                                                        M: "Medium",
-                                                        XL: "Extra Large",
-                                                    }[x.size]
-                                                }
-                                            </p>
-                                            <p>Color : {x.color}</p>
-                                            <h1 className="font-bold text-lg">
-                                                $
-                                                {(
-                                                    x.price *
-                                                    x.quantity *
-                                                    (1 -
-                                                        (x.discount || 0) / 100)
-                                                ).toFixed(2)}{" "}
-                                                ({x.price} * {x.quantity}{" "}
-                                                {x.discount
-                                                    ? `- ${x.discount}%`
-                                                    : ""}
-                                                )
-                                            </h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                            <div>
-                                <button><Link to={"/account/orders/"+order._id} className="px-5  py-2 me-4 bg-amber-400 rounded border-1 text-white block">View</Link></button>
+							{/* Order Status */}
+							<div className="flex flex-col sm:items-end justify-center bg-green-400 text-white px-4 py-2 rounded">
+								<span className="font-medium text-sm">
+									{order.status_history.slice(-1)[0]?.status}
+								</span>
+							</div>
+						</div>
+						<div className=" p-4">
+							{order?.items
+								.filter((x) => !x.is_cancelled)
+								.map((x) => (
+									<div
+										key={x._id}
+										className="relative bg-gray-50 shadow w-full rounded-2xl px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all duration-300"
+									>
+										{/* Left Side - Image and Info */}
+										<div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full">
+											{/* Product Image */}
+											<img
+												src={x.image}
+												alt={x.name}
+												className="w-full sm:w-28 h-40 sm:h-28 object-cover rounded-lg"
+											/>
 
+											{/* Product Info */}
+											<div className="flex flex-col justify-evenly flex-1 text-sm sm:text-base">
+												<h1 className="font-semibold text-gray-800">
+													{x.name}
+												</h1>
+												<p className="text-gray-600">
+													Size:{" "}
+													{
+														{
+															S: "Small",
+															M: "Medium",
+															L: "Large",
+															XL: "Extra Large",
+														}[x.size]
+													}
+												</p>
+												<p className="text-gray-600">
+													Color: {x.color}
+												</p>
+												<h1 className="font-bold text-lg mt-1 text-gray-900">
+													$
+													{(
+														x.price *
+														x.quantity *
+														(1 -
+															(x.discount ||
+																0) /
+																100)
+													).toFixed(2)}{" "}
+													<span className="text-sm text-gray-500">
+														({x.price} ×{" "}
+														{x.quantity}
+														{x.discount
+															? ` − ${x.discount}%`
+															: ""}
+														)
+													</span>
+												</h1>
+											</div>
+										</div>
+									</div>
+								))}
+							<div>
+								<button>
+									<Link
+										to={"/account/orders/" + order._id}
+										className="px-5  py-2 me-4 bg-amber-400 rounded border-1 text-white block"
+									>
+										View
+									</Link>
+								</button>
 
-                              <CTAButton status={order.status_history.slice(-1)[0]?.status} id={order._id}/>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-                <Pagination page={data?.data?.page} pages={data?.data?.pages} onPageChange={(x)=>setParams(prev => ({...prev , page : x}))} />
-            </div>
-        </div>
-    );
+								<CTAButton
+									status={order.status_history.slice(-1)[0]?.status}
+									id={order._id}
+								/>
+							</div>
+						</div>
+					</div>
+				))}
+				<Pagination
+					page={data?.data?.page}
+					pages={data?.data?.pages}
+					onPageChange={(x) => setParams((prev) => ({ ...prev, page: x }))}
+				/>
+			</div>
+		</>
+	);
 };
 export default Order;

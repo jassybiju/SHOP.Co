@@ -3,8 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import BreadCrumb from "@/app/Home/components/BreadCrumb";
 import AvatarImageComponent from "../pages/profile/components/AvatarImageComponent";
 import { useUser } from "@/hooks/useUser";
+import { X } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({open , close}) => {
   const { data: user } = useUser();
   const location = useLocation();
   const [selected, setSelected] = useState("Manage My Account");
@@ -33,7 +34,8 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-1/4 min-w-[220px] bg-white shadow-md rounded-xl p-5">
+    <div className="w-1/4 h-full min-w-[220px] z-1 bg-white shadow-md rounded-xl p-5">
+       {open && <X onClick={close}/>}
       {/* Breadcrumb */}
       <BreadCrumb  />
 

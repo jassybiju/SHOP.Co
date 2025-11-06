@@ -11,7 +11,7 @@ export const displayRazorpay = async (result, validateFn , errorFn = null) => {
 	}
 
 	const { amount, id: order_id, currency, receipt='' } = result;
-
+    console.log(amount, result)
 	const options = {
 		key: "rzp_test_RVl8zmvwluwyHj",
 		amount: amount.toString(),

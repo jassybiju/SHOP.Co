@@ -12,16 +12,16 @@ import toast from "react-hot-toast";
 const ViewOrder = () => {
 	const { id } = useParams();
 	const { data: orderData, status } = useGetOrder(id);
-    const onClickComment = useCommentModal()
-    const {mutate : cancelOrderItem} = useCancelOrderItem()
-    const {mutate : returnOrderItem} = useReturnOrderItem()
+	const onClickComment = useCommentModal();
+	const { mutate: cancelOrderItem } = useCancelOrderItem();
+	const { mutate: returnOrderItem } = useReturnOrderItem();
 	if (status === "pending") {
 		return <Loader />;
 	}
 	console.log(orderData, status);
 	const { status_history, items, shipping_address_id, ...order } = orderData?.data || {};
 	return (
-		<div className="w-4/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
+		<>
 			<div className="pb-5 mb-5 flex justify-between text-2xl font-semibold border-b-2">
 				<span>My Orders</span>
 			</div>
@@ -32,7 +32,9 @@ const ViewOrder = () => {
 						<div className="w-full rounded-2xl border-2 bg-white ">
 							{/* ! HEADER  */}
 							<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">Order Details</div>
+								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+									Order Details
+								</div>
 							</div>
 							<div className="p-4 flex justify-around text-center">
 								<div className="flex flex-col">
@@ -42,20 +44,29 @@ const ViewOrder = () => {
 								<div className="flex flex-col">
 									<span className="text-gray-400 text-xs">ORDER DATE</span>
 									<span className="font-medium text-sm">
-										{new Date(order.createdAt).toLocaleDateString("en-GB", {
-											day: "2-digit",
-											month: "short",
-											year: "numeric",
-										})}
+										{new Date(order.createdAt).toLocaleDateString(
+											"en-GB",
+											{
+												day: "2-digit",
+												month: "short",
+												year: "numeric",
+											}
+										)}
 									</span>
 								</div>
 								<div className="flex flex-col">
-									<span className="text-gray-400 text-xs">TOTAL AMOUNT</span>
-									<span className="font-medium text-sm">{order.total_amount.toFixed(2)}</span>
+									<span className="text-gray-400 text-xs">
+										TOTAL AMOUNT
+									</span>
+									<span className="font-medium text-sm">
+										{order.total_amount.toFixed(2)}
+									</span>
 								</div>
 								<div className="flex flex-col">
 									<span className="text-gray-400 text-xs">STATUS</span>
-									<span className="font-medium text-sm">{status_history.slice(-1)[0]?.status}</span>
+									<span className="font-medium text-sm">
+										{status_history.slice(-1)[0]?.status}
+									</span>
 								</div>
 								{/* Name : {customerInfo.first_name}{" "}
                             {customerInfo.last_name}
@@ -69,7 +80,9 @@ const ViewOrder = () => {
 						<div className="w-full rounded-2xl border-2 bg-white">
 							{/* ! HEADER  */}
 							<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">Order Timeline</div>
+								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+									Order Timeline
+								</div>
 							</div>
 							<div className="p-8">
 								<ol className="relative border-s-8 border-gray-300 ">
@@ -92,7 +105,9 @@ const ViewOrder = () => {
 												</span>
 											</h3>
 											<time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-												{new Date(x.changed_at).toLocaleString("en-EG")}
+												{new Date(
+													x.changed_at
+												).toLocaleString("en-EG")}
 											</time>
 										</li>
 									))}
@@ -105,21 +120,33 @@ const ViewOrder = () => {
 								{/* Order Info */}
 								{/* ! HEADER  */}
 								<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-									<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">Order Items</div>
+									<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+										Order Items
+									</div>
 								</div>
-								<div className=" p-4">
+								<div className="p-4 space-y-4">
 									{items.map((x) => (
 										<div
 											key={x._id}
-											className={`relative ${x.is_cancelled || x.is_returned ? "bg-gray-400" : "bg-gray-50" }  shadow w-full  rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300`}
+											className={`relative ${
+												x.is_cancelled || x.is_returned
+													? "bg-gray-400"
+													: "bg-gray-50"
+											} shadow w-full rounded-2xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all duration-300`}
 										>
 											{/* Left Side - Image and Info */}
-											<div className="flex h-full gap-2">
-												<img src={x.images} alt="" className="w-25  h-30 rounded" />
-												<div className="flex flex-col justify-evenly h-full">
-													<h1 className=" text-auto font-semibold">{x.name}</h1>
+											<div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+												<img
+													src={x.images}
+													alt={x.name}
+													className="w-full sm:w-28 h-36 sm:h-28 object-cover rounded-lg"
+												/>
+												<div className="flex flex-col justify-evenly text-sm sm:text-base">
+													<h1 className="font-semibold text-base sm:text-lg">
+														{x.name}
+													</h1>
 													<p>
-														Size :{" "}
+														Size:{" "}
 														{
 															{
 																S: "Small",
@@ -129,14 +156,103 @@ const ViewOrder = () => {
 															}[x.size]
 														}
 													</p>
-													<p>Color : {x.color}</p>
-													<h1 className="font-bold text-lg">
-														${(x.price * x.quantity * (1 - (x.discount || 0) / 100)).toFixed(2)}{" "}
-														({x.price} * {x.quantity} {x.discount ? `- ${x.discount}%` : ""})
+													<p>Color: {x.color}</p>
+													<h1 className="font-bold text-base sm:text-lg">
+														$
+														{(
+															x.price *
+															x.quantity *
+															(1 -
+																(x.discount ||
+																	0) /
+																	100)
+														).toFixed(2)}{" "}
+														({x.price} ×{" "}
+														{x.quantity}{" "}
+														{x.discount
+															? `- ${x.discount}%`
+															: ""}
+														)
 													</h1>
-                                                    {x?.status || 'no defined'}
-                                                    {x?.status === 'DELIVERED' ?<button disabled={x.is_returned} onClick={()=>onClickComment(y=> returnOrderItem({id : order._id , itemId : x._id, data : {reason : y}}))}>{ x.is_returned ? "Returned " :"Return"}</button> : "" }
-                                                    {x?.status === 'PLACED' && <button disabled={x.is_cancelled} onClick={()=>onClickComment(y=> cancelOrderItem({id : order._id , itemId : x._id, data : {reason : y}}))}>{ x.is_cancelled ? "Cancelled " :"Cancel"}</button>}
+                                                    <div className="flex sm:flex-row flex-col justify-between sm:items-center  ">
+													{/* Status */}
+													<p className="mt-1 text-gray-600 text-xs sm:text-sm">
+														Status:{" "}
+														{x?.status ||
+															"Not defined"}
+													</p>
+
+													{/* Buttons */}
+													<div className="mt-2 flex flex-wrap gap-2">
+														{x?.status ===
+															"DELIVERED" && (
+															<button
+																disabled={
+																	x.is_returned
+																}
+																onClick={() =>
+																	onClickComment(
+																		(
+																			y
+																		) =>
+																			returnOrderItem(
+																				{
+																					id: order._id,
+																					itemId: x._id,
+																					data: {
+																						reason: y,
+																					},
+																				}
+																			)
+																	)
+																}
+																className={`px-3 py-1 rounded-lg text-sm font-medium ${
+																	x.is_returned
+																		? "bg-gray-300 cursor-not-allowed"
+																		: "bg-green-500 text-white hover:bg-green-600"
+																}`}
+															>
+																{x.is_returned
+																	? "Returned"
+																	: "Return"}
+															</button>
+														)}
+
+														{x?.status ===
+															"PLACED" && (
+															<button
+																disabled={
+																	x.is_cancelled
+																}
+																onClick={() =>
+																	onClickComment(
+																		(
+																			y
+																		) =>
+																			cancelOrderItem(
+																				{
+																					id: order._id,
+																					itemId: x._id,
+																					data: {
+																						reason: y,
+																					},
+																				}
+																			)
+																	)
+																}
+																className={`px-3 py-1 rounded-lg text-sm font-medium ${
+																	x.is_cancelled
+																		? "bg-gray-300 cursor-not-allowed"
+																		: "bg-red-500 text-white hover:bg-red-600"
+																}`}
+															>
+																{x.is_cancelled
+																	? "Cancelled"
+																	: "Cancel"}
+															</button>
+														)}
+													</div>
+                                                    </div>
 												</div>
 											</div>
 										</div>
@@ -148,12 +264,17 @@ const ViewOrder = () => {
 						<div className="w-full rounded-2xl border-2 bg-white">
 							{/* ! HEADER  */}
 							<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">Shipping Address</div>
+								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+									Shipping Address
+								</div>
 							</div>
 
 							<div className="w-full  rounded-lg  flex justify-between py-2 px-4">
 								<div>
-									{shipping_address_id.first_name + " " + shipping_address_id.last_name} ,{shipping_address_id.address}
+									{shipping_address_id.first_name +
+										" " +
+										shipping_address_id.last_name}{" "}
+									,{shipping_address_id.address}
 									<br />
 									{shipping_address_id.place}, {shipping_address_id.state},
 									<br />
@@ -171,56 +292,118 @@ const ViewOrder = () => {
 							</div>
 						</div>
 					</div>
-                        {orderData.data.total_amount}
-					<div className="w-2/4 flex flex-col gap-2 ">
+					{orderData.data.total_amount}
+					<div className="md:w-2/4 w-full flex flex-col gap-2 ">
 						{/* <DownloadOrder order={orderData?.data} /> */}
-                        {/* {order.razorpay_order_id || "not-fding"} */}
-                        {order.payment_status !== "PAID" && order.payment_method === 'RAZORPAY' && (
-                            <button onClick={()=>displayRazorpay({id :order.razorpay_order_id , amount : (orderData.data.total_amount * 100).toFixed(2), currency : "INR"},(response)=>{
-                                console.log(response)
-                                orderAxiosInstance.post('./verify-payment',{
-                                    razorpay_order_id : response.razorpay_order_id,
-                                    razorpay_payment_id : response.razorpay_payment_id,
-                                    razorpay_signature : response.razorpay_signature
-                                }).then((res)=>{
-                                    console.log(res," Order paid")
-                                    if(res.statusText === "OK"){
-                                        toast.success("Payment Received")
-                                    }else{
-                                        toast.error('Payment Failed')
-                                    }
-                                }).catch(e=>{
-                                    console.log(e)
-                                    toast.error("Payment failed")
-                                })
-                            })}>PAY</button>
-                        )}
+						{/* {order.razorpay_order_id || "not-fding"} */}
+						{order.payment_status !== "PAID" && order.payment_method === "RAZORPAY" && (
+							<button
+								onClick={() =>
+									orderAxiosInstance
+										.patch(`${order._id}/repay`)
+										.then((x) => {
+											console.log(x);
+											displayRazorpay(
+												x.data.data,
+												(response) => {
+													console.log(response);
+													orderAxiosInstance
+														.post(
+															"./verify-payment",
+															{
+																razorpay_order_id:
+																	response.razorpay_order_id,
+																razorpay_payment_id:
+																	response.razorpay_payment_id,
+																razorpay_signature:
+																	response.razorpay_signature,
+															}
+														)
+														.then((res) => {
+															console.log(
+																res,
+																" Order paid"
+															);
+															if (
+																res.statusText ===
+																"OK"
+															) {
+																toast.success(
+																	"Payment Received"
+																);
+															} else {
+																toast.error(
+																	"Payment Failed"
+																);
+															}
+														})
+														.catch((e) => {
+															console.log(
+																e
+															);
+															toast.error(
+																"Payment failed"
+															);
+														});
+												}
+											);
+										})
+										.catch((x) => {
+											toast.error(x.response.data.message);
+											console.log(x);
+										})
+								}
+							>
+								PAY
+							</button>
+						)}
 						<div className="w-full rounded-2xl border-2 bg-white  ">
 							{/* ! HEADER  */}
 							<div className=" flex flex-col sm:flex-row p-4 sm:justify-between gap-4 sm:gap-0 border-b-2">
-								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">Order Summary</div>
+								<div className="flex flex-col sm:flex-row sm:gap-8 flex-1">
+									Order Summary
+								</div>
 							</div>
 							<div className="p-4 flex flex-col gap-3">
 								<div className="w-full flex justify-between">
 									<span className="">
-										Subtotal <span className="text-gray-500 text-sm text-nowrap">( {items.length} item(s) )</span>:{" "}
+										Subtotal{" "}
+										<span className="text-gray-500 text-sm text-nowrap">
+											( {items.length} item(s) )
+										</span>
+										:{" "}
 									</span>
-									<span className="font-bold "> ${orderData.data.subtotal.toFixed(2)} </span>
+									<span className="font-bold ">
+										{" "}
+										${orderData.data.subtotal.toFixed(2)}{" "}
+									</span>
 								</div>
 								<div className="w-full flex justify-between">
 									<span className="">Discount :</span>
-									<span className="font-bold text-red-600">- ${orderData.data.discountApplied.toFixed(2)} </span>
+									<span className="font-bold text-red-600">
+										- ${orderData.data.discountApplied.toFixed(2)}{" "}
+									</span>
 								</div>
-                                <div className="w-full flex justify-between">
+								<div className="w-full flex justify-between">
 									<span className="">Coupon Discount :</span>
-									<span className="font-bold text-red-600">- ${orderData.data?.couponDiscountApplied?.toFixed(2)} </span>
+									<span className="font-bold text-red-600">
+										- $
+										{orderData.data?.couponDiscountApplied?.toFixed(
+											2
+										)}{" "}
+									</span>
 								</div>
 								<hr className="border-1 border-gray-500" />
 								<div className="w-full flex justify-between">
 									<span className="">Total :</span>
-									<span className="font-bold ">${orderData.data.total_amount.toFixed(2)} </span>
+									<span className="font-bold ">
+										${orderData.data.total_amount.toFixed(2)}{" "}
+									</span>
 								</div>
-								<Link to={"/account/orders"} className="w-full text-center py-4 rounded border-2">
+								<Link
+									to={"/account/orders"}
+									className="w-full text-center py-4 rounded border-2"
+								>
 									Back to Orders
 								</Link>
 							</div>
@@ -228,7 +411,7 @@ const ViewOrder = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 export default ViewOrder;

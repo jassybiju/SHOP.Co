@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 import { calculateDateRange } from "@/utils/datesUtil";
 import { useGetSalesReport } from "../../hooks/useSalesReport";
 import TableComponent from "../../components/TableComponent";
-import { downloadSalesReportExcel, downloadSalesReportPDF, getSalesReportDownloadable } from "../../services/sales-report.service";
+import {
+	downloadSalesReportExcel,
+	downloadSalesReportPDF,
+	getSalesReportDownloadable,
+} from "../../services/sales-report.service";
 import toast from "react-hot-toast";
 
 const SalesReport = () => {
@@ -26,15 +30,14 @@ const SalesReport = () => {
 	};
 
 	const generatePdfReport = async () => {
-		const data = await getSalesReportDownloadable({ range: dateRange, start, end, });
-		downloadSalesReportPDF(data.data.order , data.data.startDate , data.data.endDate);
+		const data = await getSalesReportDownloadable({ range: dateRange, start, end });
+		downloadSalesReportPDF(data.data.order, data.data.startDate, data.data.endDate);
 	};
-    const generateExcelReport = async() => {
-        toast.success("Downloading report")
-        const data = await getSalesReportDownloadable({range : dateRange , start ,end, })
-		downloadSalesReportExcel(data.data.order , data.data.startDate , data.data.endDate);
-
-    }
+	const generateExcelReport = async () => {
+		toast.success("Downloading report");
+		const data = await getSalesReportDownloadable({ range: dateRange, start, end });
+		downloadSalesReportExcel(data.data.order, data.data.startDate, data.data.endDate);
+	};
 	const column = [
 		{ label: "ORDER ID", key: "_id" },
 		{ label: "Date", key: "createdAt", render: (val) => new Date(val).toDateString() },
@@ -45,19 +48,38 @@ const SalesReport = () => {
 	];
 
 	return (
-		<div>
+		<>
 			<Header heading="Sales  Report" />
-			<div className="flex gap-10 m-10">
-				<IconCards icon={<Package2 size={35} />} value={data?.data?.grandTotalOrder} label={"Overall sales count"} />
-				<IconCards icon={<PackageMinus size={35} />} value={data?.data?.grandTotalAmount.toFixed(2) || 0} label={"Overall order amount"} />
-				<IconCards icon={<PackageMinus size={35} />} value={data?.data?.grandTotalDiscount?.toFixed(2) || 0} label={"Overall order discount"} />
-				<IconCards icon={<PackageMinus size={35} />} value={data?.data?.totalCouponDiscountAmount?.toFixed(2) || 0} label={"Overall coupon discount"} />
+			<div className="flex gap-10 md:p-10 m-1 w-full  box-border overflow-scroll">
+				<IconCards
+					icon={<Package2 size={35} />}
+					value={data?.data?.grandTotalOrder}
+					label={"Overall sales count"}
+				/>
+				<IconCards
+					icon={<PackageMinus size={35} />}
+					value={data?.data?.grandTotalAmount.toFixed(2) || 0}
+					label={"Overall order amount"}
+				/>
+				<IconCards
+					icon={<PackageMinus size={35} />}
+					value={data?.data?.grandTotalDiscount?.toFixed(2) || 0}
+					label={"Overall order discount"}
+				/>
+				<IconCards
+					icon={<PackageMinus size={35} />}
+					value={data?.data?.totalCouponDiscountAmount?.toFixed(2) || 0}
+					label={"Overall coupon discount"}
+				/>
 				{/* <IconCards icon={<PackageMinus size={35} />} value={200 || 0} label={"Overall Discount"} /> */}
 			</div>
-			<div className="px-10 py-4 flex items-start space-x-4 mx-10 rounded-xl bg-gray-300" style={{ padding: "16px", borderRadius: "16px" }}>
+			<div
+				className="px-4  py-4   w-full box-border flex sm:flex-row flex-col md:justify-between items-start md:items-center md:space-y-0 md:space-x-4 rounded-xl bg-gray-300"
+				style={{ borderRadius: "16px" }}
+			>
 				{/* 1. Date Range Dropdown & Filter Label */}
-				<div className="flex items-center gap-5">
-					<p className="text-sm font-semibold text-black mb-2 ">Report Duration</p>
+				<div className="flex  items-center gap-5 w-full md:w-auto">
+					<p className="text-sm font-semibold text-black ">Report Duration</p>
 
 					{/* Dropdown */}
 					<select
@@ -73,7 +95,7 @@ const SalesReport = () => {
 								setShowDatePicker(false);
 							}
 						}}
-						className="bg-gray-700 text-white px-4 py-3 rounded-lg outline-none border border-gray-600 focus:ring-2 focus:ring-indigo-500"
+						className="bg-gray-700 text-white px-4 py-3 rounded-lg outline-none border w-1/2 min-w-[150px] md:w-auto border-gray-600 focus:ring-2 focus:ring-indigo-500"
 					>
 						<option value="today">Today</option>
 						<option value="last7days">Last 7 Days</option>
@@ -85,14 +107,11 @@ const SalesReport = () => {
 				</div>
 
 				{/* 2. Action Buttons */}
-				<div className="flex space-x-4 items-end h-full">
-					{/* Generate Report Button */}
-
+				<div className="flex w-full md:w-auto space-x-4">
+					{/* Download PDF Button */}
 					<button
-						type="button"
-						onClick={generatePdfReport}
-						// disabled={!reportData || isGenerating}
-						className="px-6 py-3 bg-green-500 text-white font-bold rounded-xl shadow-lg hover:bg-green-600 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+						// ... button logic ...
+						className="px-6 py-3 w-1/2 bg-green-500 box-border text-white font-bold rounded-xl shadow-lg hover:bg-green-600 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
 						style={{ backgroundColor: "#48bb78" }}
 					>
 						Download PDF
@@ -100,10 +119,8 @@ const SalesReport = () => {
 
 					{/* Download Excel Button */}
 					<button
-						type="button"
-						 onClick={generateExcelReport}
-						// disabled={!reportData || isGenerating}
-						className="px-6 py-3 bg-pink-600 text-white font-bold rounded-xl shadow-lg hover:bg-pink-700 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+						// ... button logic ...
+						className="px-6 py-3 w-1/2 bg-pink-600 text-white box-border font-bold rounded-xl shadow-lg hover:bg-pink-700 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
 						style={{ backgroundColor: "#e93b8d" }}
 					>
 						Download Excel
@@ -141,7 +158,7 @@ const SalesReport = () => {
 					setPage(x);
 				}}
 			/>
-		</div>
+		</>
 	);
 };
 export default SalesReport;

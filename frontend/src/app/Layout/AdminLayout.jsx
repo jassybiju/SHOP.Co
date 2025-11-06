@@ -58,7 +58,7 @@ const AdminLayout = () => {
 
     return (
 
-            <div className="flex min-h-screen">
+            <div className="flex min-h-screen w-full ">
                 {/* <ShowModal /> */}
 
                 {/* Sidebar */}
@@ -69,7 +69,7 @@ const AdminLayout = () => {
                 />
 
                 {/* Main content area */}
-                <main className={`flex-1 bg-gray-100  min-h-screen ${isOpen ? 'translate-x-0 z-[100]' : '-translate-x-0'} md:translate-x-0 md:w-1/4`}>
+                <main className={`flex-1 bg-gray-100  min-h-screen w-full overflow-x-auto   ${isOpen ? 'translate-x-0 ' : '-translate-x-0'} md:translate-x-0 `}>
                     <Outlet context={{ isOpen, setIsOpen }} />
                 </main>
             </div>

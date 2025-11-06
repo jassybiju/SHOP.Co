@@ -13,7 +13,7 @@ import {
     ArrowLeft,
     Check,
     Mail,
-    
+
 } from "lucide-react";
 import { useLogoutUser } from "../../../Auth/hooks/useAuth";
 import Navbar from "../../components/Navbar";
@@ -34,7 +34,7 @@ export default function Home() {
     console.log(res);
     console.log(status)
     if(status!=='success'){
-      return Loader
+      return <Loader/>
     }
     return (
         <div className="min-h-screen bg-white">
@@ -135,8 +135,8 @@ export default function Home() {
             {/* Brand Logos */}
             <section className="bg-black py-12">
                 <div className=" flex justify-center w-full">
-                    <div className="flex w-[90vw]  gap-15 items-center justify-evenly  flex-nowrap ">
-                        <img 
+                    <div className="flex w-full overflow-hidden  gap-15 items-center justify-evenly  flex-nowrap ">
+                        <img
                             src={versace_logo}
                             alt="VERSACE"
                             className="h-6 md:h-8 w-full opacity-80"
@@ -178,13 +178,13 @@ export default function Home() {
                         {res.data.new_arrivals.map((x) => (
                            <ProductCard product={x}/>
                         ))}
-                      
 
-                      
+
+
                     </div>
 
                     <div className="text-center">
-                        <Link 
+                        <Link
                         to={'/search?sort=createdAt&order=desc'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"
@@ -206,16 +206,16 @@ export default function Home() {
                     <h2 className="font-bakbak text-4xl font-bold text-center mb-12">
                         Top Selling
                     </h2>
-                        
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         {/* Product 1 */}
                         {res.data.top_selling.map(x => (
                       <ProductCard product={x}/>
 ))}
-                      </div>   
+                      </div>
 
                     <div className="text-center">
-                        <Link 
+                        <Link
                             to={'/search?sort=createdAt&order=desc'}
                             variant="outline"
                             className="border-gray-300 px-12 py-3 font-poppins"

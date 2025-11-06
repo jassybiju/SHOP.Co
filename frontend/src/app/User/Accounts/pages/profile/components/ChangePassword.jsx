@@ -21,14 +21,14 @@ const ChangePassword = () => {
     })};
     console.log(errors)
     return (
-        <div className="w-3/5 mx-auto shadow-xl ring ring-gray-200 rounded-xl px-20 py-10 ">
+        <>
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2 ">
                 <span>Change Password</span>{" "}
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="relative">
                     <InputComponent label={'Old password'} register={register("old_password", {
                                 required: "Password is required",
-                             
+
                             })}   error={errors?.old_password} />
                         <Link to={'/auth/forget-password'} className="text-sm text-right w-full block text-red-400 relative -top-5 z-1000 hover:text-red-600">forget password ?</Link>
                     <InputComponent label={'New password'} register={register("password", {
@@ -52,9 +52,9 @@ const ChangePassword = () => {
                             })}
                             error={errors?.confirm_password}/>
 
-                    
-                        
-                        <Button 
+
+
+                        <Button
                         type='submit'
                             className={"h-min mt-2"}
                             disabled={status === "pending"}
@@ -67,11 +67,11 @@ const ChangePassword = () => {
                                 </div>
                             }
                         />
-                    
-                
+
+
             </form>
             {/* <ChangeUserEmail/> */}
-        </div>
+        </>
     );
 };
 export default ChangePassword;

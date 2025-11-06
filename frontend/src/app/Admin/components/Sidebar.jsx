@@ -11,15 +11,16 @@ import useConfirmationModal from "../hooks/useConfirmationModal";
 const Sidebar = ({ navList = [], isOpen, setIsOpen }) => {
   const { data: user } = useUser();
   const { mutate: logout } = useLogoutUser();
+
   const confirmation = useConfirmationModal()
   return (
     <>
       {/* Sidebar */}
       <div
         className={`
-          relative top-0 left-0 h-screen  bg-white shadow-md flex flex-col
+          md:relative absolute top-0 left-0 h-screen  bg-white shadow-md flex flex-col
           transform transition-transform duration-300 ease-in-out w-0
-          ${isOpen ? " translate-x-0 z-[100]" : "-translate-x-full w-0"}
+          ${isOpen ? " translate-x-0 z-1 w-96 absolute" : "-translate-x-full w-0"}
            md:translate-x-0 md:w-64 lg:w-96
         `}
       >

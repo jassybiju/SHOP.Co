@@ -1,4 +1,4 @@
-import { useGetProduct } from "@/app/Admin/hooks/useProductManagement";
+import { useProduct } from "@/app/Home/hooks/useProduct"
 import { useUpdateCartItems } from "@/app/User/hooks/useCart";
 import Loader from "@/components/Loader";
 import { useModal } from "@/hooks/useModal";
@@ -10,7 +10,8 @@ const ShowVariantsModal = ({ id }) => {
     const {mutate : addToCart } = useUpdateCartItems()
 	const [selectedVariant, setSelectedVariant] = useState("");
 	const [quantity, setQuantity] = useState(0);
-	const { data, status } = useGetProduct(id);
+	const { data, status } = useProduct(id);
+    console.log(data)
     const {closeModal} = useModal()
 	if (status === "pending") {
 		return <Loader />;
@@ -39,19 +40,20 @@ const ShowVariantsModal = ({ id }) => {
 			{" "}
 			<h1 className="font-bold uppercase text-center pb-10">Select variant to add to Cart</h1>
 			<div className="flex gap-3 flex-wrap">
-				{data?.data?.variants.map((variant, index) => (
+				{data?.variants.map((variant, index) => (
 					<button
 						key={index}
-						onClick={() => setSelectedVariant(variant)}
+						onClick={() => (variant.stock !== 0) && setSelectedVariant(variant)}
 						className={` border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
-							selectedVariant === variant ? "bg-gray-variant border-gray-400" : "bg-gray-variant  hover:border-gray-300"
+							selectedVariant === variant ? "bg-gray-variant border-gray-800" : "bg-gray-variant  hover:border-gray-300"
 						} flex items-center gap-2 ${variant.stock === 0 && "bg-red-400"}`}
 					>
 						{variant.size}{" "}
 						<div
-							className="w-4  h-4 rounded-full"
+							className="w-4  h-4 border-black border-1 rounded-full"
 							style={{
 								backgroundColor: variant.color,
+
 							}}
 						></div>
 						{/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}

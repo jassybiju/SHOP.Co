@@ -9,3 +9,11 @@
   --color-primary-500 : rgb(120 , 72, 244),
 
 }
+
+html, body{
+    width : 100vw;
+}
+
+#root {
+    width : 100%
+}

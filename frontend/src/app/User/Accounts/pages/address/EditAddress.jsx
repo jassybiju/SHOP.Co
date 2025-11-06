@@ -59,7 +59,7 @@ const EditAddress = ({id : propId}) => {
     };
 
     return (
-        <div className="w-3/5 mx-auto shadow-xl ring bg-white ring-gray-200 rounded-xl px-20 py-10 ">
+        <>
             <div className="pb-5 mb-5 flex justify-between text-2xl font-normal border-b-2">
                 <span className='flex items-center gap-2'><Link to={-1}><ChevronLeft/></Link> Edit Address</span> <span>Personal Information</span>
             </div>
@@ -163,7 +163,7 @@ const EditAddress = ({id : propId}) => {
                     />
                 </div>
             </form>
-        </div>
+        </>
     );
 };
 
