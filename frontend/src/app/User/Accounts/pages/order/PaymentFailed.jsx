@@ -1,6 +1,6 @@
 import Footer from "@/app/Home/components/Footer";
 import Navbar from "@/app/Home/components/Navbar";
-import { orderAxiosInstance } from "@/lib/axios";
+import { axiosInstance } from "@/lib/axios";
 import { displayRazorpay } from "@/utils/displayRazorpay";
 import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -51,8 +51,8 @@ const PaymentFailed = () => {
 								},
 								(response) => {
 									console.log(response);
-									orderAxiosInstance
-										.post("./verify-payment", {
+									axiosInstance
+										.post("order/verify-payment", {
 											razorpay_order_id:
 												response.razorpay_order_id,
 											razorpay_payment_id:
@@ -78,7 +78,7 @@ const PaymentFailed = () => {
 								},
 								() => {
 									toast.error("Error i payemnt");
-									orderAxiosInstance.patch("/payment-cancelled", {
+									axiosInstance.patch("order/payment-cancelled", {
 										razorpay_order_id,
 									});
 								}

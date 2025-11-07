@@ -125,14 +125,18 @@ const ProductManagement = () => {
 	];
 
 	return (
-		<div>
-			<Header heading="Product Mangement" />
-			<div className="flex gap-10 m-10">
+	<div>
+			<Header heading="Product Management" />
+
+			{/* Icon Cards */}
+			<div className="flex flex-wrap gap-5 m-5 sm:m-10">
 				<IconCards icon={<Package2 size={35} />} value={products.total_products} label={"total products"} />
 				<IconCards icon={<PackageMinus size={35} />} value={products.blocked_products || 0} label={"Blocked products"} />
 			</div>
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
+
+			{/* Search & Filter Section */}
+			<div className="flex flex-col sm:flex-row sm:justify-between gap-4 mx-4 sm:mx-6">
+				<div className="flex flex-col sm:flex-row gap-4 sm:w-[70%] w-full">
 					<Search
 						value={params.search}
 						onChange={(e) =>
@@ -153,21 +157,25 @@ const ProductManagement = () => {
 						options={productFilterOptions}
 					/>
 				</div>
+
 				<Link
-					type="submit"
-					className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
 					to={"add"}
+					className="bg-violet-700 hover:bg-violet-500 text-white text-center rounded px-6 py-2 sm:px-10 sm:py-2 text-lg sm:text-xl w-full sm:w-auto"
 				>
 					Add Product
 				</Link>
 			</div>
-			<TableComponent
-				data={products?.data}
-				column={column}
-				pages={products.pages}
-				page={products.page}
-				onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
-			/>
+
+			{/* Table */}
+			<div className="overflow-x-auto mt-4 sm:mt-6">
+				<TableComponent
+					data={products?.data}
+					column={column}
+					pages={products.pages}
+					page={products.page}
+					onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
+				/>
+			</div>
 		</div>
 	);
 };

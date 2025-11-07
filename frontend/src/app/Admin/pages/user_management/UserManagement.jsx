@@ -105,59 +105,70 @@ const UserManagement = () => {
 	}
 
 	return (
-		<div>
-			<Header heading="User Management" />
-			<div className="flex gap-10 m-10">
-				<IconCards icon={<User size={35} />} value={users.total_users} label={"total users"} />
-				<IconCards icon={<User size={35} />} value={users.blocked_users || 0} label={"Blocked users"} />
-			</div>
-			<div className="flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
-					<Search
-						value={params.search}
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								search: e.target.value,
-							}))
-						}
-					/>
-					<Dropdown
-						label={"Sort By"}
-						options={SortOptions}
-						// value={Object.keys(SORT_OPTION_CONSTANT).find(
-						//     (key) => SORT_OPTION_CONSTANT[key] === params.sort
-						// )}
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								...SORT_OPTION_CONSTANT[e.target.value],
-							}))
-						}
-					/>
-					<Dropdown
-						label="Filter By"
-						options={filterOptions}
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								filter: e.target.value,
-							}))
-						}
-					/>
-				</div>
-				<button onClick={showConfirmation} className="hover:text-gray-700 h-auto px-10  rounded  text-xl  bg-violet-700 hover:bg-violet-500 text-white">
-					Export
-				</button>
-			</div>
-			<TableComponent
-				data={users.data}
-				column={column}
-				pages={users.pages}
-				page={users.page}
-				onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
+<div>
+	<Header heading="User Management" />
+
+	{/* Summary Cards */}
+	<div className="flex flex-wrap gap-6 m-6">
+		<IconCards icon={<User size={35} />} value={users.total_users} label={"Total Users"} />
+		<IconCards icon={<User size={35} />} value={users.blocked_users || 0} label={"Blocked Users"} />
+	</div>
+
+	{/* Filters & Search */}
+	<div className="flex flex-col md:flex-row md:justify-between gap-6 mx-6">
+		{/* Left controls */}
+		<div className="flex flex-col sm:flex-row flex-wrap gap-4 w-full md:w-[70%]">
+			<Search
+				value={params.search}
+				onChange={(e) =>
+					setParams((state) => ({
+						...state,
+						search: e.target.value,
+					}))
+				}
+			/>
+			<Dropdown
+				label="Sort By"
+				options={SortOptions}
+				onChange={(e) =>
+					setParams((state) => ({
+						...state,
+						...SORT_OPTION_CONSTANT[e.target.value],
+					}))
+				}
+			/>
+			<Dropdown
+				label="Filter By"
+				options={filterOptions}
+				onChange={(e) =>
+					setParams((state) => ({
+						...state,
+						filter: e.target.value,
+					}))
+				}
 			/>
 		</div>
+
+		{/* Export button */}
+		<button
+			onClick={showConfirmation}
+			className="bg-violet-700 hover:bg-violet-500 text-white text-lg rounded px-6 py-2 w-full sm:w-auto self-start md:self-center"
+		>
+			Export
+		</button>
+	</div>
+
+	{/* Table */}
+	<div className="mt-6 mx-4 overflow-x-auto">
+		<TableComponent
+			data={users.data}
+			column={column}
+			pages={users.pages}
+			page={users.page}
+			onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
+		/>
+	</div>
+</div>
 	);
 };
 export default UserManagement;

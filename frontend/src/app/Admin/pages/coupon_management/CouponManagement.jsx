@@ -34,8 +34,11 @@ const CouponManagement = () => {
 	if (getCouponStatus === "pending") return <Loader2 />;
 
 	const column = [
-		{ label: "Sl No", render: (val) => val },
-		{ label: "Code", key: "code" },
+{
+			label: "Sl No",
+			key: "_id",
+			render: (_, row, data) => data.indexOf(row) + 1,
+		},		{ label: "Code", key: "code" },
 		{
 			label: "Discount",
 			render: (_, row) => (
@@ -55,37 +58,40 @@ const CouponManagement = () => {
 	return (
 		<div>
 			<Header heading="Coupon Management" />
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
-					<Search
-						value={params.q}
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								q: e.target.value,
-							}))
-						}
-					/>
-					<Dropdown
-						label="Filter by"
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								filter: e.target.value,
-							}))
-						}
-						options={filterOptions}
-					/>
-				</div>
-				<button
-					type="submit"
-					className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
-					onClick={showAddCoupon}
-				>
-					Add Coupon
-				</button>
-			</div>
+		 {/* Top Filter Section */}
+      <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-6 mt-6 mb-6">
+        {/* Search + Dropdown */}
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-[60%]">
+          <Search
+            value={params.q}
+            onChange={(e) =>
+              setParams((state) => ({
+                ...state,
+                q: e.target.value,
+              }))
+            }
+          />
+          <Dropdown
+            label="Filter by"
+            onChange={(e) =>
+              setParams((state) => ({
+                ...state,
+                filter: e.target.value,
+              }))
+            }
+            options={filterOptions}
+          />
+        </div>
 
+        {/* Add Button */}
+        <button
+          type="submit"
+          className="hover:text-gray-700 flex justify-center rounded px-6 sm:px-10 py-2 text-lg sm:text-xl items-center bg-violet-700 hover:bg-violet-500 text-white w-full sm:w-auto"
+          onClick={showAddCoupon}
+        >
+          Add Coupon
+        </button>
+      </div>
 			<TableComponent data={couponRes?.data?.coupons} column={column} pages={couponRes?.data?.pages} page={Number(couponRes.data?.page)} onPageChange={(s)=>setParams(x => ({...x, page : s}))}/>
 		</div>
 	);

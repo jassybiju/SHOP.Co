@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { useGetAllProductStatus, useRestokeProduct } from "../../hooks/useStockManagement";
-import useConfirmationModal from "../../hooks/useConfirmationModal";
+import { useGetAllProductStatus,  } from "../../hooks/useStockManagement";
 import Header from "../../components/Header";
-import IconCards from "../../components/IconCards";
-import { Package2, PackageMinus } from "lucide-react";
 import Dropdown from "../../../../components/Dropdown";
-import { productFilterOptions } from "@/utils/CONSTANTS";
 import TableComponent from "../../components/TableComponent";
 import Search from "../../components/Search";
 import RestokeInput from "./components/RestokeInput";
@@ -19,7 +14,6 @@ const FILTER_OPTIONS = [
 ];
 
 const StockManagement = () => {
-	const navigate = useNavigate();
 	const [params, setParams] = useState({
 		search: "",
 		sort: "created at - asc",
@@ -40,7 +34,6 @@ const StockManagement = () => {
 		// console.log(users?.page , params?.page)
 	}, [params, products]);
 
-	const showConfirmation = useConfirmationModal();
 
 	if (status !== "success") {
 		return "Loading";
@@ -114,13 +107,24 @@ const StockManagement = () => {
 
 	return (
 		<div>
-			<Header heading="Product Mangement" />
-			<div className="flex gap-10 m-10">
-				<IconCards icon={<Package2 size={35} />} value={products.total_products} label={"total products"} />
-				<IconCards icon={<PackageMinus size={35} />} value={products.blocked_products || 0} label={"Blocked products"} />
-			</div>
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
+			<Header heading="Stock Mangement" />
+			{/* Top Cards */}
+			{/* <div className="flex flex-col sm:flex-row sm:gap-10 gap-4 sm:m-10 m-4">
+				<IconCards
+					icon={<Package2 size={35} />}
+					value={products.total_products}
+					label={"Total Products"}
+				/>
+				<IconCards
+					icon={<PackageMinus size={35} />}
+					value={products.blocked_products || 0}
+					label={"Blocked Products"}
+				/>
+			</div> */}
+
+			{/* Search & Filter Row */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mx-3 sm:mx-6 mt-3">
+				<div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-[70%]">
 					<Search
 						value={params.search}
 						onChange={(e) =>
@@ -141,6 +145,7 @@ const StockManagement = () => {
 						options={FILTER_OPTIONS}
 					/>
 				</div>
+			</div>
 				{/* <Link
                     type="submit"
                     className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
@@ -148,7 +153,6 @@ const StockManagement = () => {
                 >
                     Add Product
                 </Link> */}
-			</div>
 			<TableComponent
 				data={products?.data.data}
 				column={column}

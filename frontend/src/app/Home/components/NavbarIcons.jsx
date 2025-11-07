@@ -6,7 +6,6 @@ import ProfileDropdown from "../../../components/ProfileDropdown";
 import { Link, useNavigate } from "react-router";
 import useConfirmationModal from "@/app/Admin/hooks/useConfirmationModal";
 import { useLogoutUser } from "@/app/Auth/hooks/useAuth";
-import Search from "@/app/Admin/components/Search";
 
 const NavbarIcons = () => {
 	const navigate = useNavigate();

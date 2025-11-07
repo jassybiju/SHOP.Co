@@ -1,10 +1,7 @@
 import { Package2, PackageMinus } from "lucide-react";
 import Header from "../../components/Header";
 import IconCards from "../../components/IconCards";
-import Dropdown from "@/components/Dropdown";
-import DateRangeDropdown from "./components/DateRangeDropdown";
-import { useEffect, useState } from "react";
-import { calculateDateRange } from "@/utils/datesUtil";
+import {  useState } from "react";
 import { useGetSalesReport } from "../../hooks/useSalesReport";
 import TableComponent from "../../components/TableComponent";
 import {
@@ -13,6 +10,8 @@ import {
 	getSalesReportDownloadable,
 } from "../../services/sales-report.service";
 import toast from "react-hot-toast";
+import DownloadOrderInvoice from "./components/DownloadOrderInvoice";
+import Loader from "@/components/Loader";
 
 const SalesReport = () => {
 	const [dateRange, setDateRange] = useState("today");
@@ -21,13 +20,14 @@ const SalesReport = () => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [page, setPage] = useState(1);
 
-	const { data, refetch } = useGetSalesReport({ range: dateRange, start, end, page: page, limit: 4 });
+	const { data , status} = useGetSalesReport({ range: dateRange, start, end, page: page, limit: 4 });
+
+    if(status === 'pending'){
+        return <Loader/>
+    }
+
 
 	// useEffect(()=>{generateReport()},[gne])
-	const generateReport = () => {
-		console.log(123);
-		refetch();
-	};
 
 	const generatePdfReport = async () => {
 		const data = await getSalesReportDownloadable({ range: dateRange, start, end });
@@ -45,12 +45,13 @@ const SalesReport = () => {
 		{ label: "Payment Methods", key: "payment_method" },
 		{ label: "Payment Status", key: "payment_status" },
 		{ label: "Status", key: "status_history", render: (val) => val.slice(-1)[0].status },
+		{ label: "Status", key: "_id", render: (val) => (<DownloadOrderInvoice orderId={val}></DownloadOrderInvoice>) },
 	];
 
 	return (
 		<>
 			<Header heading="Sales  Report" />
-			<div className="flex gap-10 md:p-10 m-1 w-full  box-border overflow-scroll">
+			<div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 p-4 md:p-8 w-full box-border">
 				<IconCards
 					icon={<Package2 size={35} />}
 					value={data?.data?.grandTotalOrder}
@@ -58,7 +59,7 @@ const SalesReport = () => {
 				/>
 				<IconCards
 					icon={<PackageMinus size={35} />}
-					value={data?.data?.grandTotalAmount.toFixed(2) || 0}
+					value={data?.data?.grandTotalAmount?.toFixed(2) || 0}
 					label={"Overall order amount"}
 				/>
 				<IconCards
@@ -71,8 +72,8 @@ const SalesReport = () => {
 					value={data?.data?.totalCouponDiscountAmount?.toFixed(2) || 0}
 					label={"Overall coupon discount"}
 				/>
-				{/* <IconCards icon={<PackageMinus size={35} />} value={200 || 0} label={"Overall Discount"} /> */}
 			</div>
+
 			<div
 				className="px-4  py-4   w-full box-border flex sm:flex-row flex-col md:justify-between items-start md:items-center md:space-y-0 md:space-x-4 rounded-xl bg-gray-300"
 				style={{ borderRadius: "16px" }}
@@ -111,6 +112,7 @@ const SalesReport = () => {
 					{/* Download PDF Button */}
 					<button
 						// ... button logic ...
+                        onClick={generatePdfReport}
 						className="px-6 py-3 w-1/2 bg-green-500 box-border text-white font-bold rounded-xl shadow-lg hover:bg-green-600 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
 						style={{ backgroundColor: "#48bb78" }}
 					>
@@ -119,6 +121,7 @@ const SalesReport = () => {
 
 					{/* Download Excel Button */}
 					<button
+                    onClick={generateExcelReport}
 						// ... button logic ...
 						className="px-6 py-3 w-1/2 bg-pink-600 text-white box-border font-bold rounded-xl shadow-lg hover:bg-pink-700 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
 						style={{ backgroundColor: "#e93b8d" }}

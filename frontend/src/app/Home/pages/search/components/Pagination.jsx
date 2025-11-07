@@ -1,7 +1,7 @@
 import { useResponsive } from "@/hooks/useResponsive";
 import { ChevronLeft, ChevronRight, MoveLeft, MoveRight } from "lucide-react";
 
-const Pagination = ({ page, pages, onPageChange }) => {
+const Pagination = ({ page, pages = 1, onPageChange }) => {
 	console.log(pages);
     const {isMobile} = useResponsive()
 	const pagesAr = Array.from({ length: pages }, (_, i) => i);

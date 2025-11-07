@@ -115,8 +115,8 @@ const CategoryMangement = () => {
 	return (
 		<div>
 			<Header heading="Category Mangement" />
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
+			<div className=" flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-6 mx-3 sm:mx-6 flex-wrap">
+				<div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-[60%]">
 					<Search
 						value={params.search}
 						onChange={(e) =>
@@ -149,7 +149,7 @@ const CategoryMangement = () => {
 				</div>
 				<button
 					type="submit"
-					className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
+					className="w-full sm:w-auto hover:text-gray-700 h-auto flex justify-center rounded px-6 sm:px-10 py-2 gap-3 text-base sm:text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
 					onClick={showAddCategoryModal}
 				>
 					Add Category

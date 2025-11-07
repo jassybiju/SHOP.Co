@@ -1,12 +1,11 @@
 import { useAddWishlistItems, useRemoveWishlistItems } from "@/app/User/hooks/useWishlist";
 import ModalWrapper from "@/components/ModalWrapper";
-import { BatteryWarning, Minus, Plus, Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { BatteryWarning, Trash2 } from "lucide-react";
 import ShowVariantsModal from "./ShowVariantsModal";
 import { useModal } from "@/hooks/useModal";
 import { useResponsive } from "@/hooks/useResponsive";
 
-export const ProductCard = ({ data, disabled = true, is_blocked = false }) => {
+export const ProductCard = ({ data, is_blocked = false }) => {
 	const { mutate: updateWishlistItem, status } = useAddWishlistItems();
 	const { mutate: removeWishlistItem, status: removeStatus } = useRemoveWishlistItems();
 	const { isMobile } = useResponsive();
@@ -36,11 +35,11 @@ export const ProductCard = ({ data, disabled = true, is_blocked = false }) => {
 			{/* Left Side - Image and Info */}
 			<div className="flex h-full w-max  gap-5 ">
 				<img src={data.image} alt="" className="md:w-35 w-20 md:h-35 h-20 rounded" />
-				<div className="flex flex-col justify-evenly h-full">
-					<h1 className="font-hero md:text-xl text-sm">{data.name}</h1>
+				<div className="flex flex-col justify-evenly h-full w-full">
+					<h1 className="font-hero md:text-xl text-sm w-full overflow-hidden">{data.name}</h1>
 
 					<h1 className="font-hero text-xl">
-						${data.price} {data.quantity}
+						${data.price}
 					</h1>
 					{is_blocked && (
 						<p className="text-red-500">

@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import BreadCrumb from "@/app/Home/components/BreadCrumb";
 import { ProductCard } from "../../components/ProductCart";
 import Loader from "@/components/Loader";
-import { redirect, useLocation, useNavigate } from "react-router";
+import {  useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import CouponInput from "./components/CouponInput";
 import { MoveRight } from "lucide-react";
@@ -13,7 +13,7 @@ import AddAddress from "../../Accounts/pages/address/AddAddress";
 import { useModal } from "@/hooks/useModal";
 import { usePlaceOrder } from "../../hooks/useOrder";
 import { displayRazorpay } from "@/utils/displayRazorpay";
-import { orderAxiosInstance } from "@/lib/axios";
+import { axiosInstance } from "@/lib/axios";
 const Checkout = () => {
 	// s
 	const { state } = useLocation();
@@ -24,7 +24,7 @@ const Checkout = () => {
 
 	const { mutate: placeOrder, status: placeOrderStatus } = usePlaceOrder();
 	const [paymentMethod, setPaymentMethod] = useState("COD");
-	const [placedOrder, setPlacedOrder] = useState(false);
+	// const [placedOrder, setPlacedOrder] = useState(false);
 	const navigate = useNavigate();
 	const { openModal, closeModal } = useModal();
 	const [selectedAddress, setSelectedAddress] = useState();
@@ -61,7 +61,6 @@ const Checkout = () => {
 	};
 
 	const onPlaceOrder = () => {
-		setPlacedOrder(true);
 		placeOrder(
 			{
 				order_items: cart.map((x) => ({
@@ -84,8 +83,8 @@ const Checkout = () => {
 							data.data.razorpay_order,
 							(response) => {
 								console.log(response);
-								orderAxiosInstance
-									.post("/verify-payment", {
+								axiosInstance
+									.post("order/verify-payment", {
 										razorpay_order_id: response.razorpay_order_id,
 										razorpay_payment_id: response.razorpay_payment_id,
 										razorpay_signature: response.razorpay_signature,
@@ -105,6 +104,7 @@ const Checkout = () => {
 														data?.data?.order
 															.payment_method,
 												},
+                                                replace : true
 											});
 											// return window.location.href = '/order/susccessful'
 										} else {
@@ -120,7 +120,7 @@ const Checkout = () => {
 											// return window.location.href = '/order/paymsent-failed'
 										}
 									})
-									.catch((e) => {
+									.catch(() => {
 										console.log(3);
 										return navigate("/order/paydment-failed");
 									});
@@ -128,7 +128,7 @@ const Checkout = () => {
 							() => {
 								window.location.href = `/order/failed?orderId=${data.data.razorpay_order.id}&amount=${data.data.razorpay_order.amount.toString()}`;
 								toast.error("Payment popul closed");
-								orderAxiosInstance.patch("/payment-cancelled", {
+								axiosInstance.patch("order/payment-cancelled", {
 									razorpay_order_id: data.data.razorpay_order.id,
 								});
 							}
@@ -356,7 +356,7 @@ const Checkout = () => {
 									Place Order <MoveRight />{" "}
 								</div>
 							}
-							disabled={placedOrder}
+							disabled={placeOrderStatus === 'pending'}
 							loadingLabel={
 								<div className="flex gap-2 justify-center">
 									Placing Order <MoveRight />{" "}

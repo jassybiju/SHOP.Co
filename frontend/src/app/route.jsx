@@ -183,6 +183,7 @@ export const router = createBrowserRouter(
                         </Route>
                     </Route>
                 </Route>
+                <Route path="*" element={<>404</>}></Route>
             </Route>
         </>
     )

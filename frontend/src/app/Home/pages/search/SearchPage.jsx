@@ -193,7 +193,7 @@ const SearchPage = () => {
 
 							{/* Categories */}
 							<div className="border-b border-black/10 pb-2 mb-6">
-								<div
+								<button
 									className="flex items-center justify-between mb-4"
 									onClick={() =>
 										setFilterToggle((state) => ({
@@ -204,13 +204,13 @@ const SearchPage = () => {
 								>
 									<h3 className="text-base font-semibold text-black">Categories</h3>
 									<ChevronDown className={`w-4 h-4 text-black ${filterToggle.category && "rotate-180"}`} />
-								</div>
+								</button>
 								{filterToggle.category && (
 									<div className="space-y-4 mb-6">
 										{data?.allCategories.map((category) => (
 											<div key={category} className="flex items-center gap-3">
 												{/* <Checkbox className="w-4 h-4 border-gray-400" /> */}
-												<label
+												<button
 													className={`text-sm text-black/60  cursor-pointer px-7 py-2 rounded w-full ${
 														params.category.includes(category)
 															? `bg-gray-400 text-white `
@@ -239,7 +239,7 @@ const SearchPage = () => {
 													// }
 												>
 													{category}
-												</label>
+												</button>
 											</div>
 										))}
 									</div>
@@ -248,7 +248,7 @@ const SearchPage = () => {
 
 							{/* Price Range */}
 							<div className="border-b border-black/10 pb-6 mb-6">
-								<div
+								<button
 									className="flex items-center justify-between mb-4"
 									onClick={() =>
 										setFilterToggle((state) => ({
@@ -259,7 +259,7 @@ const SearchPage = () => {
 								>
 									<h3 className="text-base font-semibold text-black">Price Range</h3>
 									<ChevronDown className={`w-4 h-4 text-black ${filterToggle.price && "rotate-180"} `} />
-								</div>
+								</button>
 								{filterToggle.price && (
 									<div className="space-y-4">
 										<div className="flex justify-between text-sm font-medium text-black">
@@ -314,7 +314,7 @@ const SearchPage = () => {
 
 							{/* Colors */}
 							<div className="border-b border-black/10 pb-6 mb-6">
-								<div
+								<button
 									className="flex items-center justify-between mb-4"
 									onClick={() =>
 										setFilterToggle((state) => ({
@@ -325,7 +325,7 @@ const SearchPage = () => {
 								>
 									<h3 className="text-base font-semibold text-black">Colors</h3>
 									<ChevronDown className={`w-4 h-4 text-black ${filterToggle.color && "rotate-180"}`} />
-								</div>
+								</button>
 								{filterToggle.color && (
 									<div className="grid grid-cols-5 gap-4">
 										{[
@@ -379,7 +379,7 @@ const SearchPage = () => {
 
 							{/* Sizes */}
 							<div className="border-b border-black/10 pb-6 mb-6">
-								<div
+								<button
 									className="flex items-center justify-between mb-4"
 									onClick={() =>
 										setFilterToggle((state) => ({
@@ -390,7 +390,7 @@ const SearchPage = () => {
 								>
 									<h3 className="text-base font-semibold text-black">Sizes</h3>
 									<ChevronDown className={`w-4 h-4 text-black ${filterToggle.size && "rotate-180"} `} />
-								</div>
+								</button>
 								{filterToggle.size && (
 									<div className="flex flex-wrap gap-2">
 										{(data?.allSizes ? data.allSizes : ["M", "XL"]).sort().map((size) => (
@@ -426,7 +426,7 @@ const SearchPage = () => {
 
 							{/* Brands */}
 							<div>
-								<div
+								<button
 									className="flex items-center justify-between mb-4"
 									onClick={() =>
 										setFilterToggle((state) => ({
@@ -437,13 +437,13 @@ const SearchPage = () => {
 								>
 									<h3 className="text-base font-semibold text-black">Brands</h3>
 									<ChevronDown className={`w-4 h-4 text-black ${filterToggle.brand && "rotate-180"}`} />
-								</div>
+								</button>
 								{filterToggle.brand && (
 									<div className="space-y-4">
 										{data.allBrands.map((brand) => (
 											<div key={brand} className="flex items-center gap-3">
 												{/* <Checkbox className="w-4 h-4 border-gray-400" /> */}
-												<label
+												<button
 													className={`text-sm text-black/60  cursor-pointer px-7 py-2 rounded w-full ${
 														params.brand.includes(brand)
 															? `bg-gray-400 text-white `
@@ -469,7 +469,7 @@ const SearchPage = () => {
 													// }
 												>
 													{brand}
-												</label>
+												</button>
 											</div>
 										))}
 									</div>

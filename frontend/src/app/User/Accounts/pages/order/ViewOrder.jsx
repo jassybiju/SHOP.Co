@@ -6,7 +6,7 @@ import DownloadOrder from "./utils/DownloadOrder";
 import { useCancelOrderItem, useGetOrder, useReturnOrderItem } from "@/app/User/hooks/useOrder";
 import useCommentModal from "@/hooks/useCommentModal";
 import { displayRazorpay } from "@/utils/displayRazorpay";
-import { orderAxiosInstance } from "@/lib/axios";
+import { axiosInstance } from "@/lib/axios";
 import toast from "react-hot-toast";
 
 const ViewOrder = () => {
@@ -19,7 +19,9 @@ const ViewOrder = () => {
 		return <Loader />;
 	}
 	console.log(orderData, status);
+
 	const { status_history, items, shipping_address_id, ...order } = orderData?.data || {};
+
 	return (
 		<>
 			<div className="pb-5 mb-5 flex justify-between text-2xl font-semibold border-b-2">
@@ -86,9 +88,31 @@ const ViewOrder = () => {
 							</div>
 							<div className="p-8">
 								<ol className="relative border-s-8 border-gray-300 ">
-									{status_history.map((x) => (
+									{status_history.map((x) => {
+                                        let status_color ;
+                                        switch(x.status){
+                                            case "PLACED":
+                                                status_color = 'bg-gray-400'
+                                                break
+                                            case "CONFIMED":
+                                                status_color = 'bg-blue-400'
+                                                break
+                                            case "PACKED":
+                                                status_color = 'bg-orange-400'
+                                                break
+                                            case "SHIPPED":
+                                                status_color = 'bg-purple-400'
+                                                break
+                                            case "DELIVERED":
+                                                status_color = 'bg-green-400'
+                                                break
+                                            default :
+                                                status_color = 'bg-red-500'
+                                        }
+                                        return (
+
 										<li key={x._id} className="mb-10 ms-6 group">
-											<span className="absolute flex items-center justify-center w-6 h-6  rounded-full -start-4 bg-gray-300   "></span>
+											<span className={"absolute flex items-center justify-center w-6 h-6  rounded-full -start-4    "+status_color}></span>
 											<h3 className="flex items-center mb-1 text-lg font-semibold text-gray-900 ">
 												ORDER {x.status}{" "}
 												<span className="ml-2 relative cursor-pointer">
@@ -110,7 +134,7 @@ const ViewOrder = () => {
 												).toLocaleString("en-EG")}
 											</time>
 										</li>
-									))}
+									)})}
 								</ol>
 							</div>
 						</div>
@@ -294,22 +318,22 @@ const ViewOrder = () => {
 					</div>
 					{orderData.data.total_amount}
 					<div className="md:w-2/4 w-full flex flex-col gap-2 ">
-						{/* <DownloadOrder order={orderData?.data} /> */}
+						<DownloadOrder order={orderData?.data} />
 						{/* {order.razorpay_order_id || "not-fding"} */}
 						{order.payment_status !== "PAID" && order.payment_method === "RAZORPAY" && (
 							<button
 								onClick={() =>
-									orderAxiosInstance
-										.patch(`${order._id}/repay`)
+									axiosInstance
+										.patch(`order/${order._id}/repay`)
 										.then((x) => {
 											console.log(x);
 											displayRazorpay(
 												x.data.data,
 												(response) => {
 													console.log(response);
-													orderAxiosInstance
+													axiosInstance
 														.post(
-															"./verify-payment",
+															"order/verify-payment",
 															{
 																razorpay_order_id:
 																	response.razorpay_order_id,

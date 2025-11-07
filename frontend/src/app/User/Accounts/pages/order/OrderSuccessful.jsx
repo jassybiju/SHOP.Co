@@ -4,9 +4,9 @@ import Navbar from "@/app/Home/components/Navbar";
 import { Link, useLocation, Navigate } from "react-router";
 
 const OrderSuccessful = () => {
-    const {state : {total_amount , payment_method, order_id}} = useLocation()
-
-    if(!order_id) {return <Navigate to='/'/>}
+    const {state } = useLocation()
+    if(!state ) {return <Navigate to='/'/>}
+    const  {total_amount , payment_method, order_id} = state
 
   return <div>
     <Navbar/>

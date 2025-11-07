@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 

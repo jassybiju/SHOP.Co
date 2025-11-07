@@ -206,10 +206,10 @@ const AddCoupon = () => {
                             {status === "pending" ? (
                                 <div className="flex gap-2">
                                     <Loader2 className="animate-spin" /> Adding
-                                    Brand
+                                    Coupon
                                 </div>
                             ) : (
-                                "Add Brand"
+                                "Add Coupon"
                             )}
                         </button>
                     </div>

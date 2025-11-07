@@ -28,60 +28,75 @@ export const ProductCard = ({ data , disabled , is_blocked = false}) => {
     const isRemoving = removeStatus === "pending";
 
     return (
-        <div
-            className={`relative bg-gray-50 shadow w-full h-40 rounded-2xl px-3 py-3 flex items-center justify-between transition-all duration-300 ${
-                isRemoving ? "opacity-60 pointer-events-none" : ""
-            }`}
-        >
-            {/* Left Side - Image and Info */}
-            <Link to={'/product/'+data.product_id} className="flex h-full gap-5" >
-                <img src={data.image} alt="" className="w-35 h-35 rounded" />
-                <div className="flex flex-col justify-evenly h-full">
-                    <h1 className="font-hero text-xl">{data.name}</h1>
-                    <p>
-                        Size :{" "}
-                        {
-                            {
-                                S: "Small",
-                                L: "Large",
-                                M: "Medium",
-                                XL: "Extra Large",
-                            }[data.size]
-                        }
-                    </p>
-                    <p>Color : {data.color}</p>
-                    <h1 className="font-hero text-xl">${data.price} * {data.quantity}</h1>
-                    {is_blocked && <p className="text-red-500"> <BatteryWarning/> Product is out of stock</p>}
-                </div>
-            </Link>
-           {!disabled && (
+		<div
+			className={`relative bg-gray-50 shadow w-full rounded-2xl px-4 py-4 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 transition-all duration-300 ${
+				isRemoving ? "opacity-60 pointer-events-none" : ""
+			}`}
+		>
+			{/* Left Side - Image and Info */}
+			<Link
+				to={"/product/" + data.product_id}
+				className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto"
+			>
+				<img
+					src={data.image}
+					alt={data.name}
+					className="w-full sm:w-32 h-40 sm:h-32 object-cover rounded-lg"
+				/>
+				<div className="flex flex-col justify-evenly text-center sm:text-left">
+					<h1 className="font-hero text-lg sm:text-xl">{data.name}</h1>
+					<p className="text-gray-600 text-sm sm:text-base">
+						Size: {{
+							S: "Small",
+							L: "Large",
+							M: "Medium",
+							XL: "Extra Large",
+						}[data.size]}
+					</p>
+					<p className="text-gray-600 text-sm sm:text-base">
+						Color: {data.color}
+					</p>
+					<h1 className="font-hero text-lg sm:text-xl">
+						${data.price} × {data.quantity}
+					</h1>
+					{is_blocked && (
+						<p className="text-red-500 flex items-center justify-center sm:justify-start gap-1 text-sm sm:text-base">
+							<BatteryWarning className="w-4 h-4" /> Product is out of stock
+						</p>
+					)}
+				</div>
+			</Link>
 
-            <div className="flex flex-col justify-between items-end h-full">
-                <button
-                    onClick={() => removeCartItem(data._id)}
-                    disabled={isRemoving}
-                >
-                    <Trash2 className="text-red-700 mx-3" />
-                </button>
-                <div className="flex gap-3 bg-gray-100 py-3 px-5 rounded-full items-center">
-                    <button
-                        onClick={() => onAddToCart(1)}
-                        disabled={status === "pending" || isRemoving}
-                        className="hover:bg-gray-300 border-8 border-neutral-50 rounded-full hover:border-gray-300"
-                    >
-                        <Plus />
-                    </button>
-                    {data.quantity}
-                    <button
-                        onClick={() => onAddToCart(-1)}
-                        disabled={status === "pending" || isRemoving}
-                        className="hover:bg-gray-300 border-8 border-black/0 rounded-full hover:border-gray-300"
-                    >
-                        <Minus />
-                    </button>
-                </div>
-            </div>
-            )}
-        </div>
-    );
+			{/* Right Side - Controls */}
+			{!disabled && (
+				<div className="flex sm:flex-col justify-between sm:items-end items-center w-full sm:w-auto gap-3">
+					<button
+						onClick={() => removeCartItem(data._id)}
+						disabled={isRemoving}
+						className="text-red-700 hover:text-red-800 transition-colors"
+					>
+						<Trash2 className="w-5 h-5" />
+					</button>
+
+					<div className="flex gap-4 bg-gray-100 py-2 px-5 rounded-full items-center">
+						<button
+							onClick={() => onAddToCart(1)}
+							disabled={status === "pending" || isRemoving}
+							className="hover:bg-gray-200 border-4 border-transparent rounded-full transition-all"
+						>
+							<Plus className="w-4 h-4" />
+						</button>
+						<span className="text-base font-medium">{data.quantity}</span>
+						<button
+							onClick={() => onAddToCart(-1)}
+							disabled={status === "pending" || isRemoving}
+							className="hover:bg-gray-200 border-4 border-transparent rounded-full transition-all"
+						>
+							<Minus className="w-4 h-4" />
+						</button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 };

@@ -1,13 +1,8 @@
 import React from "react";
-import {
-    X,
-} from "lucide-react";
-import { useUser } from "@/hooks/useUser";
 import {  NavLink,  } from "react-router";
 import NavbarIcons from "./NavbarIcons";
 const Navbar = () => {
     //User data
-    const { data: user } = useUser();
 
     return (
         <>

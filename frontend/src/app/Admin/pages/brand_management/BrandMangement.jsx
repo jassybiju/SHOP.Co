@@ -88,10 +88,11 @@ const BrandMangement = () => {
 	];
 
 	return (
-		<div>
+<div className="p-2 sm:p-4">
 			<Header heading="Brand Mangement" />
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
+
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mx-2 sm:mx-6 mt-3">
+				<div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-[60%]">
 					<Search
 						value={params.search}
 						onChange={(e) =>
@@ -112,22 +113,25 @@ const BrandMangement = () => {
 						}
 					/>
 				</div>
+
 				<button
 					type="submit"
-					className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
+					className="hover:text-gray-700 w-full sm:w-auto flex justify-center sm:justify-between items-center rounded px-6 sm:px-10 py-2 text-lg sm:text-xl bg-violet-700 hover:bg-violet-500 text-white"
 					onClick={showAddBrandModal}
 				>
 					Add Brand
 				</button>
 			</div>
-			<TableComponent
-				data={brands.data}
-				column={column}
-				pages={brands.pages}
-				page={brands.page}
-				onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
-			/>
-		</div>
-	);
+
+			<div className="mt-4 overflow-x-auto">
+				<TableComponent
+					data={brands.data}
+					column={column}
+					pages={brands.pages}
+					page={brands.page}
+					onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
+				/>
+			</div>
+		</div>	);
 };
 export default BrandMangement;

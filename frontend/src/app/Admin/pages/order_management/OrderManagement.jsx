@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import TableComponent from "../../components/TableComponent";
 import { Link } from "react-router";
 import Header from "../../components/Header";
-import IconCards from "../../components/IconCards";
-import { Package2, PackageMinus } from "lucide-react";
 import Search from "../../components/Search";
 import Dropdown from "../../../../components/Dropdown";
 import { useGetAllOrder } from "../../hooks/useOrderManagement";
@@ -106,37 +104,28 @@ const OrderManagement = () => {
 			),
 		},
 	];
-	const filterOptions = [
-		{ label: "Active", value: "isActive" },
-		{ label: "All Products", value: "AllProduct" },
-		{ label: "In Active", value: "isInActive" },
-	];
+	// const filterOptions = [
+	// 	{ label: "Active", value: "isActive" },
+	// 	{ label: "All Products", value: "AllProduct" },
+	// 	{ label: "In Active", value: "isInActive" },
+	// ];
 	console.log(orders);
 	return (
-		<div>
-			<Header heading="Product Mangement" />
-			<div className="flex gap-10 m-10">
-				<IconCards
-					icon={<Package2 size={35} />}
-					// value={products.total_products}
-					label={"total products"}
-				/>
-				<IconCards
-					icon={<PackageMinus size={35} />}
-					// value={products.blocked_products || 0}
-					label={"Blocked products"}
-				/>
-			</div>
-			<div className=" flex justify-between mx-6">
-				<div className="flex gap-5 w-[60%] ">
+		<div className="">
+			<Header heading="Order Mangement" />
+
+			{/* Stat Cards */}
+			{/* <div className="flex flex-col sm:flex-row sm:gap-10 gap-4 sm:m-10 m-4">
+				<IconCards icon={<Package2 size={35} />} label={"Total Products"} />
+				<IconCards icon={<PackageMinus size={35} />} label={"Blocked Products"} />
+			</div> */}
+
+			{/* Filters */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mx-3 sm:mx-6 mt-3">
+				<div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-[70%]">
 					<Search
 						value={params.search}
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								search: e.target.value,
-							}))
-						}
+						onChange={(e) => setParams((state) => ({ ...state, search: e.target.value }))}
 					/>
 					<Dropdown
 						label="Sort by"
@@ -150,32 +139,30 @@ const OrderManagement = () => {
 					/>
 					<Dropdown
 						label="Select Status"
-						onChange={(e) =>
-							setParams((state) => ({
-								...state,
-								status: e.target.value,
-							}))
-						}
+						onChange={(e) => setParams((state) => ({ ...state, status: e.target.value }))}
 						options={STATUS_OPTIONS}
 					/>
 				</div>
-				<Link
+
+				{/* <Link
 					type="submit"
-					className="hover:text-gray-700 h-auto flex  rounded px-10 p-2  gap-4 text-xl items-center bg-violet-700 hover:bg-violet-500 text-white"
+					className="hover:text-gray-700 w-full sm:w-auto flex justify-center items-center rounded px-6 sm:px-10 py-2 text-lg sm:text-xl bg-violet-700 hover:bg-violet-500 text-white"
 					to={"add"}
 				>
 					Add Product
-				</Link>
+				</Link> */}
 			</div>
-			<TableComponent
-				data={orders?.data.data}
-				column={column}
-				pages={orders?.data.pages}
-				page={orders?.data.page}
-				// page={products.page}
-				onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
-			/>
-		</div>
-	);
+
+			{/* Table */}
+			<div className="mt-4 overflow-x-auto">
+				<TableComponent
+					data={orders?.data.data}
+					column={column}
+					pages={orders?.data.pages}
+					page={orders?.data.page}
+					onPageChange={(x) => setParams((state) => ({ ...state, page: x }))}
+				/>
+			</div>
+		</div>	);
 };
 export default OrderManagement;

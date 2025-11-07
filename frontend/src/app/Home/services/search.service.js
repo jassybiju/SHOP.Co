@@ -1,8 +1,8 @@
-import { homeAxiosInstance } from "@/lib/axios"
+import { axiosInstance,  } from "@/lib/axios"
 
 import qs from 'qs'
 export const searchProductService =async (data) =>{
-    const res = await homeAxiosInstance('/search',  {
+    const res = await axiosInstance('home/search',  {
         params: data.queryKey[1],
         paramsSerializer : (params) => qs.stringify(params, {arrayFormat : 'repeat', skipNulls : true})
     })

@@ -12,46 +12,76 @@ const Cart = () => {
 	const { isTab } = useResponsive();
 	if (getStatus === "pending") return <Loader />;
 	console.log(cart);
-	return (
-		<div className="px-20 py-5">
+	return   (
+		<div className="w-full px-3 sm:px-6 md:px-10 lg:px-20 py-5 md:py-10">
 			<BreadCrumb />
 
-			<h1 className=" font-hero text-5xl my-10 ">Your Cart</h1>
-			<div className="flex flex-col md:flex-row gap-10 w-full min-h-100">
-				<div className="rounded border-1 w-3/5 border-gray-400 px-10 py-10">
-					{cart?.data?.cart.map((x) => (
-						<ProductCard key={x._id} data={x} is_blocked={x.stock === 0} />
-					))}
+			<h1 className="font-hero text-2xl sm:text-3xl md:text-5xl my-5 md:my-10 text-center md:text-left">
+				Your Cart
+			</h1>
+
+			<div className="flex flex-col md:flex-row gap-6 md:gap-10">
+				{/* Left Section - Product List */}
+				<div className="w-full md:w-3/5 border border-gray-300 rounded-xl px-3 sm:px-5 md:px-10 py-5">
+					{cart?.data?.cart?.length > 0 ? (
+						cart.data.cart.map((x) => (
+							<ProductCard key={x._id} data={x} is_blocked={x.stock === 0} />
+						))
+					) : (
+						<div className="text-center text-gray-500 py-10 text-sm sm:text-base">
+							Your cart is empty
+						</div>
+					)}
 				</div>
-				<div className="w-full md:2/5 rounded border-1 h-max border-gray-400 md:p-5 p-2 pb-10 text-lg md:px-10 px-4 ">
-					<h1 className="font-hero text-3xl">Order Summary</h1>
-					<div className="flex justify-between w-full my-5">
-						<span>Subtotal : </span>
-						<span className="font-bold">${cart.data.subtotal}</span>
+
+				{/* Right Section - Order Summary */}
+				<div className="w-full md:w-2/5 border border-gray-300 rounded-xl p-3 sm:p-5 md:p-8 text-sm sm:text-base h-max bg-white">
+					<h1 className="font-hero text-xl sm:text-2xl md:text-3xl mb-4 sm:mb-6 text-center md:text-left">
+						Order Summary
+					</h1>
+
+					<div className="flex justify-between my-2 sm:my-3">
+						<span>Subtotal:</span>
+						<span className="font-semibold">${cart?.data?.subtotal ?? 0}</span>
 					</div>
-					<div className="flex justify-between w-full my-5">
+
+					<div className="flex justify-between my-2 sm:my-3">
 						<span>
-							Discount : <span>{cart.data.discountAppliedInPercentage}</span>{" "}
+							Discount:{" "}
+							<span>{cart?.data?.discountAppliedInPercentage ?? 0}%</span>
 						</span>
-						<span className="font-bold text-red-600">-${cart.data.discountApplied}</span>
-					</div>
-					<div className="flex justify-between w-full my-5">
-						<span>Delivery Fee : </span>
-						<span className="font-bold ">${cart.data.cart.length !== 0 ? Number(15).toFixed(2) : Number(0.0).toFixed(2)}</span>
-					</div>
-					<hr />
-					<div className="flex justify-between w-full my-5">
-						<span>Total : </span>
-						<span className="font-bold">${cart.data.total.toFixed(2)}</span>
+						<span className="font-semibold text-red-600">
+							-${cart?.data?.discountApplied ?? 0}
+						</span>
 					</div>
 
-					{/* <CouponInput /> */}
+					<div className="flex justify-between my-2 sm:my-3">
+						<span>Delivery Fee:</span>
+						<span className="font-semibold">
+							$
+							{cart?.data?.cart?.length
+								? Number(15).toFixed(2)
+								: Number(0.0).toFixed(2)}
+						</span>
+					</div>
 
-					<Button onClick={() => navigate("/checkout")} className={"rounded-full w-full"} label="Checkout" />
+					<hr className="my-4 sm:my-5" />
+
+					<div className="flex justify-between my-2 sm:my-3">
+						<span>Total:</span>
+						<span className="font-bold">
+							${cart?.data?.total?.toFixed(2) ?? "0.00"}
+						</span>
+					</div>
+
+					<Button
+						onClick={() => navigate("/checkout")}
+						className="rounded-full w-full mt-5 sm:mt-6"
+						label="Checkout"
+					/>
 				</div>
 			</div>
 		</div>
-	);
-};
+	);};
 
 export default Cart;

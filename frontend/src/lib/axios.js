@@ -10,26 +10,11 @@ export const accountAxiosInstance = axios.create({
     withCredentials: true,
 });
 
-export const orderAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URI + "order",
-    withCredentials: true,
-});
-export const wishlistAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URI + "wishlist",
-    withCredentials: true,
-});
-export const cartAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URI + "cart",
-    withCredentials: true,
 
-});
-export const checkoutAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URI + "checkout",
-    withCredentials: true,
 
-});
-export const homeAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URI + "home",
+
+export const axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URI + "",
     withCredentials: true,
 });
 

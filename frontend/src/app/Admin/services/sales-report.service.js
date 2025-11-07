@@ -53,7 +53,7 @@ export const downloadSalesReportPDF = (orders, startDate, endDate) => {
 			2: { cellWidth: 25 }, // Amount
 			3: { cellWidth: 25 }, // Payment Method
 			4: { cellWidth: 30 }, // Payment Status
-			5: { cellWidth: 30 }, // Status
+			5: { cellWidth: 25 }, // Status
 			6: { cellWidth: 35 }, // Discount Applied
 		},
         // didDrawPage : ()=>{	setTimeout(()=>doc.save(`order_report-${Date.now()}.pdf`,300));

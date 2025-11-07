@@ -153,11 +153,11 @@ const EditProduct = () => {
 							register={register("price", {
 								required: "Price is required",
 								min: {
-									value: 0,
-									message: "Price cannot be negative",
+									value: 1,
+									message: "Price cannot be less than 0",
 								},
 							})}
-							errors={errors.name}
+							errors={errors.price}
 						/>
 						<InputComponent
 							required

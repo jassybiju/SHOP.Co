@@ -11,330 +11,329 @@ import BreadCrumb from "../../components/BreadCrumb";
 import InnerImageZoom from "react-inner-image-zoom";
 import ImageMagnifier from "./components/ImageMagnifier";
 import { useUpdateCartItems } from "@/app/User/hooks/useCart";
+import ProtectedFunctionsWrapper from "@/components/ProtectedFunctionsWrapper";
 
 function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
-    const sizeClasses = {
-        sm: "w-4 h-4",
-        md: "w-5 h-5",
-        lg: "w-6 h-6",
-    };
+	const sizeClasses = {
+		sm: "w-4 h-4",
+		md: "w-5 h-5",
+		lg: "w-6 h-6",
+	};
 
-    const textSizeClasses = {
-        sm: "text-sm",
-        md: "text-base",
-        lg: "text-lg",
-    };
+	const textSizeClasses = {
+		sm: "text-sm",
+		md: "text-base",
+		lg: "text-lg",
+	};
 
-    return (
-        <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-                {Array.from({ length: maxRating }, (_, index) => {
-                    const isFilled = index < Math.floor(rating);
-                    const isHalfFilled =
-                        index === Math.floor(rating) && rating % 1 !== 0;
+	return (
+		<div className="flex items-center gap-2">
+			<div className="flex items-center gap-1">
+				{Array.from({ length: maxRating }, (_, index) => {
+					const isFilled = index < Math.floor(rating);
+					const isHalfFilled = index === Math.floor(rating) && rating % 1 !== 0;
 
-                    return (
-                        <div key={index} className="relative">
-                            <Star
-                                className={`${sizeClasses[size]} ${
-                                    isFilled
-                                        ? "fill-star-yellow text-star-yellow"
-                                        : "text-gray-300"
-                                }`}
-                            />
-                            {isHalfFilled && (
-                                <div
-                                    className="absolute inset-0 overflow-hidden"
-                                    style={{ width: "50%" }}
-                                >
-                                    <Star
-                                        className={`${sizeClasses[size]} fill-star-yellow text-star-yellow`}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-            {showRating && (
-                <span className={`${textSizeClasses[size]} text-gray-text`}>
-                    <span className="text-black">{rating}</span>/{maxRating}
-                </span>
-            )}
-        </div>
-    );
+					return (
+						<div key={index} className="relative">
+							<Star
+								className={`${sizeClasses[size]} ${
+									isFilled
+										? "fill-star-yellow text-star-yellow"
+										: "text-gray-300"
+								}`}
+							/>
+							{isHalfFilled && (
+								<div
+									className="absolute inset-0 overflow-hidden"
+									style={{ width: "50%" }}
+								>
+									<Star
+										className={`${sizeClasses[size]} fill-star-yellow text-star-yellow`}
+									/>
+								</div>
+							)}
+						</div>
+					);
+				})}
+			</div>
+			{showRating && (
+				<span className={`${textSizeClasses[size]} text-gray-text`}>
+					<span className="text-black">{rating}</span>/{maxRating}
+				</span>
+			)}
+		</div>
+	);
 }
 
 const ProductPage = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const { data, isError, error, isLoading, status } = useProduct(id);
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const { data, isError, error, isLoading, status } = useProduct(id);
 
-    const [selectedImage, setSelectedImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
-    const [selectedVariant, setSelectedVariant] = useState(null);
-    const [activeTab, setActiveTab] = useState("details");
-    console.log(selectedVariant);
+	const [selectedImage, setSelectedImage] = useState(0);
+	const [quantity, setQuantity] = useState(1);
+	const [selectedVariant, setSelectedVariant] = useState(null);
+	const [activeTab, setActiveTab] = useState("details");
+	console.log(selectedVariant);
 
-    const { mutate: addToCart } = useUpdateCartItems();
+	const { mutate: addToCart } = useUpdateCartItems();
 
-    if (isLoading || status !== 'success') {
-        return <Loader2 className="animate-spin" />;
-    }
+	if (isLoading || status !== "success") {
+		return <Loader2 className="animate-spin" />;
+	}
 
-    console.log(data)
+	console.log(data);
 
-    if (isError) {
-        console.log(error);
-        toast.error(error?.response?.data?.message);
-        return <Navigate to={"/search"} replace />;
-    }
+	if (isError) {
+		console.log(error);
+		toast.error(error?.response?.data?.message);
+		return <Navigate to={"/search"} replace />;
+	}
 
-    const breadcrumbItems = [
-        { label: "Home", link: "/" },
-        { label: "Search", link: "/search" },
-    ];
+	const breadcrumbItems = [
+		{ label: "Home", link: "/" },
+		{ label: "Search", link: "/search" },
+	];
 
-    const onAddToCart = () => {
-        if (!selectedVariant) return toast.error("Variant not selected");
-        addToCart(
-            { variant_id: selectedVariant._id, quantity },
-            {
-                onSuccess: (data) => {
-                    console.log(data);
-                    toast.success(data.message);
-                },
-                onError: (res) => {
-                    toast.error(res.response.data.message);
-                },
-            }
-        );
-    };
+	const onAddToCart = () => {
+		if (!selectedVariant) return toast.error("Variant not selected");
+		addToCart(
+			{ variant_id: selectedVariant._id, quantity },
+			{
+				onSuccess: (data) => {
+					console.log(data);
+					toast.success(data.message);
+				},
+				onError: (res) => {
+					toast.error(res.response.data.message);
+				},
+			}
+		);
+	};
 
-    return (
-        <div>
-            <div className="min-h-screen bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    {/* Breadcrumb */}
-                    <BreadCrumb
-                        items={[
-                            ...breadcrumbItems,
-                            { label: data.name, link: "/product/" + data._id },
-                        ]}
-                    />
+	return (
+		<div>
+			<div className="min-h-screen bg-white">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+					{/* Breadcrumb */}
+					<BreadCrumb
+						items={[...breadcrumbItems, { label: data.name, link: "/product/" + data._id }]}
+					/>
 
-                    {/* Main Product Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-16 mb-12 md:mb-16">
-                        {/* Image Gallery */}
-                        <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
-                            {/* Thumbnail Images */}
-                            <div className="flex lg:flex-col gap-3 md:gap-4 order-2 lg:order-1 overflow-x-auto lg:overflow-visible">
-                                {data?.images?.map((image, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedImage(index)}
-                                        className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-28 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all ${
-                                            selectedImage === index
-                                                ? "border-black"
-                                                : "border-transparent"
-                                        }`}
-                                    >
-                                        <img
-                                            src={image.url}
-                                            alt={`Product view ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
+					{/* Main Product Section */}
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-16 mb-12 md:mb-16">
+						{/* Image Gallery */}
+						<div className="flex flex-col lg:flex-row gap-3 md:gap-4">
+							{/* Thumbnail Images */}
+							<div className="flex lg:flex-col gap-3 md:gap-4 order-2 lg:order-1 overflow-x-auto lg:overflow-visible">
+								{data?.images?.map((image, index) => (
+									<button
+										key={index}
+										onClick={() => setSelectedImage(index)}
+										className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-28 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all ${
+											selectedImage === index
+												? "border-black"
+												: "border-transparent"
+										}`}
+									>
+										<img
+											src={image.url}
+											alt={`Product view ${index + 1}`}
+											className="w-full h-full object-cover"
+										/>
+									</button>
+								))}
+							</div>
 
-                            {/* Main Image */}
-                            <div className="flex-1 order-1 lg:order-2 ">
-                                <div className="aspect-square border-2 rounded-xl md:rounded-2xl overflow-hidden bg-gray-100">
-                                    <ImageMagnifier
-                                        zoomScale={2}
-                                        src={data?.images?.[selectedImage]?.url}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    {/* <img style={{
+							{/* Main Image */}
+							<div className="flex-1 order-1 lg:order-2 ">
+								<div className="aspect-square border-2 rounded-xl md:rounded-2xl overflow-hidden bg-gray-100">
+									<ImageMagnifier
+										zoomScale={2}
+										src={data?.images?.[selectedImage]?.url}
+										className="w-full h-full object-cover"
+									/>
+									{/* <img style={{
                 transformOrigin: zoomData.transformOrigin,
                 transform: zoomData.transform,
             }}
                                         src={data.images[selectedImage].url}
                                         alt="One Life Graphic T-shirt"
                                     {/* /> */}
-                                </div>
-                            </div>
-                        </div>
+								</div>
+							</div>
+						</div>
 
-                        {/* Product Info */}
-                        <div className="space-y-4 md:space-y-6">
-                            {/* Title and Rating */}
-                            <div>
-                                <h1 className="font-hero text-2xl md:text-3xl lg:text-4xl text-black mb-3 md:mb-4">
-                                    {data.name}
-                                </h1>
-                                {/* <StarRating rating={4.5} /> */}
-                            </div>
+						{/* Product Info */}
+						<div className="space-y-4 md:space-y-6">
+							{/* Title and Rating */}
+							<div>
+								<h1 className="font-hero text-2xl md:text-3xl lg:text-4xl text-black mb-3 md:mb-4">
+									{data.name}
+								</h1>
+								{/* <StarRating rating={4.5} /> */}
+							</div>
 
-                            {/* Price */}
-                            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-                                <span className="font-poppins text-3xl  font-bold text-black">
-                                    ${" "}
-                                    {(data.price -
-                                        data.price * (data.discount / 100).toFixed(2))}
-                                </span>
-                                <span className="font-poppins text-2xl text-black opacity-50 font-bold text-gray-text line-through  ">
-                                    ${data.price}
-                                </span>
-                                <div className="bg-red-400 text-red-discount px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium">
-                                    -{data.discount}%
-                                </div>
-                            </div>
+							{/* Price */}
+							<div className="flex items-center gap-2 md:gap-3 flex-wrap">
+								<span className="font-poppins text-3xl  font-bold text-black">
+									${" "}
+									{data.price -
+										data.price * (data.discount / 100).toFixed(2)}
+								</span>
+								<span className="font-poppins text-2xl text-black opacity-50 font-bold text-gray-text line-through  ">
+									${data.price}
+								</span>
+								<div className="bg-red-400 text-red-discount px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+									-{data.discount}%
+								</div>
+							</div>
 
-                            {/* Description */}
-                            <p className="font-poppins text-gray-text leading-relaxed">
-                                This graphic t-shirt which is perfect for any
-                                occasion. Crafted from a soft and breathable
-                                fabric, it offers superior comfort and style.
-                            </p>
+							{/* Description */}
+							<p className="font-poppins text-gray-text leading-relaxed">
+								This graphic t-shirt which is perfect for any occasion. Crafted
+								from a soft and breathable fabric, it offers superior comfort and
+								style.
+							</p>
 
-                            <hr className="border-gray-200" />
+							<hr className="border-gray-200" />
 
-                            {/* Size Selection */}
-                            <div>
-                                <h3 className="font-poppins text-gray-text mb-4">
-                                    Select Variant
-                                </h3>
-                                <div className="flex gap-3 flex-wrap">
-                                    {data.variants.map((variant, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() =>
-                                                (variant.stock !== 0) && setSelectedVariant(variant)
-                                            }
-                                            className={` border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
-                                                selectedVariant === variant
-                                                    ? "bg-gray-variant border-gray-800"
-                                                    : "bg-gray-variant  hover:border-gray-300"
-                                            } flex items-center gap-2 ${
-                                                variant.stock === 0 &&
-                                                "bg-red-400"
-                                            }`}
-                                        >
-                                            {variant.size}{" "}
-                                            <div
-                                                className="w-4  h-4 rounded-full"
-                                                style={{
-                                                    backgroundColor:
-                                                        variant.color,
-                                                    border : 'black solid 1px'
-                                                }}
-                                            ></div>
-                                            {/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+							{/* Size Selection */}
+							<div>
+								<h3 className="font-poppins text-gray-text mb-4">
+									Select Variant
+								</h3>
+								<div className="flex gap-3 flex-wrap">
+									{data.variants.map((variant, index) => (
+										<button
+											key={index}
+											onClick={() =>
+												variant.stock !== 0 &&
+												setSelectedVariant(variant)
+											}
+											className={` border-gray-200 flex justify-center items-center  px-8 py-3 rounded-full font-poppins text-sm border transition-all ${
+												selectedVariant === variant
+													? "bg-gray-variant border-gray-800"
+													: "bg-gray-variant  hover:border-gray-300"
+											} flex items-center gap-2 ${
+												variant.stock === 0 &&
+												"bg-red-400"
+											}`}
+										>
+											{variant.size}{" "}
+											<div
+												className="w-4  h-4 rounded-full"
+												style={{
+													backgroundColor:
+														variant.color,
+													border: "black solid 1px",
+												}}
+											></div>
+											{/* <div className="w-4 h-4 bg-red-discount rounded-full"></div> */}
+										</button>
+									))}
+								</div>
+							</div>
 
-                            <hr className="border-gray-200" />
+							<hr className="border-gray-200" />
 
-                            {/* Quantity and Actions */}
-                            <div className="space-y-4">
-                                {/* Quantity Selector */}
-                                <div className="flex items-center">
-                                    <div className="flex items-center bg-gray-light rounded-full px-4 md:px-5 py-3">
-                                        <button
-                                            onClick={() =>
-                                                setQuantity(
-                                                    Math.max(1, quantity - 1)
-                                                )
-                                            }
-                                            className="p-1"
-                                        >
-                                            <Minus className="w-4 h-4 md:w-5 md:h-5" />
-                                        </button>
-                                        <span className="mx-4 md:mx-6 font-poppins font-medium min-w-[2rem] text-center">
-                                            {quantity}
-                                        </span>
-                                        <button
-                                            onClick={() =>
-                                                setQuantity(quantity + 1)
-                                            }
-                                            className="p-1"
-                                        >
-                                            <Plus className="w-4 h-4 md:w-5 md:h-5" />
-                                        </button>
-                                    </div>
-                                </div>
+							{/* Quantity and Actions */}
+							<div className="space-y-4">
+								{/* Quantity Selector */}
+								<div className="flex items-center">
+									<div className="flex items-center bg-gray-light rounded-full px-4 md:px-5 py-3">
+										<button
+											onClick={() =>
+												setQuantity(
+													Math.max(1, quantity - 1)
+												)
+											}
+											className="p-1"
+										>
+											<Minus className="w-4 h-4 md:w-5 md:h-5" />
+										</button>
+										<span className="mx-4 md:mx-6 font-poppins font-medium min-w-[2rem] text-center">
+											{quantity}
+										</span>
+										<button
+											onClick={() => setQuantity(quantity + 1)}
+											className="p-1"
+										>
+											<Plus className="w-4 h-4 md:w-5 md:h-5" />
+										</button>
+									</div>
+								</div>
 
-                                {/* Action Buttons */}
-                                <div className="space-y-3">
-                                    <button
-                                        className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
-                                        onClick={onAddToCart}
-                                    >
-                                        Add to Cart
-                                    </button>
-                                    <button
-                                        className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
-                                        onClick={() => {
-                                            if(!selectedVariant) toast.error('Variant not selected')
-                                            if(selectedVariant.stock !== 0){
-                                            navigate("/checkout/", {
-                                                state: {
-                                                    variant_id:
-                                                        selectedVariant._id,
-                                                    quantity,
-                                                },
-                                            });
-                                        }else{
-                                            toast.error("Stock is empty")
-                                        }
-                                        }}
-                                    >
-                                        Buy Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+								{/* Action Buttons */}
+								<div className="space-y-3">
+									<ProtectedFunctionsWrapper fn={onAddToCart}>
+										<button className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base">
+											Add to Cart
+										</button>
+									</ProtectedFunctionsWrapper>
+                                    <ProtectedFunctionsWrapper fn={() => {
+											if (!selectedVariant)
+												toast.error(
+													"Variant not selected"
+												);
+											if (selectedVariant.stock !== 0) {
+												navigate("/checkout/", {
+													state: {
+														variant_id: selectedVariant._id,
+														quantity,
+													},
+												});
+											} else {
+												toast.error("Stock is empty");
+											}
+										}}>
+									<button
+										className="w-full bg-black text-white font-poppins font-medium py-3 md:py-4 rounded-full hover:bg-gray-800 transition-colors text-sm md:text-base"
 
-                    {/* Product Details Tabs */}
-                    <div className="mb-12 md:mb-16">
-                        <div className="flex border-b border-gray-200 mb-6 md:mb-8 overflow-x-auto">
-                            <button
-                                onClick={() => setActiveTab("details")}
-                                className={`pb-3 md:pb-4 px-1 font-poppins text-lg md:text-xl whitespace-nowrap ${
-                                    activeTab === "details"
-                                        ? "text-black border-b-2 border-black font-medium"
-                                        : "text-gray-400"
-                                }`}
-                            >
-                                Product Details
-                            </button>
-                            <button
-                                onClick={() => setActiveTab("reviews")}
-                                className={`pb-3 md:pb-4 px-1 ml-6 md:ml-12 font-poppins text-lg md:text-xl whitespace-nowrap ${
-                                    activeTab === "reviews"
-                                        ? "text-black border-b-2 border-black font-medium"
-                                        : "text-gray-400"
-                                }`}
-                            >
-                                Rating & Reviews
-                            </button>
-                        </div>
+									>
+										Buy Now
+									</button>
+                                    </ProtectedFunctionsWrapper>
+								</div>
+							</div>
+						</div>
+					</div>
 
-                        {activeTab === "details" && (
-                            <div className="space-y-6 md:space-y-8">
-                                <div
-                                    className="text-2xl"
-                                    dangerouslySetInnerHTML={{
-                                        __html: data.description,
-                                    }}
-                                />
+					{/* Product Details Tabs */}
+					<div className="mb-12 md:mb-16">
+						<div className="flex border-b border-gray-200 mb-6 md:mb-8 overflow-x-auto">
+							<button
+								onClick={() => setActiveTab("details")}
+								className={`pb-3 md:pb-4 px-1 font-poppins text-lg md:text-xl whitespace-nowrap ${
+									activeTab === "details"
+										? "text-black border-b-2 border-black font-medium"
+										: "text-gray-400"
+								}`}
+							>
+								Product Details
+							</button>
+							<button
+								onClick={() => setActiveTab("reviews")}
+								className={`pb-3 md:pb-4 px-1 ml-6 md:ml-12 font-poppins text-lg md:text-xl whitespace-nowrap ${
+									activeTab === "reviews"
+										? "text-black border-b-2 border-black font-medium"
+										: "text-gray-400"
+								}`}
+							>
+								Rating & Reviews
+							</button>
+						</div>
 
-                                {/* <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
+						{activeTab === "details" && (
+							<div className="space-y-6 md:space-y-8">
+								<div
+									className="text-2xl"
+									dangerouslySetInnerHTML={{
+										__html: data.description,
+									}}
+								/>
+
+								{/* <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Product Description
                                     </h3>
                                     <p className="font-poppins text-base md:text-lg leading-relaxed mb-4 md:mb-6">
@@ -365,9 +364,9 @@ const ProductPage = () => {
                                         this graphic tee complements every
                                         style.
                                     </p> */}
-                                {/* </div> */}
+								{/* </div> */}
 
-                                {/* <div>
+								{/* <div>
                                     <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Key Features
                                     </h3>
@@ -399,7 +398,7 @@ const ProductPage = () => {
                                     </ul>
                                 </div> */}
 
-                                {/* <div>
+								{/* <div>
                                     <h3 className="font-poppins text-xl md:text-2xl font-bold mb-3 md:mb-4">
                                         Care Instructions
                                     </h3>
@@ -414,31 +413,27 @@ const ProductPage = () => {
                                         </li>
                                     </ul>
                                 </div> */}
-                            </div>
-                        )}
-                        {activeTab === "reviews" && (
-                            <>
-                                {data?.ratings?.length == 0 && "No ratings Yet"}
-                            </>
-                        )}
-                    </div>
+							</div>
+						)}
+						{activeTab === "reviews" && <>{data?.ratings?.length == 0 && "No ratings Yet"}</>}
+					</div>
 
-                    {/* You Might Also Like */}
-                    <div>
-                        <h2 className="font-bakbak text-3xl md:text-4xl lg:text-5xl text-center mb-8 md:mb-12">
-                            You might also like
-                        </h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            {data.products.map((product, index) => (
-                                <ProductCard product={product} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+					{/* You Might Also Like */}
+					<div>
+						<h2 className="font-bakbak text-3xl md:text-4xl lg:text-5xl text-center mb-8 md:mb-12">
+							You might also like
+						</h2>
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+							{data.products.map((product, index) => (
+								<ProductCard product={product} />
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <Footer />
-        </div>
-    );
+			<Footer />
+		</div>
+	);
 };
 export default ProductPage;

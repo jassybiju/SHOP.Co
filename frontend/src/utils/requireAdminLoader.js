@@ -1,14 +1,13 @@
 import { redirect } from "react-router-dom";
 import { fetchUser } from "../app/Auth/services/auth.service";
-import { useQueryClient } from "@tanstack/react-query";
 import queryClient from "./queryClient";
 
 export const requireAdminLoader = async () => {
     let user = null;
-    
+
     try {
         // Attempt to fetch the user
-        user = await fetchUser(); 
+        user = await fetchUser();
     } catch (error) {
         queryClient.invalidateQueries({queryKey : ["user"]})
         console.error("Auth fetch failed in loader:", error);
@@ -18,12 +17,12 @@ export const requireAdminLoader = async () => {
     }
 
     console.log(user)
-    if (!user) return redirect("/auth/login"); 
+    if (!user) return redirect("/auth/login");
 
-   
-    if (!user.active) return redirect("/auth/login"); 
 
-    if (user.role !== "admin") return redirect("/"); 
+    if (!user.active) return redirect("/auth/login");
 
-    return null; 
+    if (user.role !== "admin") return redirect("/");
+
+    return null;
 };

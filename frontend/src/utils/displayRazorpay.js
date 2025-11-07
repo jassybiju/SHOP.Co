@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { loadScript } from "./loadScript";
-import { redirect } from "react-router";
 
 export const displayRazorpay = async (result, validateFn , errorFn = null) => {
 	const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");

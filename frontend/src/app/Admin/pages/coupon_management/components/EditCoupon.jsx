@@ -3,6 +3,7 @@ import { useEditCoupon, useGetCouponById } from "@/app/Admin/hooks/useCouponMana
 import { useGetAllUsers } from "@/app/Admin/hooks/useUserManagement";
 import InputComponent from "@/components/InputComponent";
 import { useModal } from "@/hooks/useModal";
+import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -59,7 +60,7 @@ const EditCoupon = ({id}) => {
         <>
             <div className="bg-white rounded-xl shadow-xl w-3/4 my-10  p-10 px-[10%]  outline-1">
                 <h2 className="text-2xl font-semibold mb-6 border-b border-gray-300 pb-2">
-                    Add Coupon
+                    Edit Coupon
                 </h2>
 
                 <form
@@ -211,16 +212,15 @@ const EditCoupon = ({id}) => {
                         </button>
                         <button
                             type="submit"
-                            disabled={status === "pending"}
+                            disabled={editingStatus === "pending"}
                             className="px-6 py-3 bg-indigo-600 rounded-lg font-semibold text-white hover:bg-indigo-700 transition disabled:bg-indigo-700"
                         >
-                            {status === "pending" ? (
+                            {editingStatus === "pending" ? (
                                 <div className="flex gap-2">
-                                    <Loader2 className="animate-spin" /> Adding
-                                    Brand
+                                    <Loader2 className="animate-spin" /> Editing Coupon
                                 </div>
                             ) : (
-                                "Add Brand"
+                                "Edit Coupon"
                             )}
                         </button>
                     </div>

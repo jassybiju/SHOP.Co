@@ -13,9 +13,10 @@ const Order = () => {
 	const [params, setParams] = useState({ q: "", sort: "", order: "", page: 1 });
 
 	const { data, status } = useGetAllOrder(params);
+    console.log(data)
 
 	useEffect(() => {
-		if (data?.data?.pages < params.page) {
+		if (data?.data?.pages < params.page ) {
 			setParams((state) => ({ ...state, page: data?.data?.pages }));
 		}
 	}, [params, data?.data]);
@@ -81,7 +82,8 @@ const Order = () => {
 			</div>
 			{/* Orders List */}
 			<div className="flex flex-col gap-5">
-				{data?.data?.data?.map((order) => (
+                {(data?.data?.data?.length === 0 ) ? "No Orders" :
+				data?.data?.data?.map((order) => (
 					<div key={order._id} className="w-full rounded-2xl border-2 ">
 						{/* Order Info */}
 						{/* ! HEADER  */}
@@ -206,11 +208,13 @@ const Order = () => {
 						</div>
 					</div>
 				))}
+                { data?.data?.data.length !== 0&&(
 				<Pagination
 					page={data?.data?.page}
 					pages={data?.data?.pages}
 					onPageChange={(x) => setParams((prev) => ({ ...prev, page: x }))}
 				/>
+                )}
 			</div>
 		</>
 	);
