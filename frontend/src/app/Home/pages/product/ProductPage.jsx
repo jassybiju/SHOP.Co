@@ -1,14 +1,12 @@
 import React from "react";
-import { ChevronRight, Loader2, Minus, Plus, Star } from "lucide-react";
+import { Loader2, Minus, Plus, Star } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
 import { Navigate, useParams, useNavigate } from "react-router";
-import Navbar from "../../components/Navbar";
 import toast from "react-hot-toast";
 import ProductCard from "../search/components/ProductCard";
 import BreadCrumb from "../../components/BreadCrumb";
-import InnerImageZoom from "react-inner-image-zoom";
 import ImageMagnifier from "./components/ImageMagnifier";
 import { useUpdateCartItems } from "@/app/User/hooks/useCart";
 import ProtectedFunctionsWrapper from "@/components/ProtectedFunctionsWrapper";

@@ -1,14 +1,9 @@
-import { ImageUp, Loader, Loader2, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Header from "../../components/Header";
-import { useRef, useState } from "react";
 import InputComponent from "../../../../components/InputComponent";
-import Dropdown from "../../../../components/Dropdown";
-import { useModal } from "../../../../hooks/useModal";
-import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import { useForm, useFieldArray } from "react-hook-form";
-import toast from "react-hot-toast";
 import { useAddProduct } from "../../hooks/useProductManagement";
 import VariantComponent from "./components/VariantComponent";
 import { ImageGroupComponent } from "./components/ImageGroupComponent";

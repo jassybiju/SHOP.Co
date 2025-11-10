@@ -1,4 +1,4 @@
-import {ChevronRight, Eye, EyeClosed, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react';
 
 const Input = ({ label, type = "text", register, error , required =false , placeholder}) => {
@@ -24,7 +24,7 @@ const Input = ({ label, type = "text", register, error , required =false , place
         {...register}
         className={`${baseClass} ${focusClass} ${errorClass}`}
       />
-      <span className='absolute right-0' onClick={()=>setPasswordView(state => !state)}>{type === 'password' && (passwordView ? <Eye/> : <EyeOff/>) }</span>
+      <button className='absolute right-0' onClick={()=>setPasswordView(state => !state)}>{type === 'password' && (passwordView ? <Eye/> : <EyeOff/>) }</button>
        </div>
 
       {/* Error message */}

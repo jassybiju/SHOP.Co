@@ -1,11 +1,9 @@
 import { useForm } from "react-hook-form";
 import Input from "../../../../components/Input"; // same component
-import { useCallback, useEffect, useState } from "react";
-import { useStore } from "../../../../store/store";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useResendOtp, useVerifyOtp } from "../../hooks/useAuth";
 import toast from "react-hot-toast";
-import { Timer } from "lucide-react";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 
 const OTPVerify = () => {

@@ -3,35 +3,94 @@ import { Product } from "../models/product.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import { Brand } from "../models/brand.model.js";
 import { Category } from "../models/category.model.js";
+import { OrderItem } from "../models/order_item.model.js";
 
 export const getHomeDataService = async (user) => {
-    const wishlistLookup = {
-        $lookup : {
-            from : "wishlists",
-            let : {productId : "$_id"},
-            pipeline : [
-                {
-                    $match : {
-                        $expr : {
-                            $and : [
-                                {$eq : ['$product_id',"$$productId"]},
-                                ...(user && user._id ? [{ $eq : ['$user_id' , user._id]}] : [{$eq : [0,1]}])
-                            ]
-                        }
-                    }
-                }
-            ],
-            as : "wishlist"
-        }
-    }
+	const wishlistLookup = {
+		$lookup: {
+			from: "wishlists",
+			let: { productId: "$_id" },
+			pipeline: [
+				{
+					$match: {
+						$expr: {
+							$and: [
+								{ $eq: ["$product_id", "$$productId"] },
+								...(user && user._id
+									? [{ $eq: ["$user_id", user._id] }]
+									: [{ $eq: [0, 1] }]),
+							],
+						},
+					},
+				},
+			],
+			as: "wishlist",
+		},
+	};
+
+	const topSellingProducts = await OrderItem.aggregate([
+		{
+			$lookup: {
+				from: "productvariants",
+				localField: "variant_id",
+				foreignField: "_id",
+				as: "variant",
+			},
+		},
+		{ $unwind: "$variant" },
+		{
+			$group: {
+				_id: "$variant.product_id",
+				sold: { $sum: 1 },
+			},
+		},
+		{
+			$sort: { sold: -1 },
+		},
+		{
+			$limit: 8,
+		},
+	]);
+
+    console.log(topSellingProducts)
 	const product_aggregation_pipeline = [
 		{ $match: { is_active: true } },
 		{
 			$facet: {
-				new_arrivals: [{ $sort: { createdAt: -1 } }, { $limit: 4 },wishlistLookup, {$addFields : {isWishlisted : {$gt : [{$size :
-                    '$wishlist'
-                },0]}}}],
-				top_selling: [{ $sort: { createdAt: 1 } }, { $limit: 4 }],
+				new_arrivals: [
+					{ $sort: { createdAt: -1 } },
+					{ $limit: 4 },
+					wishlistLookup,
+					{ $addFields: { isWishlisted: { $gt: [{ $size: "$wishlist" }, 0] } } },
+				],
+				top_selling: [
+					{ $match: { _id: { $in: topSellingProducts.map((x) => x._id) } } },
+					{
+						$addFields: {
+							totalSold: {
+								$getField: {
+									field: "sold",
+									input: {
+										$arrayElemAt: [
+											topSellingProducts,
+											{
+												$indexOfArray: [
+													topSellingProducts.map(
+														(x) => x._id
+													),
+													"$_id",
+												],
+											},
+										],
+									},
+								},
+							},
+						},
+					},
+					{ $limit: 4 },
+					wishlistLookup,
+					{ $addFields: { isWishlisted: { $gt: [{ $size: "$wishlist" }, 0] } } },
+				],
 			},
 		},
 	];
@@ -45,7 +104,7 @@ export const getHomeDataService = async (user) => {
 			url: cloudinary.url(img?.url, { secure: true }),
 		})),
 	}));
-	products[0].top_selling = products[0].new_arrivals.map((x) => ({
+	products[0].top_selling = products[0].top_selling.map((x) => ({
 		...x,
 		images: x.images.map((img) => ({
 			is_main: img?.is_main,
@@ -114,10 +173,15 @@ export const getSearchDataService = async (query, user) => {
 		};
 
 	if (query.q) {
-		filterOptions.$or = [{ name: { $regex: query.q, $options: "i" } }, { small_description: { $regex: query.q, $options: "i" } }];
+		filterOptions.$or = [
+			{ name: { $regex: query.q, $options: "i" } },
+			{ small_description: { $regex: query.q, $options: "i" } },
+		];
 	}
 	if (query.brand) {
-		const queryBrand = Array.isArray(query.brand) ? query.brand?.map((x) => new RegExp(x, "i")) : [new RegExp(query.brand, "i")];
+		const queryBrand = Array.isArray(query.brand)
+			? query.brand?.map((x) => new RegExp(x, "i"))
+			: [new RegExp(query.brand, "i")];
 		const brand = await Brand.find(
 			{
 				name: {
@@ -138,7 +202,9 @@ export const getSearchDataService = async (query, user) => {
 	console.log(query.color);
 
 	if (query.category) {
-		const queryCategories = Array.isArray(query.category) ? query.category?.map((x) => new RegExp(x, "i")) : [new RegExp(query.category, "i")];
+		const queryCategories = Array.isArray(query.category)
+			? query.category?.map((x) => new RegExp(x, "i"))
+			: [new RegExp(query.category, "i")];
 		const category = await Category.find(
 			{
 				name: {
@@ -166,25 +232,27 @@ export const getSearchDataService = async (query, user) => {
 	});
 
 	const wishlistLookup = {
-	$lookup: {
-            from: "wishlists",
-            let: { productId: "$_id" },
-            pipeline: [
-                {
-                    $match: {
-                        $expr: {
-                            $and: [
-                                { $eq: ["$product_id", "$$productId"] },
-                                // Only match user ID if available, otherwise force empty array
-                                ...(user && user._id ? [{ $eq: ["$user_id", user._id] }] : [{ $eq: [0, 1] }]),
-                            ],
-                        },
-                    },
-                },
-                { $project: { _id: 1 } }
-            ],
-            as: "wishlist",
-        },
+		$lookup: {
+			from: "wishlists",
+			let: { productId: "$_id" },
+			pipeline: [
+				{
+					$match: {
+						$expr: {
+							$and: [
+								{ $eq: ["$product_id", "$$productId"] },
+								// Only match user ID if available, otherwise force empty array
+								...(user && user._id
+									? [{ $eq: ["$user_id", user._id] }]
+									: [{ $eq: [0, 1] }]),
+							],
+						},
+					},
+				},
+				{ $project: { _id: 1 } },
+			],
+			as: "wishlist",
+		},
 	};
 
 	const product_aggregation_pipeline = [
@@ -200,14 +268,14 @@ export const getSearchDataService = async (query, user) => {
 						},
 					},
 					wishlistLookup,
-                    {
-                        $lookup  : {
-                            from : 'categories',
-                            localField : 'category_id',
-                            foreignField: '_id',
-                            as : 'category'
-                        }
-                    },
+					{
+						$lookup: {
+							from: "categories",
+							localField: "category_id",
+							foreignField: "_id",
+							as: "category",
+						},
+					},
 					{ $unwind: "$category" }, // make category an object instead of array
 					{
 						$match: {
@@ -264,7 +332,10 @@ export const getSearchDataService = async (query, user) => {
 									$subtract: [
 										"$price",
 										{
-											$multiply: ["$price", { $divide: ["$discount", 100] }],
+											$multiply: [
+												"$price",
+												{ $divide: ["$discount", 100] },
+											],
 										},
 									],
 								},

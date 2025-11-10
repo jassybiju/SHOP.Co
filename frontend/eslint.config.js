@@ -8,6 +8,7 @@ import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
 import pluginReactRefresh from "eslint-plugin-react-refresh";
+import pluginUnusedImports from 'eslint-plugin-unused-imports'
 
 const compat = new FlatCompat({
     baseDirectory:import.meta.dirname
@@ -22,6 +23,7 @@ export default defineConfig([
             "react-hooks": pluginReactHooks,
             "jsx-a11y": eslintPluginJsxA11y,
             "react-refresh": pluginReactRefresh,
+            "unused-imports" : pluginUnusedImports
         },
         extends: [
             ...compat.extends(
@@ -48,7 +50,9 @@ export default defineConfig([
             'react-refresh/only-export-components' : [
                 'warn',
                 {allowConstantExport : true}
-            ]
+            ],
+            'no-unused-vars' : 'warn',
+            'unused-imports/no-unused-imports' : "error"
         },
         ignores : ['dist','node_modules']
     },

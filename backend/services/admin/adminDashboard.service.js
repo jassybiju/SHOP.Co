@@ -1,4 +1,7 @@
 import { Order } from "../../models/order.model.js";
+import { OrderItem } from "../../models/order_item.model.js";
+import { Product } from "../../models/product.model.js";
+import { ProductVariant } from "../../models/product_variants.model.js";
 
 export class AdminDashboardService {
 	static async getChartData(type = "daily") {
@@ -47,7 +50,7 @@ export class AdminDashboardService {
 				projectDateStage = "$_id";
 				break;
 			case "monthly":
-				groupStage = { $isoWeekYear: "$createdAt" };
+				groupStage = { $month: "$createdAt" };
 				projectDateStage = "$_id";
 				break;
 		}
@@ -79,12 +82,147 @@ export class AdminDashboardService {
 			{
 				$project: {
 					date: projectDateStage,
-					value: {$round : ["$sum",2]},
+					value: { $round: ["$sum", 2] },
 
 					_id: 0,
 				},
 			},
 		]);
 		return result;
+	}
+
+	static async topThreeData() {
+		const orders = await Order.find().lean();
+		const productVariants = await ProductVariant.find().lean();
+		console.log(productVariants);
+		const data =await Promise.all([ OrderItem.aggregate([
+			{
+				$lookup: {
+					from: "productvariants",
+					localField: "variant_id",
+					foreignField: "_id",
+					as: "variant",
+				},
+			},
+			{
+				$unwind: "$variant",
+			},
+			{
+				$group: {
+					_id: "$variant.product_id",
+					count: { $sum: 1 },
+				},
+			},
+			{
+				$lookup: {
+					from: "products",
+					localField: "_id",
+					foreignField: "_id",
+					as: "product",
+				},
+			},
+			{
+				$project: {
+					name: { $arrayElemAt: ["$product.name", 0] },
+					_id: "$_id",
+					count: "$count",
+				},
+			},
+			{
+				$sort: { count: -1 },
+			},
+			{
+				$limit: 4,
+			},
+		]),
+     OrderItem.aggregate([
+			{
+				$lookup: {
+					from: "productvariants",
+					localField: "variant_id",
+					foreignField: "_id",
+					as: "variant",
+				},
+			},
+			{ $unwind: "$variant" },
+			{
+				$lookup: {
+					from: "products",
+					localField: "variant.product_id",
+					foreignField: "_id",
+					as: "product",
+				},
+			},
+			{
+				$group: {
+					_id: "$product.category_id",
+					count: { $sum: 1 },
+					products: { $addToSet: "$product._id" },
+				},
+			},
+			{
+				$lookup: {
+					from: "categories",
+					localField: "_id",
+					foreignField: "_id",
+					as: "category",
+				},
+			},
+			{
+				$project: {
+					_id: {$arrayElemAt : ['$_id', 0]},
+					count: 1,
+					name: { $arrayElemAt: ["$category.name", 0] },
+				},
+			},
+			{ $sort: { count: -1 } },
+			{ $limit: 3 },
+		]),
+	 OrderItem.aggregate([
+			{
+				$lookup: {
+					from: "productvariants",
+					localField: "variant_id",
+					foreignField: "_id",
+					as: "variant",
+				},
+			},
+			{ $unwind: "$variant" },
+			{
+				$lookup: {
+					from: "products",
+					localField: "variant.product_id",
+					foreignField: "_id",
+					as: "product",
+				},
+			},
+			{
+				$group: {
+					_id: "$product.brand_id",
+					count: { $sum: 1 },
+					products: { $addToSet: "$product._id" },
+				},
+			},
+			{
+				$lookup: {
+					from: "brands",
+					localField: "_id",
+					foreignField: "_id",
+					as: "brand",
+				},
+			},
+			{
+				$project: {
+					_id: { $arrayElemAt: ["$_id", 0] },
+					count: 1,
+					name: { $arrayElemAt: ["$brand.name", 0] },
+				},
+			},
+			{ $sort: { count: -1 } },
+			{ $limit: 3 },
+		])
+
+])
+		return {topProducts : data[0],topCategories : data[1], topBrands : data[2]};
 	}
 }

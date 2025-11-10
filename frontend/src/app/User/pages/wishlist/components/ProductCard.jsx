@@ -1,4 +1,4 @@
-import { useAddWishlistItems, useRemoveWishlistItems } from "@/app/User/hooks/useWishlist";
+import {  useRemoveWishlistItems } from "@/app/User/hooks/useWishlist";
 import ModalWrapper from "@/components/ModalWrapper";
 import { BatteryWarning, Trash2 } from "lucide-react";
 import ShowVariantsModal from "./ShowVariantsModal";
@@ -6,7 +6,6 @@ import { useModal } from "@/hooks/useModal";
 import { useResponsive } from "@/hooks/useResponsive";
 
 export const ProductCard = ({ data, is_blocked = false }) => {
-	const { mutate: updateWishlistItem, status } = useAddWishlistItems();
 	const { mutate: removeWishlistItem, status: removeStatus } = useRemoveWishlistItems();
 	const { isMobile } = useResponsive();
 
@@ -28,18 +27,18 @@ export const ProductCard = ({ data, is_blocked = false }) => {
 
 	return (
 		<div
-			className={`${isMobile ? 'flex-col item-left' : 'flex-row items-center'}  relative bg-gray-50 shadow w-full h-40 rounded-2xl px-3 py-3 flex  justify-between transition-all duration-300 ${
+			className={`${isMobile ? 'flex-col item-left' : 'flex-row items-center'}  relative bg-gray-50 shadow w-full h-max rounded-2xl px-3 py-3 flex  justify-between transition-all duration-300 ${
 				isRemoving ? "opacity-60 pointer-events-none" : ""
 			}`}
 		>
 			{/* Left Side - Image and Info */}
-			<div className="flex h-full w-max  gap-5 ">
+			<div className="flex h-full w-full  gap-5 ">
 				<img src={data.image} alt="" className="md:w-35 w-20 md:h-35 h-20 rounded" />
 				<div className="flex flex-col justify-evenly h-full w-full">
-					<h1 className="font-hero md:text-xl text-sm w-full overflow-hidden">{data.name}</h1>
+					<h1 className="font-hero md:text-xl text-lg  overflow-hidden">{data.name}</h1>
 
 					<h1 className="font-hero text-xl">
-						${data.price}
+						${data.price} <span className="text-red-500">-${data.discount}</span>
 					</h1>
 					{is_blocked && (
 						<p className="text-red-500">
@@ -58,7 +57,7 @@ export const ProductCard = ({ data, is_blocked = false }) => {
 						<div className="flex gap-3  py-3 px-5 rounded-full items-center">
 							<button
 								onClick={() => onAddToCart(data.product_id)}
-								disabled={status === "pending" || isRemoving}
+								disabled={ isRemoving}
 								className="hover:bg-gray-300 border-8 md:text-sm text-sm text-nowrap border-neutral-50 rounded-full hover:border-gray-300"
 							>
 								Add to Cart

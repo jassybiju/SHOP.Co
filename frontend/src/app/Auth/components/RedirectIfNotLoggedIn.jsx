@@ -1,7 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { Loader } from "lucide-react";
 import { useUser } from "../../../hooks/useUser";
-import { useStore } from "../../../store/store";
 import toast from "react-hot-toast";
 
 const RedirectIfNotLoggedIn = () => {

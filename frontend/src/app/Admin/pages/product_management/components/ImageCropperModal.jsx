@@ -1,5 +1,3 @@
-import { X } from "lucide-react";
-import { useModal } from "../../../../../hooks/useModal";
 import { useState } from "react";
 import {
     centerCrop,
@@ -10,6 +8,7 @@ import {
 import setCanvasPreview from "./setCanvarPreview";
 import { useRef } from "react";
 import toast from "react-hot-toast";
+import { createPortal } from "react-dom";
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 100;
@@ -98,8 +97,8 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
         }, "image/jpeg");
     };
 
-    return (
-    <div className="bg-gray-600/60 h-screen left-0 flex justify-center items-center w-screen fixed top-0 z-999">
+    return createPortal(
+    <div className="bg-gray-600/60 h-screen  left-0 flex justify-center items-center w-screen fixed inset-0 top-0 z-999">
       <div className="w-max h-min-1/2 h-max flex flex-col  bg-red-400 relative p-10 rounded-xl">
         <button onClick={closeModal} className="absolute right-10">
           X
@@ -162,6 +161,6 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
         ) }
       </div>
     </div>
-  );
+  ,document.body);
 };
 export default ImageCropperModal;

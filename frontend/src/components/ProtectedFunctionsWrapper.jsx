@@ -1,7 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import { cloneElement } from "react";
 import toast from "react-hot-toast";
-import { Navigate, redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const ProtectedFunctionsWrapper = ({children , fn}) => {
     const navigate = useNavigate()

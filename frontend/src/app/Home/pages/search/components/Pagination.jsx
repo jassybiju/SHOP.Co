@@ -1,5 +1,5 @@
 import { useResponsive } from "@/hooks/useResponsive";
-import { ChevronLeft, ChevronRight, MoveLeft, MoveRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pagination = ({ page, pages = 1, onPageChange }) => {
 	console.log(pages);
@@ -83,6 +83,7 @@ const Pagination = ({ page, pages = 1, onPageChange }) => {
                         <>
 						{pageSlice.map((x, i) => (
 							<button
+                                key={i}
 								disabled={page === x + 1}
 								onClick={() => onPageChange(x + 1)}
 								href="#"

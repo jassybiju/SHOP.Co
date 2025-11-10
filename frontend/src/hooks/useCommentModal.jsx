@@ -1,6 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, } from "react";
 import { useModal } from "./useModal";
-import InputComponent from "@/components/InputComponent";
 const useCommentModal = () => {
     const { openModal, closeModal } = useModal();
     const ref= useRef()

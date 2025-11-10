@@ -68,7 +68,7 @@ const AvatarImageComponent = ({
 
     return (
         <>
-            <div
+            <button
                 className="rounded-full w-full h-full bg-gray-300 flex justify-center text-center items-center flex-col"
                 type='button'
                 onClick={(e)=>{e.preventDefault(); onUpload()}}
@@ -90,7 +90,7 @@ const AvatarImageComponent = ({
                         Upload Your image
                     </>
                 )}
-            </div>
+            </button>
             {showCropper && <ImageCropperModal updateImage={updateImage} closeModal={()=>setShowCropper(false)}/>}
             <input
                 {...registerRest}

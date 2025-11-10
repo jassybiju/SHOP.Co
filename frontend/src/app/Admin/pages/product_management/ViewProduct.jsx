@@ -3,14 +3,11 @@ import { ImageUp, Trash2 } from "lucide-react";
 import Header from "../../components/Header";
 import { useRef, useState } from "react";
 import InputComponent from "../../../../components/InputComponent";
-import Dropdown from "../../../../components/Dropdown";
 import { useModal } from "../../../../hooks/useModal";
 import AddVariant from "./components/AddVariant";
 import { useGetAllBrands } from "../../hooks/useBrandManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
-import { useForm, useFieldArray } from "react-hook-form";
-import toast from "react-hot-toast";
-import { useAddProduct, useGetProduct } from "../../hooks/useProductManagement";
+import { useGetProduct } from "../../hooks/useProductManagement";
 import { useParams } from "react-router";
 import Loader from "../../../../components/Loader";
 const ViewProduct = () => {

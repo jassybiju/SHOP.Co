@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useDeleteAddress, useSetAsPrimaryAddress } from "@/app/User/Accounts/hooks/useAccount";
-import { useNavigate } from "react-router";
 import { useModal } from "@/hooks/useModal";
-import AddAddress from "@/app/User/Accounts/pages/address/AddAddress";
 import ModalWrapper from "@/components/ModalWrapper";
 import EditAddress from "@/app/User/Accounts/pages/address/EditAddress";
 
@@ -11,7 +9,6 @@ import EditAddress from "@/app/User/Accounts/pages/address/EditAddress";
 const CheckoutAddress = ({data}) => {
  const { mutate: deleteAddress } = useDeleteAddress();
     const { mutate: setAsPrimary } = useSetAsPrimaryAddress();
-    const navigate = useNavigate();
     const {openModal , closeModal} = useModal()
 
 

@@ -2,22 +2,12 @@
 // import { Input } from "@/components/ui/input";
 // import { Badge } from "@/components/ui/badge";
 import {
-    Heart,
-    Search,
-    ShoppingCart,
-    User,
-    ChevronDown,
-    X,
     Star,
     ArrowRight,
     ArrowLeft,
     Check,
-    Mail,
 
 } from "lucide-react";
-import { useLogoutUser } from "../../../Auth/hooks/useAuth";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 import NewsLetter from "../../components/NewsLetter";
 import { useHome } from "../../hooks/useHome";
 import ProductCard from "../search/components/ProductCard";

@@ -13,7 +13,7 @@ export default defineConfig({
   server : {
     // host : true,
     port : 5173,
-    allowedHosts : ["shop.serveo.net"]
+    allowedHosts : ["resolve-computation-glucose-blackberry.trycloudflare.com"]
   },
   resolve : {
     alias : {

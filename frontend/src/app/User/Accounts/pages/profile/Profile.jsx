@@ -1,6 +1,5 @@
 import React from "react";
 import InputComponent from "@/components/InputComponent";
-import Sidebar from "../../components/Sidebar";
 import Button from "@/app/User/components/Button";
 import { useNavigate } from "react-router";
 import { useUser } from "@/hooks/useUser";

@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 
 const RedirectIfNoOTP = ({ children }) => {
     const { state = {} } = useLocation();

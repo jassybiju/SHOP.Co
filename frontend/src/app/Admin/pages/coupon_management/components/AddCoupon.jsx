@@ -6,7 +6,6 @@ import { useModal } from "@/hooks/useModal";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router";
 
 const getTodayString = () => {
     const today = new Date();

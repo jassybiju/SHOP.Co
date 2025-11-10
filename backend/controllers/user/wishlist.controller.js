@@ -76,6 +76,7 @@ export const getAllWishlistController = async (req, res, next) => {
 			const product = x.product_id;
 			return {
 				_id: x._id,
+                discount : product.discount > product.category_id.discount ? product.discount : product.category_id.discount,
 				product_id: product._id,
 				name: product.name,
 				price: product.price,

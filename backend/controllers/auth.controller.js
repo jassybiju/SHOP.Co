@@ -1,6 +1,7 @@
 import { oauth2 } from "googleapis/build/src/apis/oauth2/index.js";
 import client from "../config/redisClient.js";
 import { User } from "../models/user.model.js";
+import { Cart } from "../models/cart.model.js";
 import { Wallet } from "../models/wallet.model.js";
 import { OTP_TYPES, OTP_INVALID_TIME, OTP_EXPIRY_TIME, OTP_VERIFY_LIMIT } from "../utils/CONSTANTS.js";
 import { oauth2Client } from "../utils/googleClient.js";
@@ -380,6 +381,7 @@ export const getUserDetails = async (req, res, next) => {
 		}
 		const data = verifyToken(req.cookies.jwt);
 		const user = await User.findOne({ email: data.email });
+        const cart = await Cart.find({user_id : user?._id}).countDocuments()
 		console.log(user);
 		if (!user) {
 			res.status(403).cookie("jwt", "", {
@@ -417,6 +419,7 @@ export const getUserDetails = async (req, res, next) => {
 				phone: user.phone,
 				role: user.role,
 				active: user.active,
+                cart: cart,
 				refferal_id: user.refferal_id,
 				avatar_url: user?.avatar_url ? cloudinary.url(user.avatar_url, { secure: true }) : null,
 			},

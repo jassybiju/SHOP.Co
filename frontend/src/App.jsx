@@ -19,6 +19,7 @@ const App = () => {
         <ReactQueryDevtools/>
             <Toaster toastOptions={{className : "z-9999"}}/>
             <ModalProvider>
+            
                 <RouterProvider router={router} hydrateFallback={<>Loading</>} />
            </ModalProvider>
         </>

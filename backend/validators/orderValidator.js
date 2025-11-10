@@ -25,7 +25,10 @@ const orderSearchSchema = Joi.object({
 	sort: Joi.string().valid("createdAt").empty('').default("createdAt"), // TODO add valids
 	order: Joi.string().valid("asc", "desc").empty('').insensitive().default("desc").optional(),
 	status: Joi.string().valid("PLACED", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURNED", "REFUNDED", "all").insensitive().default("all"),
-    page : Joi.number().integer().min(1).default(1),
+    page : Joi.number().integer().custom((value)=>{
+        if(value < 1) return 1;
+        return value
+    }).default(1),
     limit: Joi.number().integer().min(1).max(100).default(5),
 });
 

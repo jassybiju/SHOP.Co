@@ -1,10 +1,7 @@
 
-import { MoveLeft, MoveRight } from "lucide-react";
-import AdminPagination from "./AdminPagination";
 import Pagination from "../../Home/pages/search/components/Pagination";
 
 const TableComponent = ({ data = [], column = [], page, pages, onPageChange }) => {
-    console.log(data,pages,page)
     return (
         <div className="bg-white shadow rounded-2xl p-4 m-4 w-max-xl overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-100">

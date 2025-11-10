@@ -3,7 +3,6 @@ import Button from "@/app/User/components/Button";
 import InputComponent from "@/components/InputComponent";
 import { useUser } from "@/hooks/useUser";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import {  useEditAccount } from "../../../hooks/useAccount";
 import { Loader2 } from "lucide-react";
 import AvatarImageComponent from "./AvatarImageComponent";
@@ -11,7 +10,6 @@ import ChangeUserEmail from "./ChangeUserEmail";
 import toast from "react-hot-toast";
 
 const EditProfile = () => {
-    const navigate = useNavigate();
     const { data: user } = useUser();
     const { register, handleSubmit, formState :{ errors}, setValue } = useForm({
         defaultValues: {

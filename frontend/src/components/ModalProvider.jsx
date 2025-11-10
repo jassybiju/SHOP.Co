@@ -1,7 +1,6 @@
 import { createPortal } from "react-dom";
 import { ModalContext } from "./ModalContext";
 import { useEffect, useState } from "react";
-import { IsRestoringProvider } from "@tanstack/react-query";
 
 export const ModalProvider = ({ children }) => {
     // const [showModal, setShowModal] = useState(false);

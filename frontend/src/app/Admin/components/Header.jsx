@@ -1,4 +1,4 @@
-import { ChevronLeft, Home, HomeIcon, Menu } from "lucide-react";
+import { ChevronLeft, Home, Menu } from "lucide-react";
 import { Link, useOutletContext } from "react-router";
 
 const Header = ({

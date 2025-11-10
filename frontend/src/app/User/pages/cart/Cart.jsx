@@ -1,15 +1,13 @@
 import BreadCrumb from "@/app/Home/components/BreadCrumb";
 import React from "react";
 import Button from "../../components/Button";
-import { useGetAllCart, useRemoveCartItems, useUpdateCartItems } from "../../hooks/useCart";
+import { useGetAllCart,} from "../../hooks/useCart";
 import Loader from "@/components/Loader";
 import { useNavigate } from "react-router";
 import { ProductCard } from "../../components/ProductCart";
-import { useResponsive } from "@/hooks/useResponsive";
 const Cart = () => {
 	const { data: cart, status: getStatus } = useGetAllCart();
 	const navigate = useNavigate();
-	const { isTab } = useResponsive();
 	if (getStatus === "pending") return <Loader />;
 	console.log(cart);
 	return   (

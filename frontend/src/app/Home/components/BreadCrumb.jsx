@@ -7,13 +7,13 @@ const BreadCrumb = ({ items, separator }) => {
   // If no items prop, generate from URL
   const pathItems = items?.length
     ? items
-    : location.pathname
+    : [{label : "home", link: '/'},...location.pathname
         .split("/")
         .filter(Boolean)
         .map((name, index, arr) => ({
           label: name.charAt(0).toUpperCase() + name.slice(1), // capitalize
           link: "/" + arr.slice(0, index + 1).join("/"),
-        }));
+        }))];
 
   return (
     <nav className="flex items-center space-x-1 text-sm mb-6" aria-label="Breadcrumb">

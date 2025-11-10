@@ -42,7 +42,6 @@ export const useToggleCoupon = () => {
     return useMutation({
         mutationFn : toggleCouponService ,
         onSuccess : ()=>{
-            console.log(123)
             toast.success("Coupon toggled successfully")
             queryClient.invalidateQueries(['coupon'])}
     })

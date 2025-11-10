@@ -1,6 +1,6 @@
 import React from "react";
 import { useRemoveCartItems, useUpdateCartItems } from "../hooks/useCart";
-import { BatteryWarning, LucideFileWarning, Minus, Plus, Trash2 } from "lucide-react";
+import { BatteryWarning, Minus, Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link } from "react-router";
 

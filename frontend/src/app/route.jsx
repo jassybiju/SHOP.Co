@@ -15,7 +15,6 @@ import Dashboard from "./Admin/pages/Dashboard/Dashboard";
 import RoleBasedProtectedRoute from "../components/RoleBasedProtectedRoute";
 import AdminLayout from "./Layout/AdminLayout";
 import UserManagement from "./Admin/pages/user_management/UserManagement";
-import { requireAdminLoader } from "../utils/requireAdminLoader";
 import UserDetails from "./Admin/pages/user_management/UserDetails";
 import ProductManagement from "./Admin/pages/product_management/ProductManagement";
 import BrandMangement from "./Admin/pages/brand_management/BrandMangement";

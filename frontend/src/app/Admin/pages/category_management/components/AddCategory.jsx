@@ -1,10 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useModal } from "../../../../../hooks/useModal";
 import { useForm } from "react-hook-form";
 import { useAddCategory } from "../../../hooks/useCategoryManagement";
 import { toast } from "react-hot-toast";
 import {Loader2} from 'lucide-react'
-import { useState } from "react";
 import useConfirmationModal from "../../../hooks/useConfirmationModal";
 export default function AddCategory() {
     const { closeModal } = useModal();

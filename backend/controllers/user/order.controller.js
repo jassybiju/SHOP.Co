@@ -130,8 +130,8 @@ export const getOrderById = async (req, res, next) => {
 			.populate([
 				{
 					path: "variant_id",
-					populate: "product_id",
-					select: "images name",
+					populate: { path: "product_id", select: "images name" },
+                    select : "color size"
 				},
 			])
 			.lean();
@@ -492,18 +492,18 @@ export const verifyPayment = async (req, res, next) => {
 				{ payment_status: "PAID" },
 				{ new: true }
 			).lean();
-            if(!order) throw new ErrorWithStatus("Order Not foud", HTTP_RES.NOT_FOUND)
+			if (!order) throw new ErrorWithStatus("Order Not foud", HTTP_RES.NOT_FOUND);
 			const orderItems = await OrderItem.find({ order_id: order._id }).lean();
 
-            for (const item of orderItems) {
-                const variant = await ProductVariant.findById(item.variant_id).lean()
-                if(!variant) throw new ErrorWithStatus('Variant not found', HTTP_RES.NOT_FOUND)
+			for (const item of orderItems) {
+				const variant = await ProductVariant.findById(item.variant_id).lean();
+				if (!variant) throw new ErrorWithStatus("Variant not found", HTTP_RES.NOT_FOUND);
 
-                if(variant.stock < item.quantity){
-                    await Order.findByIdAndDelete(order._id)
-                    throw new ErrorWithStatus("Order cancelled Insufficent quantityt", HTTP_RES.NOT_FOUND)
-                }
-            }
+				if (variant.stock < item.quantity) {
+					await Order.findByIdAndDelete(order._id);
+					throw new ErrorWithStatus("Order cancelled Insufficent quantityt", HTTP_RES.NOT_FOUND);
+				}
+			}
 
 			await Promise.all(
 				orderItems.map((x) =>
@@ -521,58 +521,58 @@ export const verifyPayment = async (req, res, next) => {
 };
 
 export const cancelPayment = async (req, res, next) => {
-    try{
-        const {razorpay_order_id} = req.body
+	try {
+		const { razorpay_order_id } = req.body;
 
-        const transaction = await Transaction.findOneAndUpdate({razorpay_order_id},{status : "FAILED"})
+		const transaction = await Transaction.findOneAndUpdate({ razorpay_order_id }, { status: "FAILED" });
 
-        return res.status(HTTP_RES.ACCEPTED).json({status : "success"})
-    }catch(error){
-        next(error)
-    }
-}
+		return res.status(HTTP_RES.ACCEPTED).json({ status: "success" });
+	} catch (error) {
+		next(error);
+	}
+};
 
+export const repayOrderController = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const user = req.user;
+		const order = await Order.findById(id).lean();
+		console.log(order);
+		if (!order) throw new ErrorWithStatus("Order Not Found", HTTP_RES.NOT_FOUND);
 
-export const repayOrderController = async( req, res, next) => {
-    try{
-        const {id} = req.params
-        const user = req.user
-        const order = await Order.findById(id).lean()
-        console.log(order)
-        if(!order) throw new ErrorWithStatus("Order Not Found", HTTP_RES.NOT_FOUND)
+		const orderItems = await OrderItem.find({ order_id: order._id }).lean();
 
-        const orderItems = await OrderItem.find({order_id : order._id}).lean()
+		for (const item of orderItems) {
+			const variant = await ProductVariant.findById(item.variant_id).lean();
 
-        for(const item of orderItems ){
-            const variant = await ProductVariant.findById(item.variant_id).lean()
+			if (variant.stock < item.quantity) {
+				throw new ErrorWithStatus("Order failed invalid stock", HTTP_RES.BAD_REQUEST);
+			}
+		}
 
-            if(variant.stock < item.quantity){
-                throw new ErrorWithStatus("Order failed invalid stock",HTTP_RES.BAD_REQUEST)
-            }
-        }
+		const razorpay_option = {
+			amount: order.total_amount * 100,
+			currency: "INR",
+			receipt: order._id,
+		};
+		const razorpay_order = await razorpay.orders.create(razorpay_option);
+		console.log(razorpay_order);
+		const transaction = await Transaction.create([
+			{
+				user_id: user._id,
+				order_id: order._id,
+				type: "debit",
+				amount: order.total_amount,
+				status: "PENDING",
+				razorpay_order_id: razorpay_order.id,
+				description: `Payment initiated for ${order._id}`,
+			},
+		]);
 
-        const razorpay_option = {
-            amount : order.total_amount * 100,
-            currency : "INR",
-            receipt : order._id
-        }
-        const razorpay_order = await razorpay.orders.create(razorpay_option)
-        console.log(razorpay_order)
-        const transaction = await Transaction.create([
-            {
-                user_id : user._id,
-                order_id : order._id,
-                type : 'debit',
-                amount : order.total_amount,
-                status : "PENDING",
-                razorpay_order_id : razorpay_order.id,
-                description : `Payment initiated for ${order._id}`
-            }
-        ])
-
-        return res.status(HTTP_RES.OK).json({status : "success", message : "Repay successfuly init", data : razorpay_order})
-
-    }catch(error){
-        next(error)
-    }
-}
+		return res
+			.status(HTTP_RES.OK)
+			.json({ status: "success", message: "Repay successfuly init", data: razorpay_order });
+	} catch (error) {
+		next(error);
+	}
+};

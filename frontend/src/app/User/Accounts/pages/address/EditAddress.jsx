@@ -1,11 +1,11 @@
 import React from "react";
 import InputComponent from "@/components/InputComponent";
-import { Link, redirect, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import Button from "@/app/User/components/Button";
-import { useAddAddress, useEditAccount, useEditAddress, useGetAddress } from "../../hooks/useAccount";
+import { useEditAddress, useGetAddress } from "../../hooks/useAccount";
 import toast from "react-hot-toast";
-import { ChevronLeft, Loader2, Menu, MoveLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import Loader from "@/components/Loader";
 

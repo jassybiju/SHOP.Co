@@ -91,6 +91,8 @@ export const createOrderService = async (currentUser, orderData) => {
 			console.log(2);
 			orderItems.push(orderItem);
 
+
+
 			// ! removing from cart
 			// TODO Should i remove the number of quantity order or the full
 			// * Removing the item from cart
@@ -100,7 +102,7 @@ export const createOrderService = async (currentUser, orderData) => {
 			});
 
 			// * Removing the quantity from the inventory
-            // * if razorpay don't reduce the quantity
+			// * if razorpay don't reduce the quantity
 			if (orderData.payment_method !== "RAZORPAY") {
 				await ProductVariant.findByIdAndUpdate(
 					item.variant_id,
@@ -126,6 +128,12 @@ export const createOrderService = async (currentUser, orderData) => {
 		}
 		console.log(payable_amount);
 		order.total_amount = toFixedNum(payable_amount + order.delivery_fee);
+
+        if (order.payment_method === "COD" && order.total_amount > 1000)
+				throw new ErrorWithStatus(
+					"Cannot do COD if total amount is less than 1000",
+					HTTP_RES.BAD_REQUEST
+				);
 
 		order.status_history = [{ status: "PLACED", description: "none" }];
 

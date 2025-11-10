@@ -5,7 +5,6 @@ import AuthBanner from "../../components/AuthBanner";
 import Select from "../../../../components/Select";
 import { useRegister } from "../../hooks/useAuth";
 import toast from "react-hot-toast";
-import { useStore } from "../../../../store/store";
 import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 import { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";

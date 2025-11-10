@@ -2,13 +2,11 @@ import { useForm } from "react-hook-form";
 import { useModal } from "../../../../../hooks/useModal";
 import { useEditBrand, useGetBrand } from "../../../hooks/useBrandManagement";
 import { useEffect } from "react";
-import ImageInput from "../ui/ImageInput";
 import toast from "react-hot-toast";
 import { ImageComponent } from "../../product_management/components/ImageComponent";
 import useConfirmationModal from "../../../hooks/useConfirmationModal";
 
 const EditBrand = ({ id }) => {
-    console.log(id);
     const { data: brands, status } = useGetBrand(id);
     const {
         register,
@@ -29,19 +27,15 @@ const EditBrand = ({ id }) => {
         });
     }, [brands, reset]);
 
-    console.log(editBrandStatus);
 
     const onSubmit = (data) => {
-        console.log(data);
         editBrand(
             { id, data },
             {
                 onError: (data) => {
-                    console.log(data);
                     toast.error(data.response.data.message)
                 },
                 onSuccess : (data) =>{
-                    console.log(data)
                     toast.success(data.message)
                     closeModal('edit-brand')
                 }

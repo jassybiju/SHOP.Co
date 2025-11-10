@@ -1,11 +1,8 @@
 import {
-    QueryClient,
     useMutation,
-    useQuery,
     useQueryClient,
 } from "@tanstack/react-query";
 import {
-    fetchUser,
     forgetPassword,
     loginUser,
     logoutUser,
@@ -14,7 +11,6 @@ import {
     resetPassword,
     verifyOtp,
 } from "../services/auth.service";
-import { useStore } from "../../../store/store";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 

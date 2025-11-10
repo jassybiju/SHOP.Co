@@ -1,17 +1,12 @@
-import { use, useState } from "react";
-import Navbar from "../../components/Navbar";
-import { ChevronDown, ChevronLeft, ChevronRight, Filter, Check, Sliders, Cross, X } from "lucide-react";
-import { forwardRef } from "react";
+import { useState } from "react";
+import { ChevronDown, Filter, Check, X } from "lucide-react";
 import { Slider } from "./components/Slider";
 import { useSearchProduct } from "../../hooks/useSearch";
-import { useGetAllBrands } from "../../../Admin/hooks/useBrandManagement";
 import ProductCard from "./components/ProductCard";
 import { useEffect } from "react";
 import Pagination from "./components/Pagination";
 import { useSearchParams } from "react-router";
 import BreadCrumb from "../../components/BreadCrumb";
-import { useThrottle } from "../../../../hooks/useThrottle";
-import MultiRangeSlider from "./components/MultiRangeSlider";
 import { useResponsive } from "@/hooks/useResponsive";
 
 // const Slider = ()=>(<>SLider</>)

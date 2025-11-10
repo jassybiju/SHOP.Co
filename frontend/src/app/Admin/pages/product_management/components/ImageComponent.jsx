@@ -2,9 +2,7 @@ import { ImageUp } from "lucide-react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useModal } from "../../../../../hooks/useModal";
 import ImageCropperModal from "./ImageCropperModal";
-import toast from "react-hot-toast";
 
 export const ImageComponent = ({
     name = "",

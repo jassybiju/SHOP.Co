@@ -1,7 +1,6 @@
 import { MoveLeft, MoveRight } from "lucide-react";
 
 const AdminPagination = ({ pages, page, onPageChange }) => {
-    console.log(pages);
     return (
         <div className="flex items-center text-center justify-between border-t border-white/10 px-4 py-3 sm:px-6">
             {pages === 0 ? (

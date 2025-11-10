@@ -88,7 +88,7 @@ const BrandMangement = () => {
 	];
 
 	return (
-<div className="p-2 sm:p-4">
+<div className="">
 			<Header heading="Brand Mangement" />
 
 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mx-2 sm:mx-6 mt-3">

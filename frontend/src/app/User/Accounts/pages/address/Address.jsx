@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useGetAllAddress } from "../../hooks/useAccount";
 
 import AddressComponent from "./component/AddressComponent";

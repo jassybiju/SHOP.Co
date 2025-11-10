@@ -2,12 +2,14 @@ import { computeDateRange } from "../../services/admin/salesReport.service.js";
 import { Order } from "../../models/order.model.js";
 import { HTTP_RES } from "../../utils/CONSTANTS.js";
 import { OrderItem } from "../../models/order_item.model.js";
+import ErrorWithStatus from "../../config/ErrorWithStatus.js";
+import cloudinary from "../../utils/cloudinary.js";
 
 export const getSalesReportController = async (req, res, next) => {
 	try {
 		const { range, start, end, page = 1, limit = 10 } = req.query;
 		const { startDate, endDate } = computeDateRange(range, start, end);
-        console.log(startDate, endDate)
+		console.log(startDate, endDate);
 		const skip = (page - 1) * limit;
 		const filter = {
 			createdAt: { $gte: startDate, $lte: endDate },
@@ -47,7 +49,11 @@ export const getSalesReportController = async (req, res, next) => {
 				$project: {
 					_id: 0,
 					discountAmount: {
-						$multiply: [{ $toDouble: "$price" }, "$quantity", { $divide: ["$discount", 100] }],
+						$multiply: [
+							{ $toDouble: "$price" },
+							"$quantity",
+							{ $divide: ["$discount", 100] },
+						],
 					},
 				},
 			},
@@ -125,7 +131,11 @@ export const getSalesReportController = async (req, res, next) => {
 		for (const order of couponOrders) {
 			const coupon = order.coupon_id;
 			if (!coupon || !coupon.discount_percentage) continue;
-			const orderItems = await OrderItem.find({ order_id: order._id, is_returned: false, is_cancelled: false }).lean();
+			const orderItems = await OrderItem.find({
+				order_id: order._id,
+				is_returned: false,
+				is_cancelled: false,
+			}).lean();
 			let subTotal = 0;
 			console.log(orderItems);
 
@@ -151,7 +161,10 @@ export const getSalesReportController = async (req, res, next) => {
 				// totalCouponDiscountAmount+= effectiveDiscount
 				// console.log(totalCouponDiscountAmount)
 				const potentialDiscount = subTotal * (coupon.discount_percentage / 100);
-				const effectiveDiscount = potentialDiscount > coupon.max_discount_amount ? coupon.max_discount_amount : potentialDiscount;
+				const effectiveDiscount =
+					potentialDiscount > coupon.max_discount_amount
+						? coupon.max_discount_amount
+						: potentialDiscount;
 				console.log(effectiveDiscount, order.total_amount, subTotal);
 				totalCouponDiscountAmount += effectiveDiscount;
 				totalCouponsUsed++;
@@ -161,7 +174,18 @@ export const getSalesReportController = async (req, res, next) => {
 		console.log(totalCouponDiscountAmount);
 		res.status(HTTP_RES.OK).json({
 			message: "Report Recieved Succesfully",
-			data: { order, pages: totalPages, page, limit, startDate, endDate, grandTotalOrder, grandTotalAmount, grandTotalDiscount, totalCouponDiscountAmount },
+			data: {
+				order,
+				pages: totalPages,
+				page,
+				limit,
+				startDate,
+				endDate,
+				grandTotalOrder,
+				grandTotalAmount,
+				grandTotalDiscount,
+				totalCouponDiscountAmount,
+			},
 			status: "success",
 		});
 	} catch (error) {
@@ -184,7 +208,6 @@ export const getSalesReportDownloadableController = async (req, res, next) => {
 				{ path: "user_id", select: "email phone first_name last_name" },
 				{ path: "shipping_address_id" },
 				{ path: "coupon_id", select: "discount_percentage name code" },
-
 			])
 			.lean();
 		const simplifiedOrders = [];
@@ -202,7 +225,10 @@ export const getSalesReportDownloadableController = async (req, res, next) => {
 			const activeItems = orderItems.filter((item) => !item.is_cancelled && !item.is_returned);
 
 			const subtotal = activeItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-			const discountApplied = activeItems.reduce((acc, item) => acc + item.price * (item.discount / 100) * item.quantity, 0);
+			const discountApplied = activeItems.reduce(
+				(acc, item) => acc + item.price * (item.discount / 100) * item.quantity,
+				0
+			);
 
 			let couponDiscountApplied = 0;
 			if (order.coupon_id?.discount_percentage) {
@@ -212,7 +238,10 @@ export const getSalesReportDownloadableController = async (req, res, next) => {
 				// Only apply if min order condition is met
 				if (subtotalAfterItemDiscount >= (coupon.min_order_amount || 0)) {
 					const potentialDiscount = subtotalAfterItemDiscount * (coupon.discount_percentage / 100);
-					couponDiscountApplied = Math.min(potentialDiscount, coupon.max_discount_amount || potentialDiscount);
+					couponDiscountApplied = Math.min(
+						potentialDiscount,
+						coupon.max_discount_amount || potentialDiscount
+					);
 				}
 			}
 
@@ -223,7 +252,89 @@ export const getSalesReportDownloadableController = async (req, res, next) => {
 				couponDiscountApplied,
 			});
 		}
-		res.status(HTTP_RES.OK).json({ message: "Report Recieved Succesfully", data: { order : simplifiedOrders, totalOrders, startDate, endDate }, status: "success" });
+		res.status(HTTP_RES.OK).json({
+			message: "Report Recieved Succesfully",
+			data: { order: simplifiedOrders, totalOrders, startDate, endDate },
+			status: "success",
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getSaleReportDownloadableController = async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const order = await Order.findOne({ _id: id, })
+			.populate([
+				{ path: "shipping_address_id" },
+				{ path: "coupon_id", select: "discount_percentage name code max_discount_amount" },
+				{
+					path: "transaction_id",
+					select: "razorpay_order_id",
+				},
+			])
+			.lean();
+
+		if (!order) throw new ErrorWithStatus("Order not found", HTTP_RES.NOT_FOUND);
+
+		const orderItems = await OrderItem.find({ order_id: order._id })
+			.populate([
+				{
+					path: "variant_id",
+					populate: { path: "product_id", select: "images name" },
+					select: "color size",
+				},
+			])
+			.lean();
+
+		const simplifiedOrder = {
+			...order,
+			items: orderItems.map((x) => {
+				const variant = x.variant_id;
+				const product = variant.product_id;
+
+				return {
+					...x,
+					images: cloudinary.url(product.images[0].url, {
+						secure: true,
+					}),
+					name: product.name,
+					color: variant.color,
+					size: variant.size,
+					price: x.price.toString(),
+				};
+			}),
+		};
+
+		const subtotal = simplifiedOrder.items
+			.filter((x) => !x.is_cancelled)
+			.reduce((acc, cur) => cur.price * cur.quantity + acc, 0);
+		const discountApplied = simplifiedOrder.items.reduce(
+			(acc, cur) => acc + cur.price * (cur.discount / 100) * cur.quantity,
+			0
+		);
+
+		let couponDiscountApplied = 0;
+		console.log(order.coupon_id?.discount_percentage);
+		if (order.coupon_id?.discount_percentage) {
+			couponDiscountApplied = Math.min(
+				((subtotal - discountApplied) * order.coupon_id.discount_percentage) / 100,
+				order.coupon_id.max_discount_amount
+			);
+		}
+
+		return res.status(200).json({
+			data: {
+				...simplifiedOrder,
+				subtotal,
+				discountApplied,
+				couponDiscountApplied,
+				razorpay_order_id: order?.transaction_id?.razorpay_order_id,
+			},
+			status: "success",
+			message: "Order Recieved Successfully",
+		});
 	} catch (error) {
 		next(error);
 	}

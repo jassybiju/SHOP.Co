@@ -1,4 +1,3 @@
-import Dropdown from "@/components/Dropdown";
 import { useGetWallet } from "../../hooks/useWallet";
 import TableComponent from "@/app/Admin/components/TableComponent";
 import { useModal } from "@/hooks/useModal";
@@ -10,11 +9,11 @@ const Wallet = () => {
     const {openModal} = useModal()
     const showAddMoneyModal = () => openModal('add-money',<ModalWrapper render={<AddMoneyModal/>}/>)
 
-    const walletTypeOptions = [
-        {label : "Credit", value : 'credit'},
-        {label : "Debit", value : 'debit'},
-        {label : "All", value : 'all'},
-    ]
+    // const walletTypeOptions = [
+    //     {label : "Credit", value : 'credit'},
+    //     {label : "Debit", value : 'debit'},
+    //     {label : "All", value : 'all'},
+    // ]
     const walletTimePeriodOptions = [
         {label : 'Today', value : '1'},
         {label : 'Last Week', value : '7'},

@@ -1,4 +1,3 @@
-import { Copy } from "lucide-react";
 import { useGetUserCoupons } from "../../hooks/useAccount";
 
 const Coupon = () => {

@@ -7,7 +7,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../../services/auth.service";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { useUser } from "../../../../hooks/useUser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useResponsive } from "@/hooks/useResponsive";
 const Login = () => {
@@ -46,7 +45,6 @@ const Login = () => {
 				const first_name = result.data.first_name;
 				const active = result.data.active;
 				const role = result.data.role;
-				const token = result.data.token;
 				const obj = { email, first_name, active, role };
 				queryClient.setQueryData(["user"], obj);
 				navigate("/");

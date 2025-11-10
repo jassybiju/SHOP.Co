@@ -1,6 +1,5 @@
 import {Search as SearchIcon} from "lucide-react";
 import React from 'react'
-import { useSearchParams } from "react-router";
 
 
 

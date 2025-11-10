@@ -1,5 +1,4 @@
-import { axiosInstance,  } from "@/lib/axios"
-import axios from "axios"
+import { axiosInstance  } from "@/lib/axios"
 
 export const getCheckout = async (state) => {
     console.log(state)

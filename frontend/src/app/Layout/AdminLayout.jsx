@@ -8,9 +8,7 @@ import {
     ShoppingBag,
     User,
 } from "lucide-react";
-import Header from "../Admin/components/Header";
 // import ShowModal from "./ShowModal";
-import { ModalProvider } from "../../components/ModalProvider";
 import { useState } from "react";
 
 const AdminLayout = () => {

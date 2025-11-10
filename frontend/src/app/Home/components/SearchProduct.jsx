@@ -1,6 +1,6 @@
 import { useDebounce } from "@/hooks/useDebounce";
 import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 const SearchProduct = () => {

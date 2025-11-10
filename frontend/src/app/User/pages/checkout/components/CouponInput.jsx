@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const CouponInput = ({cartTotal , setDiscountData , available}) => {
     const codeRef = useRef()
-    const {mutate : validateCoupon , status , data , error} = useValidateCoupon()
+    const {mutate : validateCoupon , } = useValidateCoupon()
 
     const handleApplyCoupon = () => {
         validateCoupon(
@@ -41,9 +41,9 @@ const CouponInput = ({cartTotal , setDiscountData , available}) => {
 					required
 				/>
                 <datalist id='suggestion'>
-                    {available.map(x => (
+                    {available.map((x,i) => (
 
-                    <option value={x.code}>{x.description}</option>
+                    <option key={i} value={x.code}>{x.description}</option>
                     ))}
                 </datalist>
 			</div>

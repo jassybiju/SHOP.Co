@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useModal } from "../../../../../hooks/useModal";
 import { Loader2 } from "lucide-react";
 import { useGetCategory } from "../../../hooks/useCategoryManagement";

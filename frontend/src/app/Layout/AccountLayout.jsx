@@ -4,7 +4,7 @@ import Footer from "../Home/components/Footer";
 import Navbar from "../Home/components/Navbar";
 import Sidebar from "../User/Accounts/components/Sidebar";
 import { useResponsive } from "@/hooks/useResponsive";
-import { Menu, Sandwich, Search } from "lucide-react";
+import { Menu } from "lucide-react";
 
 const AccountLayout = () => {
     const [open, setOpen] = useState(false)

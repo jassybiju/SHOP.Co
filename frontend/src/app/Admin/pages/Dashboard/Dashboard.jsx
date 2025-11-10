@@ -30,7 +30,7 @@ const Dashboard = () => {
 			<div>
 				{/* //starting  */}
 
-				<div className="max-w-3xl w-full mt-10 bg-white rounded-lg shadow-sm p-4 md:p-6 ms-10">
+				<div className="max-w-3xl w-auto mt-10 bg-white rounded-lg shadow-sm p-4 md:p-6 ms-10">
 					{/* Header Section */}
 					<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5 ">
 						{/* Metrics */}
@@ -54,12 +54,13 @@ const Dashboard = () => {
 					</div>
 
 					{/* Line Chart */}
-					<div id="line-chart" className="w-full overflow-x-auto">
+					<div id="line-chart" className="w-full">
 						<Chart
 							options={{
 								chart: {
 									height: 280,
 									type: "area",
+                                    width : "100%"
 								},
 								title: { text: "Revenue Over time" },
 

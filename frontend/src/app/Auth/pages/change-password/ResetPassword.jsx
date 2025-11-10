@@ -1,9 +1,8 @@
 import { useForm } from "react-hook-form";
 import Input from "../../../../components/Input";
 import { Link, Navigate, useLocation, useNavigate } from "react-router";
-import { useForgetPassword, useResetPassword } from "../../hooks/useAuth";
+import { useResetPassword } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
-import { OTP_TYPES } from "../../../../utils/CONSTANTS";
 const ResetPassword = () => {
     const {
         register,

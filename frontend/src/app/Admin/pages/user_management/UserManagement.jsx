@@ -5,9 +5,7 @@ import Search from "../../components/Search";
 import Dropdown from "../../../../components/Dropdown";
 import TableComponent from "../../components/TableComponent";
 import { useGetAllUsers, useToggleUserActiveStatus } from "../../hooks/useUserManagement";
-import UserStateComponent from "./ui/UserStateComponent";
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useConfirmationModal from "../../hooks/useConfirmationModal";
 
