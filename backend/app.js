@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "./utils/env.js";
 import "./utils/logger.js";
 import express, { urlencoded } from "express";
@@ -90,3 +91,5 @@ app.listen(PORT, () => {
     connectDB();
     console.log(`listening to port ${PORT}`);
 });
+=======
+>>>>>>> 1c8034e5fd80e8fcf26abc7a46238fa4d2ab3adf
