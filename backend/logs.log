@@ -1,0 +1,63 @@
+{"level":"info","message":"handled"}
+{"level":"info","message":"handled"}
+{"level":"info","message":"handled"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 400 - User is Logged In through Google"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 500 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 401 - jwt must be a string"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 401 - undefined"}
+{"level":"info","message":"handled 400 - Access Denied"}
+{"level":"info","message":"handled 400 - Access Denied"}
+{"level":"info","message":"handled 400 - Access Denied"}
+{"level":"info","message":"handled 400 - Access Denied"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:01:41.269Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:01:42.305Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:05:51.016Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:05:52.067Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:14:04.023Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T01:14:05.052Z"}
+{"level":"info","message":"handled 404 - User not found","timestamp":"2025-11-10T03:00:53.242Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:09:22.653Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:17:01.366Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:17:02.698Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:17:03.788Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:17:14.854Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:17:15.873Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:19:58.428Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:19:59.467Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:20:09.086Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:20:11.727Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-10T03:20:12.766Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T03:55:35.382Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:03:29.395Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:04:16.973Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:20:41.440Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:20:45.123Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:20:46.226Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:35:36.515Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:35:37.558Z"}
