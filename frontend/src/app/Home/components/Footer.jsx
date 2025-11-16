@@ -2,15 +2,15 @@ const Footer = () => {
     return (
         <footer className="bg-gray-100 py-16 mt-20 border-t-2 border-gray-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+                <div className="flex justify-center text-center gap-8 mb-8">
                     {/* Logo and Description */}
-                    <div className="lg:col-span-1">
+                    <div className="items-center flex flex-col">
                         <h3 className="font-bakbak text-2xl font-bold mb-4">
                             SHOP.CO
                         </h3>
                         <p className="font-poppins text-gray-600 mb-6 leading-relaxed">
                             We have clothes that suits your style and which
-                            you're proud to wear. From women to men.
+                            youre proud to wear. From women to men.
                         </p>
                         <div className="flex space-x-3">
                             <div className="w-10 h-10 bg-white border border-gray-300 rounded-full flex items-center justify-center cursor-pointer">
@@ -52,171 +52,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Company Links */}
-                    <div>
-                        <h4 className="font-poppins font-medium text-lg mb-4 uppercase tracking-wider">
-                            Company
-                        </h4>
-                        <ul className="font-poppins text-gray-600 space-y-3">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    About
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Features
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Works
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Career
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Help Links */}
-                    <div>
-                        <h4 className="font-poppins font-medium text-lg mb-4 uppercase tracking-wider">
-                            Help
-                        </h4>
-                        <ul className="font-poppins text-gray-600 space-y-3">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Customer Support
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Delivery Details
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Terms & Conditions
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Privacy Policy
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* FAQ Links */}
-                    <div>
-                        <h4 className="font-poppins font-medium text-lg mb-4 uppercase tracking-wider">
-                            FAQ
-                        </h4>
-                        <ul className="font-poppins text-gray-600 space-y-3">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Account
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Manage Deliveries
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Orders
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Payments
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Resources Links */}
-                    <div>
-                        <h4 className="font-poppins font-medium text-lg mb-4 uppercase tracking-wider">
-                            Resources
-                        </h4>
-                        <ul className="font-poppins text-gray-600 space-y-3">
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Free eBooks
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Development Tutorial
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    How to - Blog
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-black transition-colors"
-                                >
-                                    Youtube Playlist
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
-
                 {/* Footer Bottom */}
                 <div className="border-t border-gray-300 pt-8">
                     <div className="flex flex-col lg:flex-row justify-between items-center">

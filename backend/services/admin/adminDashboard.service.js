@@ -1,6 +1,5 @@
 import { Order } from "../../models/order.model.js";
 import { OrderItem } from "../../models/order_item.model.js";
-import { Product } from "../../models/product.model.js";
 import { ProductVariant } from "../../models/product_variants.model.js";
 
 export class AdminDashboardService {
@@ -92,7 +91,6 @@ export class AdminDashboardService {
 	}
 
 	static async topThreeData() {
-		const orders = await Order.find().lean();
 		const productVariants = await ProductVariant.find().lean();
 		console.log(productVariants);
 		const data =await Promise.all([ OrderItem.aggregate([

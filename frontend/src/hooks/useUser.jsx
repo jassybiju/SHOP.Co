@@ -20,9 +20,6 @@ export function useUser() {
 			}
 		},
 
-		staleTime: 0,
-		cacheTime: 1000 * 60,
-		refetchOnMount: "always",
 		refetchOnWindowFocus: true,
 		retry: 1,
 		onError: (error) => {

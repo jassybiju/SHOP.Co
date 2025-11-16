@@ -3,6 +3,7 @@ import IconCards from "../../components/IconCards";
 import Header from "../../components/Header";
 import { BadgeCent } from "lucide-react";
 import { useGetUser } from "../../hooks/useUserManagement";
+import Loader from "@/components/Loader";
 
 const UserDetails = () => {
     const { id } = useParams();
@@ -10,7 +11,7 @@ const UserDetails = () => {
     const {data, isLoading} = useGetUser(id)
     // console.log(user, isLoading)
     if(isLoading){
-      return "Loading"
+      return <Loader/>
     }
     return (
       <div>

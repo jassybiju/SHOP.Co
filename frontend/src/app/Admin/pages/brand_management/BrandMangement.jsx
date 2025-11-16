@@ -9,6 +9,7 @@ import AddBrand from "./components/AddBrand";
 import ViewBrand from "./components/ViewBrand";
 import EditBrand from "./components/EditBrand";
 import ModalWrapper from "../../../../components/ModalWrapper";
+import Loader from "@/components/Loader";
 
 const BrandMangement = () => {
 	// ! TODO  edit brand
@@ -31,7 +32,7 @@ const BrandMangement = () => {
 	};
 
 	if (status !== "success") {
-		return "Loading";
+		return <Loader/>;
 	}
 
 	const column = [

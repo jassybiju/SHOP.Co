@@ -37,7 +37,7 @@ const DateRangeDropdown = ({ dateRange, setFilter }) => {
             setSelectedRangeOption('Custom Range');
         }
     }
-  }, [dateRange, isDatePickerOpen]);
+  }, [dateRange, isDatePickerOpen, selectedRangeOption]);
 
 
   const handlePredefinedRangeChange = (event) => {

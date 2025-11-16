@@ -1,4 +1,3 @@
-import { ProductVariant } from "../../models/product_variants.model.js";
 import { Product } from "../../models/product.model.js";
 import ErrorWithStatus from "../../config/ErrorWithStatus.js";
 import { HTTP_RES } from "../../utils/CONSTANTS.js";

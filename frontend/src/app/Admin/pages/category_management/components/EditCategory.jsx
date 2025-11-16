@@ -8,6 +8,7 @@ import {
 import toast from "react-hot-toast";
 import useConfirmationModal from "../../../hooks/useConfirmationModal";
 import { Loader2 } from "lucide-react";
+import Loader from "@/components/Loader";
 // import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const EditCategory = ({ id }) => {
@@ -55,7 +56,7 @@ const EditCategory = ({ id }) => {
     // }
 
     if (status !== "success") {
-        return "Loading...";
+        return <Loader/>;
     }
     return (
         <>

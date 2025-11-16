@@ -1,9 +1,8 @@
 import toast from "react-hot-toast";
-import { Navigate, useLocation, useNavigate } from "react-router";
+import { Navigate, useLocation,  } from "react-router";
 
 const RedirectIfNoOTP = ({ children }) => {
     const { state = {} } = useLocation();
-    const navigate = useNavigate();
     console.log("---------------", state?.email);
 
     if (!state?.email || !state?.otpExpiry) {

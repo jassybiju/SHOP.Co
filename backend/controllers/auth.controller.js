@@ -1,9 +1,7 @@
-import { oauth2 } from "googleapis/build/src/apis/oauth2/index.js";
 import client from "../config/redisClient.js";
 import { User } from "../models/user.model.js";
 import { Cart } from "../models/cart.model.js";
-import { Wallet } from "../models/wallet.model.js";
-import { OTP_TYPES, OTP_INVALID_TIME, OTP_EXPIRY_TIME, OTP_VERIFY_LIMIT } from "../utils/CONSTANTS.js";
+import { OTP_TYPES, OTP_INVALID_TIME, OTP_EXPIRY_TIME, OTP_VERIFY_LIMIT, HTTP_RES } from "../utils/CONSTANTS.js";
 import { oauth2Client } from "../utils/googleClient.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 import { sendOTPMail } from "../utils/nodemailer.js";
@@ -15,6 +13,7 @@ import cloudinary from "../utils/cloudinary.js";
 import { registerService } from "../services/auth.service.js";
 import { createWallet } from "../utils/helpers.js";
 import { Coupon } from "../models/coupon.model.js";
+import ErrorWithStatus from "../config/ErrorWithStatus.js";
 
 // Handles user registeration , If user unverified it deletes and recreates
 export const registerUser = async (req, res, next) => {
@@ -178,40 +177,36 @@ export const verifyOTP = async (req, res, next) => {
 				res.status(404);
 				throw new Error("User not found");
 			}
-			const newUser = await User.findOneAndUpdate({ email: email }, { $set: { is_verified: true } }, { new: true });
+			const newUser = await User.findOneAndUpdate(
+				{ email: email },
+				{ $set: { is_verified: true } },
+				{ new: true }
+			);
 			const refferedUser = await User.findOne({ refferal_id: newUser.reffered_by });
-            if(refferedUser){
-			const couponDetails = {
-				name: "Refferal Offer for",
-				description: "Flat 20% off on all orders above ₹1000",
-				usage_limit: 1,
-				min_order_amount: 1000,
-				max_discount_amount: 500,
-				discount_percentage: 20,
-				expiry_date: new Date().setDate(new Date().getDate() + 2),
-			};
-			await Coupon.create({
-				name: "Refferal Offer for " + refferedUser?.email,
-				description: "Flat 20% off on all orders above ₹1000",
-				usage_limit: 1,
-				for_user: refferedUser._id,
-				min_order_amount: 1000,
-				max_discount_amount: 500,
-				discount_percentage: 20,
-				expiry_date: new Date().setDate(new Date().getDate() + 2),
-			})
-            await Coupon.create({
-				name: "Refferal Offer for " + newUser.email,
-				description: "Flat 20% off on all orders above ₹1000",
-				usage_limit: 1,
-				for_user: newUser._id,
-				min_order_amount: 1000,
-				max_discount_amount: 500,
-				discount_percentage: 20,
-				expiry_date: new Date().setDate(new Date().getDate() + 2),
-			})
-        }
-				// await Coupon.crea    te({ ...couponDetails, for_user: newUser._id });
+			if (refferedUser) {
+
+				await Coupon.create({
+					name: "Refferal Offer for " + refferedUser?.email,
+					description: "Flat 20% off on all orders above ₹1000",
+					usage_limit: 1,
+					for_user: refferedUser._id,
+					min_order_amount: 1000,
+					max_discount_amount: 500,
+					discount_percentage: 20,
+					expiry_date: new Date().setDate(new Date().getDate() + 2),
+				});
+				await Coupon.create({
+					name: "Refferal Offer for " + newUser.email,
+					description: "Flat 20% off on all orders above ₹1000",
+					usage_limit: 1,
+					for_user: newUser._id,
+					min_order_amount: 1000,
+					max_discount_amount: 500,
+					discount_percentage: 20,
+					expiry_date: new Date().setDate(new Date().getDate() + 2),
+				});
+			}
+			// await Coupon.crea    te({ ...couponDetails, for_user: newUser._id });
 
 			await createWallet(newUser._id);
 			return res.status(201).json({
@@ -377,37 +372,17 @@ export const getUserDetails = async (req, res, next) => {
 		console.log(token);
 		if (!token) {
 			res.status(401);
-			return next("Access Denied");
+			throw new ErrorWithStatus("Access Denied",HTTP_RES.BAD_REQUEST);
 		}
 		const data = verifyToken(req.cookies.jwt);
 		const user = await User.findOne({ email: data.email });
-        const cart = await Cart.find({user_id : user?._id}).countDocuments()
+		const cart = await Cart.find({ user_id: user?._id }).countDocuments();
 		console.log(user);
 		if (!user) {
-			res.status(403).cookie("jwt", "", {
-				maxAge: 0,
-				sameSite: "None",
-				secure: true,
-			});
+
 			throw new Error("User Blocked");
 		}
 		if (!user.active) {
-			res.status(403)
-				.cookie("jwt", "", {
-					maxAge: 0,
-					sameSite: "None",
-					secure: true,
-				})
-				.json({
-					data: {
-						first_name: user.first_name,
-						last_name: user.last_name,
-						email: user.email,
-						role: user.role,
-						active: user.active,
-						refferal_id: user.refferal_id,
-					},
-				});
 			throw new Error("User Blocked");
 		}
 		console.log(user);
@@ -419,7 +394,7 @@ export const getUserDetails = async (req, res, next) => {
 				phone: user.phone,
 				role: user.role,
 				active: user.active,
-                cart: cart,
+				cart: cart,
 				refferal_id: user.refferal_id,
 				avatar_url: user?.avatar_url ? cloudinary.url(user.avatar_url, { secure: true }) : null,
 			},
@@ -427,7 +402,12 @@ export const getUserDetails = async (req, res, next) => {
 			status: "success",
 		});
 	} catch (error) {
-		res.status(401);
+		res.cookie("jwt", "", {
+			maxAge: 0,
+			sameSite: "None",
+			secure: true,
+		});
+
 		next(error);
 	}
 };
@@ -437,7 +417,9 @@ export const googleAuth = async (req, res, next) => {
 	try {
 		const googleRes = await oauth2Client.getToken(code);
 		oauth2Client.setCredentials(googleRes.tokens);
-		const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`);
+		const userRes = await axios.get(
+			`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+		);
 		console.log(userRes);
 		const { email, name } = userRes.data;
 
@@ -463,7 +445,6 @@ export const googleAuth = async (req, res, next) => {
 				status: "error",
 			});
 		}
-		const { _id } = user;
 		const token = generateToken(email);
 		res.status(200)
 			.cookie("jwt", token, {

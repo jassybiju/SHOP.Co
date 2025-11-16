@@ -1,7 +1,5 @@
-import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { getHomeDataService, getProductDataService, getSearchDataService } from "../services/home.service.js";
-import cloudinary from "../utils/cloudinary.js";
 import { verifyToken } from "../utils/jwt.js";
 import { searchValidator } from "../validators/searchValidator.js";
 

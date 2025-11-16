@@ -21,7 +21,7 @@ export const ImageComponent = ({
         setPreview(previewImg);
     }, [setPreview, previewImg]);
     console.log(images, 8881)
-  
+
     const [ showCropper, setShowCropper ] = useState(false);
     const hiddenInputRef = useRef();
 
@@ -66,7 +66,7 @@ export const ImageComponent = ({
 
     return (
         <>
-            <div
+            <button
                 className="rounded-xl w-full h-full bg-gray-300 flex justify-center items-center flex-col"
                 type='button'
                 onClick={(e)=>{e.preventDefault(); onUpload()}}
@@ -87,7 +87,7 @@ export const ImageComponent = ({
                         Upload Your image
                     </>
                 )}
-            </div>
+            </button>
             {showCropper && <ImageCropperModal updateImage={updateImage} closeModal={()=>setShowCropper(false)}/>}
             <input
                 {...registerRest}

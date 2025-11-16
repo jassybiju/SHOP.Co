@@ -11,6 +11,7 @@ export default function ViewBrand({ id }) {
     console.log(status);
     console.log(brand)
     if (status !== "success") {
+        
         return <Loader2 />;
     }
     return (

@@ -10,6 +10,7 @@ import { useGetAllCoupons, useToggleCoupon } from "../../hooks/useCouponManageme
 import { Loader2 } from "lucide-react";
 import EditCoupon from "./components/EditCoupon";
 import ToggleBtn from "../product_management/ui/ToggleBtn";
+import Loader from "@/components/Loader";
 
 const filterOptions = [
     {label : "Active" , value : 'active'},
@@ -31,7 +32,7 @@ const CouponManagement = () => {
 		openModal("edit-coupon", <ModalWrapper render={<EditCoupon id={id} />} />);
 	};
 
-	if (getCouponStatus === "pending") return <Loader2 />;
+	if (getCouponStatus === "pending") return <Loader />;
 
 	const column = [
 {

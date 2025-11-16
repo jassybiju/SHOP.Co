@@ -32,7 +32,7 @@ const EditCoupon = ({id}) => {
     const confirmation = useConfirmationModal();
     const { closeModal } = useModal();
     const { data } = useGetAllUsers();
-    const { data: couponData ,status : getCouponStatus} = useGetCouponById(id);
+    const { data: couponData ,} = useGetCouponById(id);
 
     useEffect(()=>{
         if(couponData?.data){
@@ -47,6 +47,13 @@ const EditCoupon = ({id}) => {
     console.log(couponData?.data)
     const onSubmit = (data) => {
         const {_id ,used_count ,is_deleted, is_active ,createdAt ,updatedAt ,__v , ...rest} = data
+        void _id
+        void used_count
+        void is_deleted
+        void is_active
+        void createdAt
+        void updatedAt
+        void __v
         editCoupon({id, data : rest},{onSuccess : (data)=> {
             console.log(data)
             toast.success(data.message)

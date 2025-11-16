@@ -1,7 +1,6 @@
 import ErrorWithStatus from "../../config/ErrorWithStatus.js";
 import { Coupon } from "../../models/coupon.model.js";
 import { CouponUsage } from "../../models/coupon_usage.model.js";
-import { Order } from "../../models/order.model.js";
 import { addCouponService, editCouponService } from "../../services/admin/coupon-management.service.js";
 import { HTTP_RES } from "../../utils/CONSTANTS.js";
 import { couponValidator } from "../../validators/admin/couponValidator.js";
@@ -119,7 +118,7 @@ export const validateCouponController = async (req, res, next) => {
 		const couponUsedCount = await CouponUsage.find({
 			coupon_id: coupon._id,
 		}).countDocuments();
-		const userCouponUsage = await CouponUsage.find({ coupon_id: coupon._id, user_id: user._id }).countDocuments();
+		await CouponUsage.find({ coupon_id: coupon._id, user_id: user._id }).countDocuments();
         console.log(couponUsedCount,44565)
 		if (couponUsedCount >= coupon.usage_limit) throw new ErrorWithStatus("Coupon can't be used", HTTP_RES.UNPROCESSABLE_ENTITY);
 		// ! TODO UNCOMMENT

@@ -1,5 +1,4 @@
 import { Cart } from "../../models/cart.model.js";
-import { User } from "../../models/user.model.js";
 import { Address } from "../../models/address.model.js";
 import cloudinary from "../../utils/cloudinary.js";
 import { ProductVariant } from "../../models/product_variants.model.js";

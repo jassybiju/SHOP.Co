@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
 import toast from "react-hot-toast";
+import Loader from "@/components/Loader";
 
 const RedirectIfNotLoggedIn = () => {
   const { data : user, isLoading,  } = useUser();
   if (isLoading) {
-    return <div>Loading...</div>; // or your loader
+    return <Loader/>
   }
 
   if (!user) {

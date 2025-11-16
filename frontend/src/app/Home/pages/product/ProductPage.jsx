@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader2, Minus, Plus, Star } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
@@ -10,58 +10,7 @@ import BreadCrumb from "../../components/BreadCrumb";
 import ImageMagnifier from "./components/ImageMagnifier";
 import { useUpdateCartItems } from "@/app/User/hooks/useCart";
 import ProtectedFunctionsWrapper from "@/components/ProtectedFunctionsWrapper";
-
-function StarRating({ rating, maxRating = 5, size = "md", showRating = true }) {
-	const sizeClasses = {
-		sm: "w-4 h-4",
-		md: "w-5 h-5",
-		lg: "w-6 h-6",
-	};
-
-	const textSizeClasses = {
-		sm: "text-sm",
-		md: "text-base",
-		lg: "text-lg",
-	};
-
-	return (
-		<div className="flex items-center gap-2">
-			<div className="flex items-center gap-1">
-				{Array.from({ length: maxRating }, (_, index) => {
-					const isFilled = index < Math.floor(rating);
-					const isHalfFilled = index === Math.floor(rating) && rating % 1 !== 0;
-
-					return (
-						<div key={index} className="relative">
-							<Star
-								className={`${sizeClasses[size]} ${
-									isFilled
-										? "fill-star-yellow text-star-yellow"
-										: "text-gray-300"
-								}`}
-							/>
-							{isHalfFilled && (
-								<div
-									className="absolute inset-0 overflow-hidden"
-									style={{ width: "50%" }}
-								>
-									<Star
-										className={`${sizeClasses[size]} fill-star-yellow text-star-yellow`}
-									/>
-								</div>
-							)}
-						</div>
-					);
-				})}
-			</div>
-			{showRating && (
-				<span className={`${textSizeClasses[size]} text-gray-text`}>
-					<span className="text-black">{rating}</span>/{maxRating}
-				</span>
-			)}
-		</div>
-	);
-}
+import Loader from "@/components/Loader";
 
 const ProductPage = () => {
 	const { id } = useParams();
@@ -77,7 +26,7 @@ const ProductPage = () => {
 	const { mutate: addToCart } = useUpdateCartItems();
 
 	if (isLoading || status !== "success") {
-		return <Loader2 className="animate-spin" />;
+		return <Loader/>
 	}
 
 	console.log(data);
@@ -423,7 +372,7 @@ const ProductPage = () => {
 						</h2>
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 							{data.products.map((product, index) => (
-								<ProductCard product={product} />
+								<ProductCard key={index} product={product} />
 							))}
 						</div>
 					</div>

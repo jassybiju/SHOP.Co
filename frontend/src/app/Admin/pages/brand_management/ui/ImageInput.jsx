@@ -45,10 +45,10 @@ const ImageInput = ({ register ={}, previewImg , readonly=false}) => {
                 className=" hidden "
                 disabled={readonly}
             />
-            <div className="w-[50%] border-2 h-[250px]" onClick={onUpload}>
+            <button className="w-[50%] border-2 h-[250px]" onClick={onUpload}>
                 {uploadButtonLabel}
                 <img src={preview} alt="" className="h-full mx-auto" />
-            </div>
+            </button>
             <p className="text-red-500"></p>
         </div>
     );

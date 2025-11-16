@@ -48,7 +48,6 @@ const Register = () => {
                 console.log(result);
                 const email = result.data.email;
                 const first_name = result.data.first_name;
-                const token = result.data.token;
                 const obj = { email, first_name,  };
                 queryClient.setQueryData(['user'],obj)
                 navigate("/");

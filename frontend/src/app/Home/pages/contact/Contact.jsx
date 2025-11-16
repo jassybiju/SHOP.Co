@@ -2,12 +2,12 @@ export default function Contact() {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-8 rounded-2xl shadow-md">
-        
+
         {/* Left: Contact Form */}
         <div>
           <h2 className="text-3xl font-semibold text-gray-800 mb-2">Get in Touch</h2>
           <p className="text-gray-500 mb-6">We’d love to hear from you! Please fill out the form below.</p>
-          
+
           <form className="space-y-4">
             <input type="text" placeholder="Full Name" className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-black" />
             <input type="email" placeholder="Email Address" className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-black" />
@@ -32,9 +32,9 @@ export default function Contact() {
             <p>support@shopco.com</p>
           </div>
           <div className="flex space-x-4 mt-2">
-            <a href="#" className="hover:text-black">Instagram</a>
-            <a href="#" className="hover:text-black">Twitter</a>
-            <a href="#" className="hover:text-black">Facebook</a>
+            <a href="/" className="hover:text-black">Instagram</a>
+            <a href="/" className="hover:text-black">Twitter</a>
+            <a href="/" className="hover:text-black">Facebook</a>
           </div>
         </div>
       </div>

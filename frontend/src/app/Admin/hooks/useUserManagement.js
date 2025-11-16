@@ -3,7 +3,7 @@ import { getAllUsers, getUserById, toggleUserActiveStatusById } from "../service
 
 
 export const useGetAllUsers = (params) => {
-    
+
     return useQuery({
         queryKey : ['user', params],
         queryFn : getAllUsers,
@@ -24,7 +24,7 @@ export const useToggleUserActiveStatus = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn : toggleUserActiveStatusById,
-        onSuccess : (data) => {
+        onSuccess : () => {
             queryClient.invalidateQueries(['user'])
         }
     })

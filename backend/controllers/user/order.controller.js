@@ -349,7 +349,7 @@ export const cancelOrderItemController = async (req, res, next) => {
 			const refundAmount = Math.max(0, existingOrder.total_amount - newTotal);
 			console.log(refundAmount, 1110);
 			if (refundAmount > 0) {
-				const wallet = await Wallet.findOneAndUpdate(
+				await Wallet.findOneAndUpdate(
 					{ user_id: user._id },
 					{ $inc: { balance: toFixedNum(refundAmount) } },
 					{ upsert: true, new: true, session }
@@ -512,7 +512,7 @@ export const verifyPayment = async (req, res, next) => {
 			);
 			return res.status(HTTP_RES.OK).json({ status: "success", message: "Transaction not verified" });
 		} else {
-			const order = await Order.findByIdAndDelete(transaction.order_id);
+			await Order.findByIdAndDelete(transaction.order_id);
 			return res.status(HTTP_RES.BAD_REQUEST).json({ status: "error", message: "Transaction verified" });
 		}
 	} catch (error) {
@@ -524,7 +524,7 @@ export const cancelPayment = async (req, res, next) => {
 	try {
 		const { razorpay_order_id } = req.body;
 
-		const transaction = await Transaction.findOneAndUpdate({ razorpay_order_id }, { status: "FAILED" });
+		await Transaction.findOneAndUpdate({ razorpay_order_id }, { status: "FAILED" });
 
 		return res.status(HTTP_RES.ACCEPTED).json({ status: "success" });
 	} catch (error) {
@@ -557,7 +557,7 @@ export const repayOrderController = async (req, res, next) => {
 		};
 		const razorpay_order = await razorpay.orders.create(razorpay_option);
 		console.log(razorpay_order);
-		const transaction = await Transaction.create([
+		await Transaction.create([
 			{
 				user_id: user._id,
 				order_id: order._id,

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useAddAmount } from "../../../hooks/useWallet";
 import toast from "react-hot-toast";
 import { displayRazorpay } from "@/utils/displayRazorpay";
-import { walletAxiosInstance } from "@/lib/axios";
+import { axiosInstance } from "@/lib/axios";
 import { redirect } from "react-router";
 
 const AddMoneyModal = () => {
@@ -22,8 +22,8 @@ const AddMoneyModal = () => {
 				if (data?.status === "success") {
                     console.log(data.data)
 					displayRazorpay(data.data, (response) => {
-						walletAxiosInstance
-							.post("validate", {
+						axiosInstance
+							.post("wallet/validate", {
 								razorpay_order_id: response.razorpay_order_id,
 								razorpay_payment_id: response.razorpay_payment_id,
 								razorpay_signature: response.razorpay_signature,
@@ -40,7 +40,7 @@ const AddMoneyModal = () => {
 									// return window.location.href = '/order/paymsent-failed'
 								}
 							})
-							.catch((e) => {
+							.catch(() => {
 								console.log(3);
 								window.location.href = "/order/paydment-failed";
 							});

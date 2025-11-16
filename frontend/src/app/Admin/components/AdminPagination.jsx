@@ -4,23 +4,23 @@ const AdminPagination = ({ pages, page, onPageChange }) => {
     return (
         <div className="flex items-center text-center justify-between border-t border-white/10 px-4 py-3 sm:px-6">
             {pages === 0 ? (
-              <p className="text-center mx-auto">  "No Entries"</p>
+              <p className="text-center mx-auto">  No Entries</p>
             ) : (
                 <>
                     {" "}
                     <div className="flex flex-1 justify-between sm:hidden">
-                        <a
-                            href="#"
+                        <button
+                            href="/"
                             className="relative inline-flex items-center rounded-md border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-white/10"
                         >
                             Previous
-                        </a>
-                        <a
-                            href="#"
+                        </button>
+                        <button
+                            href="/"
                             className="relative  ml-3 inline-flex items-center rounded-md border border-white/10 bg-white/5 px-4 py-2  font-medium text-gray-200 hover:bg-white/10"
                         >
                             Next
-                        </a>
+                        </button>
                     </div>
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                         <div>
@@ -57,6 +57,7 @@ const AdminPagination = ({ pages, page, onPageChange }) => {
                                     </button>
                                     {[...Array(pages)].map((_, x) => (
                                         <button
+                                            key={x}
                                             disabled={page === x + 1}
                                             onClick={() => onPageChange(x + 1)}
                                             href="#"

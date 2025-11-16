@@ -12,6 +12,7 @@ import ModalWrapper from "../../../../components/ModalWrapper";
 import useConfirmationModal from "../../hooks/useConfirmationModal";
 import toast from "react-hot-toast";
 import ToggleBtn from "../product_management/ui/ToggleBtn";
+import Loader from "@/components/Loader";
 
 const CategoryMangement = () => {
 	const [params, setParams] = useState({
@@ -25,7 +26,7 @@ const CategoryMangement = () => {
 	const { mutate: toggleCategory } = useToggleCategoryStatus();
 	const showConfirmation = useConfirmationModal();
 	if (status == "loading" || isLoading) {
-		return "Loading";
+		return <Loader/>;
 	}
 	console.log(categories);
 	const showAddCategoryModal = () => {

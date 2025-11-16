@@ -125,7 +125,7 @@ const ImageComponent = ({ name = "", register = () => ({}), registerObj, value =
 
 	return (
 		<>
-			<div className="rounded-xl w-full h-full bg-gray-300 flex justify-center items-center flex-col" onClick={onUpload}>
+			<button className="rounded-xl w-full h-full bg-gray-300 flex justify-center items-center flex-col" onClick={onUpload}>
 				{preview ? (
 					<img src={preview} alt="" />
 				) : (
@@ -134,7 +134,7 @@ const ImageComponent = ({ name = "", register = () => ({}), registerObj, value =
 						Upload Your image
 					</>
 				)}
-			</div>
+			</button>
 			<input
 				{...registerRest}
 				disabled={readonly}
@@ -170,9 +170,9 @@ const VariantComponent = ({ value, onAddVariant, field, remove, readonly }) => {
 			{value ? (
 				<div className="pl-3 lg:pl-10 ">
 					{!readonly && (
-						<div className="bg-red-500 p-2 w-max rounded-full absolute -top-5 -right-5" onClick={() => remove(field.id)}>
+						<button className="bg-red-500 p-2 w-max rounded-full absolute -top-5 -right-5" onClick={() => remove(field.id)}>
 							<Trash2 color={"white"} />
-						</div>
+						</button>
 					)}
 					<div className="flex items-center  gap-3 ">
 						Color : <span className={`  w-5 h-5 inline-block rounded-full `} style={{ backgroundColor: value.color }}></span>
@@ -191,9 +191,9 @@ const VariantComponent = ({ value, onAddVariant, field, remove, readonly }) => {
 					</div>
 				</div>
 			) : (
-				<div className="flex items-center justify-center" onClick={showAddVariantModal}>
+				<button className="flex items-center justify-center" onClick={showAddVariantModal}>
 					+
-				</div>
+				</button>
 			)}
 		</div>
 	);

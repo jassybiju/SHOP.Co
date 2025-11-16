@@ -1,12 +1,13 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useUser } from "../hooks/useUser"; // Your custom hook to get user
 import toast from "react-hot-toast";
+import Loader from "./Loader";
 
 const RoleBasedProtectedRoute = ({ allowedRoles = [] }) => {
   const { data : user, isLoading ,status} = useUser({});
   const location = useLocation();
     console.log(user , isLoading, status)
-  if (isLoading) return <div>Loading...</div>; // Or a spinner
+  if (isLoading) return <Loader/>
 
   // Not logged in
   if (!user) return <Navigate to="/auth/login" replace state={{ from: location }} />;

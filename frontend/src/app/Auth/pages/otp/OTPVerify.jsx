@@ -64,7 +64,7 @@ const OTPVerify = () => {
                 toast.error(errorMessage)
             }
         })
-    } 
+    }
 
     const onExpire = () => {console.log("Expired")}
     //for otp timer
@@ -94,7 +94,7 @@ const OTPVerify = () => {
             }
         }, 1000);
         return () => clearInterval(interval);
-    }, [otpExpiry]);
+    }, [otpExpiry, timeLeft]);
 
     console.log(formError)
 
@@ -108,11 +108,11 @@ const OTPVerify = () => {
                 <h2 className="text-xl font-semibold text-center mb-6">
                     Enter the OTP
                 </h2>
-                
+
                  <p className= {` p-4 text-center ${formError && "text-red-500 bg-red-300"}`}>
                               &nbsp;  {formError}
                             </p>
-                       
+
                 {/* Info text */}
                 <p className="text-center text-gray-600 mb-4">
                     The OTP has been sent to your registered email
@@ -139,7 +139,7 @@ const OTPVerify = () => {
                         />
 
                         {/* Resend OTP */}
-                        <button 
+                        <button
                             onClick={resendOTPHandle}
                             type="button"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition disabled:bg-purple-950 "
@@ -165,7 +165,7 @@ const OTPVerify = () => {
                             to={-1}
                             className="text-sm text-gray-600 hover:underline"
                         >
-                            Go back 
+                            Go back
                         </Link>
                         <button
                             disabled={isVerifyOtpPending}

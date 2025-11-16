@@ -51,6 +51,7 @@ import SalesReport from "./Admin/pages/saleReport/salesReport";
 import Coupon from "./User/Accounts/pages/coupon/Coupon";
 import Wishlist from "./User/pages/wishlist/Wishlist";
 import PaymentFailed from "./User/Accounts/pages/order/PaymentFailed";
+import NotFound from "@/components/NotFound";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -182,7 +183,7 @@ export const router = createBrowserRouter(
                         </Route>
                     </Route>
                 </Route>
-                <Route path="*" element={<>404</>}></Route>
+                <Route path="*" element={<NotFound/>}></Route>
             </Route>
         </>
     )

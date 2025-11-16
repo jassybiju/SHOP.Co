@@ -185,6 +185,7 @@ export const getSalesReportController = async (req, res, next) => {
 				grandTotalAmount,
 				grandTotalDiscount,
 				totalCouponDiscountAmount,
+                totalCouponsUsed
 			},
 			status: "success",
 		});

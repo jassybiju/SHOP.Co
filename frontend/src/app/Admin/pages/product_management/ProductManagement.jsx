@@ -5,7 +5,7 @@ import Dropdown from "../../../../components/Dropdown";
 import TableComponent from "../../components/TableComponent";
 import IconCards from "../../components/IconCards";
 import { Package2, PackageMinus } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useGetAllProducts, useToggleProductStatus } from "../../hooks/useProductManagement";
 import { useGetAllCategories } from "../../hooks/useCategoryManagement";
 import { productFilterOptions } from "../../../../utils/CONSTANTS";
@@ -13,9 +13,9 @@ import { useEffect } from "react";
 import ToggleBtn from "./ui/ToggleBtn";
 import toast from "react-hot-toast";
 import useConfirmationModal from "../../hooks/useConfirmationModal";
+import Loader from "@/components/Loader";
 
 const ProductManagement = () => {
-	const navigate = useNavigate();
 	const [params, setParams] = useState({
 		search: "",
 		sort: "created at - asc",
@@ -39,7 +39,7 @@ const ProductManagement = () => {
 	const showConfirmation = useConfirmationModal();
 
 	if (status !== "success") {
-		return "Loading";
+		return <Loader/>;
 	}
 
 	const column = [

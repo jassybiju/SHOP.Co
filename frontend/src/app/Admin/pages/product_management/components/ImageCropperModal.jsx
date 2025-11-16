@@ -139,13 +139,13 @@ const ImageCropperModal = ({ updateImage , closeModal}) => {
               Upload Image
             </button>
           </div>
-        ) : ( <div
+        ) : ( <button
             onClick={()=>InputRef.current.click()}
             className="bg-gray-100 rounded flex justify-center items-center"
             style={{
               height: "50vh",
               width: "50vh",
-            }}>Upload Image</div>)}
+            }}>Upload Image</button>)}
         {crop && (
           <canvas
             ref={previewCanvasRef}

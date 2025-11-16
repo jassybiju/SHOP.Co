@@ -51,9 +51,9 @@ const orderStatusSchema = Joi.object({
 	description: Joi.string().default("none"),
 });
 
-const orderCancellationSchema = Joi.object({
-	reason: Joi.string(),
-});
+// const orderCancellationSchema = Joi.object({
+// 	reason: Joi.string(),
+// });
 
 export const orderStatusValidator = validator(orderStatusSchema);
 export const orderSearchValidator = validator(orderSearchSchema);

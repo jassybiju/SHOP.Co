@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Address } from "../models/address.model.js";
 import { User } from "../models/user.model.js";
 import {
@@ -203,7 +202,7 @@ export const setToPrimaryAddressController = async(req, res, next) => {
 export const getCouponsController = async(req, res, next) => {
     try {
         const user = req.user._id
-        
+
         console.log(user)
         const coupons = await Coupon.find({for_user : user.toString(), is_active : true})
         console.log(coupons)

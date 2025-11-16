@@ -12,7 +12,6 @@ export default function AddBrand() {
     const {
         register,
         handleSubmit,
-        setError,
         setValue,
         trigger,
         formState: { errors: formError },

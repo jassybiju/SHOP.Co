@@ -41,14 +41,14 @@ const VariantComponent = ({
             {value ? (
                 <div className=" ">
                     {!readonly && (
-                        <div
+                        <button
                             className="bg-red-500 p-2 w-max rounded-full absolute -top-5 -right-5"
                             onClick={() => remove(index)}
                         >
                             <Trash2 color={"white"} />
-                        </div>
+                        </button>
                     )}
-                    <div
+                    <button
                         onClick={showEditVariantModal}
                         className="pl-3 lg:pl-10"
                     >
@@ -77,15 +77,15 @@ const VariantComponent = ({
                                 {value.stock}
                             </span>
                         </div>
-                    </div>
+                    </button>
                 </div>
             ) : (
-                <div
+                <button
                     className="flex items-center justify-center"
                     onClick={showAddVariantModal}
                 >
                     +
-                </div>
+                </button>
             )}
         </div>
     );

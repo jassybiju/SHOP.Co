@@ -170,7 +170,7 @@ export const returnOrderItemController = async (req, res, next) => {
 				const refundAmount = Math.max(0, existingOrder.total_amount - newTotal);
 				console.log(refundAmount, 100);
 				if (refundAmount > 0) {
-					const wallet = await Wallet.findOneAndUpdate(
+					await Wallet.findOneAndUpdate(
 						{ user_id: existingOrder.user_id },
 						{ $inc: { balance: toFixedNum(refundAmount) } },
 						{ upsert: true, new: true }

@@ -165,8 +165,8 @@ export default function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         {/* Product 1 */}
 
-                        {res.data.new_arrivals.map((x) => (
-                           <ProductCard product={x}/>
+                        {res.data.new_arrivals.map((x, i) => (
+                           <ProductCard key={i} product={x}/>
                         ))}
 
 
@@ -199,8 +199,8 @@ export default function Home() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         {/* Product 1 */}
-                        {res.data.top_selling.map(x => (
-                      <ProductCard product={x}/>
+                        {res.data.top_selling.map((x,i) => (
+                      <ProductCard key={i} product={x}/>
 ))}
                       </div>
 
@@ -251,10 +251,10 @@ export default function Home() {
                                 <Check className="w-5 h-5 bg-green-verified text-white rounded-full ml-2 p-0.5" />
                             </div>
                             <p className="font-poppins text-gray-600 leading-relaxed">
-                                "I'm blown away by the quality and style of the
+                                &apos;I &apos; m blown away by the quality and style of the
                                 clothes I received from Shop.co. From casual
-                                wear to elegant dresses, every piece I've bought
-                                has exceeded my expectations."
+                                wear to elegant dresses, every piece I&apos;ve bought
+                                has exceeded my expectations.&apos;
                             </p>
                         </div>
 
@@ -275,11 +275,11 @@ export default function Home() {
                                 <Check className="w-5 h-5 bg-green-verified text-white rounded-full ml-2 p-0.5" />
                             </div>
                             <p className="font-poppins text-gray-600 leading-relaxed">
-                                "Finding clothes that align with my personal
+                                Finding clothes that align with my personal
                                 style used to be a challenge until I discovered
                                 Shop.co. The range of options they offer is
                                 truly remarkable, catering to a variety of
-                                tastes and occasions."
+                                tastes and occasions.
                             </p>
                         </div>
 
@@ -300,11 +300,11 @@ export default function Home() {
                                 <Check className="w-5 h-5 bg-green-verified text-white rounded-full ml-2 p-0.5" />
                             </div>
                             <p className="font-poppins text-gray-600 leading-relaxed">
-                                "As someone who's always on the lookout for
-                                unique fashion pieces, I'm thrilled to have
+                                As someone whs always on the lookout for
+                                unique fashion pieces, Im thrilled to have
                                 stumbled upon Shop.co. The selection of clothes
                                 is not only diverse but also on-point with the
-                                latest trends."
+                                latest trends.
                             </p>
                         </div>
                     </div>

@@ -11,7 +11,6 @@ export default function AddCategory() {
     const {
         register,
         handleSubmit,
-        setError,
         trigger,
         formState: { errors: formError },
     } = useForm();
@@ -101,7 +100,7 @@ export default function AddCategory() {
 
                     <div className="flex justify-end gap-4">
                         <button
-                            type="button" 
+                            type="button"
                             disabled={status === "pending"}
                             onClick={() => closeModal("add-category")}
                             className="px-6 py-3 bg-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-400 transition disabled:bg-gray-400"

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { ImageComponent } from "../../product_management/components/ImageComponent";
 import useConfirmationModal from "../../../hooks/useConfirmationModal";
+import Loader from "@/components/Loader";
 
 const EditBrand = ({ id }) => {
     const { data: brands, status } = useGetBrand(id);
@@ -44,7 +45,7 @@ const EditBrand = ({ id }) => {
     };
 
     if (status !== "success") {
-        return "Loading...";
+        return <Loader/>;
     }
     return (
         <>

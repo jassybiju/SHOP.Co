@@ -27,7 +27,7 @@ export const downloadSalesReportPDF = (orders, startDate, endDate) => {
 
 	doc.setFontSize(12);
 	doc.setTextColor(52, 73, 94);
-	// doc.text(`From: ${new Date(startDate).toLocaleDateString()} To: ${new Date(endDate).toLocaleDateString()}`, 14, 25);
+	doc.text(`From: ${new Date(startDate).toLocaleDateString()} To: ${new Date(endDate).toLocaleDateString()}`, 14, 25);
 
 	const columns = ["ORDER ID", "Date", "Amount", "Payment Methods", "Payment Status", "Status", "Discount Applied"];
 
@@ -80,7 +80,7 @@ export const downloadSalesReportPDF = (orders, startDate, endDate) => {
 
 export const downloadSalesReportExcel = (orders, startDate, endDate) => {
 	const header = [["Sales Report"], [], []];
-// [`From ${new Date(startDate).toLocaleDateString()} To : ${new Date(endDate).toLocaleDateString()}`]
+[`From ${new Date(startDate).toLocaleDateString()} To : ${new Date(endDate).toLocaleDateString()}`]
 	const data = orders.map((order) => ({
 		ORDER_ID: order._id,
 		DATE: new Date(order.createdAt).toDateString(),

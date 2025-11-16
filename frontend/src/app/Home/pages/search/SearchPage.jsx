@@ -8,6 +8,7 @@ import Pagination from "./components/Pagination";
 import { useSearchParams } from "react-router";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useResponsive } from "@/hooks/useResponsive";
+import Loader from "@/components/Loader";
 
 // const Slider = ()=>(<>SLider</>)
 
@@ -94,7 +95,7 @@ const SearchPage = () => {
 	// }, [data, params]);
 
 	if (isLoading) {
-		return "Searching...";
+		return <Loader/>
 	}
 
 	const SORT_OPTIONS = [

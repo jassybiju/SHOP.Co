@@ -10,7 +10,6 @@ import { HTTP_RES } from "../../utils/CONSTANTS.js";
 import { CouponUsage } from "../../models/coupon_usage.model.js";
 import { Transaction } from "../../models/transaction.model.js";
 import { razorpay } from "../../config/razorpay.js";
-import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 import { Wallet } from "../../models/wallet.model.js";
 import { toFixedNum } from "../../utils/toFixedNum.js";
 
@@ -32,7 +31,7 @@ export const createOrderService = async (currentUser, orderData) => {
 				throw new ErrorWithStatus("User Not authorized to use the coupon", HTTP_RES.UNAUTHORIZED);
 			const couponUsageCount = await CouponUsage.find({ coupon_id: coupon._id }).countDocuments();
 			console.log(couponUsageCount, 44565);
-			const userCouponUsage = await CouponUsage.find({
+			 await CouponUsage.find({
 				coupon_id: coupon._id,
 				user_id: user._id,
 			}).countDocuments();

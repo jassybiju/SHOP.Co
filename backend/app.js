@@ -1,4 +1,5 @@
 import "./utils/env.js";
+import "./utils/logger.js";
 import express, { urlencoded } from "express";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
@@ -22,8 +23,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import ErrorWithStatus from "./config/ErrorWithStatus.js";
-import Razorpay from 'razorpay'
 import { HTTP_RES } from "./utils/CONSTANTS.js";
+import { logger } from "./utils/logger.js";
 const PORT = process.env.PORT || 8000;
 const app = express();
 
@@ -31,7 +32,7 @@ app.use(morgan("dev"));
 
 app.use(
     cors({
-        origin:true,
+        origin:process.env.FRONTEND_URI,
         credentials: true,
     })
 );
@@ -67,18 +68,18 @@ app.use('/api/wallet',walletRouter)
 app.use('/api/wishlist',wishlistRouter)
 
 
-app.use((req, res) => {
+app.use((req, ) => {
     // res.status(404);
     throw new ErrorWithStatus("PAth not found " + req.path, HTTP_RES.NOT_FOUND);
 });
 
-app.use((error, req, res , next ) => {
+app.use((error, req, res ,  _next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-
+    logger.info(`handled ${error?.status || statusCode} - ${error.message}`)
     // console.log(statusCode, 12 , error.statusCode());
     console.log(error.message)
     res.status(error?.status || statusCode);
-    console.log(error.message);
+    console.log(error.message,2232);
     res.json({
         message: error.message,
         status: "error",

@@ -95,7 +95,7 @@ export const getAllOrdersService = async (query) => {
 };
 
 // ! CHANGE TO UTILS
-const isPhysicalStatus = (status) => ["PLACED", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "RETURNED"].includes(status);
+// const isPhysicalStatus = (status) => ["PLACED", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "RETURNED"].includes(status);
 
 export const updateOrderStatusService = async (orderId, newStatus, description) => {
 

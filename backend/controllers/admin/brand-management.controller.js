@@ -1,11 +1,9 @@
-import { Brand } from "../../models/brand.model.js";
 import {
     addBrandService,
     editBrandService,
     getAllBrandService,
     getBrandService,
 } from "../../services/admin/brand-management.service.js";
-import { uploadImages } from "../../utils/cloudinary.js";
 import { brandValidator } from "../../validators/brandValidator.js";
 
 export const addBrand = async (req, res, next) => {
@@ -68,13 +66,13 @@ export const editBrand = async (req, res, next) => {
         const { id } = req.params;
         const query = req.body;
 
-      
+
         console.log(req.body , id, 3434);
         const { value, error } = brandValidator(query);
         if (error) {
             throw error;
         }
-      
+
         console.log(12345)
         const brand = await editBrandService(id, value, req);
         res.status(200).json({

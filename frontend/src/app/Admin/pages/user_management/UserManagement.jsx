@@ -18,7 +18,7 @@ const UserManagement = () => {
 		page: 1,
 	});
 
-	const { data: users, isLoading, status, isFetching } = useGetAllUsers({ ...params, limit });
+	const { data: users, isLoading,  } = useGetAllUsers({ ...params, limit });
 
 	const { mutate: toggleActiveUser } = useToggleUserActiveStatus();
 

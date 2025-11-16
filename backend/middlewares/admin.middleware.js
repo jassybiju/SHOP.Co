@@ -1,8 +1,6 @@
-import { User } from "../models/user.model.js";
 
 export const checkAdminRole = async (req, res, next) => {
     try {
-        const email = req.email;
         const user = req.user
 
         if(!user){

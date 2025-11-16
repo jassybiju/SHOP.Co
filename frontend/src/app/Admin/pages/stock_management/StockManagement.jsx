@@ -5,6 +5,7 @@ import Dropdown from "../../../../components/Dropdown";
 import TableComponent from "../../components/TableComponent";
 import Search from "../../components/Search";
 import RestokeInput from "./components/RestokeInput";
+import Loader from "@/components/Loader";
 
 const FILTER_OPTIONS = [
 	{
@@ -36,7 +37,7 @@ const StockManagement = () => {
 
 
 	if (status !== "success") {
-		return "Loading";
+		return <Loader/>;
 	}
 
 	const column = [
