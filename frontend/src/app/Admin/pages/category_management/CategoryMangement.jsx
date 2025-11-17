@@ -58,6 +58,7 @@ const CategoryMangement = () => {
 					onClick={() =>
 						showConfirmation(
 							() =>
+
 								toggleCategory(row._id, {
 									onSuccess: (res) => toast.success(res.message),
 								}),
