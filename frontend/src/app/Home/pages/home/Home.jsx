@@ -13,8 +13,8 @@ import { useHome } from "../../hooks/useHome";
 import ProductCard from "../search/components/ProductCard";
 import { Link } from "react-router";
 import Loader from "../../../../components/Loader";
-import zara_logo from '../../../../assets/zara_logo.png'
-import prada_logo from '../../../../assets/prada_logo.png'
+import zara_logo from '../../../../assets/zara.png'
+import prada_logo from '../../../../assets/prada.png'
 import gucci_logo from '../../../../assets/gucci_logo.png'
 import calvin_logo from '../../../../assets/Calvin_logo.png'
 import versace_logo from '../../../../assets/versace_logo.png'
