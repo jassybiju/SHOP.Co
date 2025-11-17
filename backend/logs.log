@@ -61,3 +61,17 @@
 {"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:20:46.226Z"}
 {"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:35:36.515Z"}
 {"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-11T04:35:37.558Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:06:27.339Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:06:28.534Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:06:53.405Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:06:54.456Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:10.969Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:12.033Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:15.979Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:17.041Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:22.633Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T03:09:23.660Z"}
+{"level":"info","message":"handled 500 - Insufficient Quanitty","timestamp":"2025-11-17T03:10:24.545Z"}
+{"level":"info","message":"handled 400 - Cannot do COD if total amount is less than 1000","timestamp":"2025-11-17T03:10:41.461Z"}
+{"level":"info","message":"handled 500 - Cart is empty","timestamp":"2025-11-17T03:11:04.608Z"}
+{"level":"info","message":"handled 500 - Cart is empty","timestamp":"2025-11-17T03:11:05.926Z"}
