@@ -75,3 +75,20 @@
 {"level":"info","message":"handled 400 - Cannot do COD if total amount is less than 1000","timestamp":"2025-11-17T03:10:41.461Z"}
 {"level":"info","message":"handled 500 - Cart is empty","timestamp":"2025-11-17T03:11:04.608Z"}
 {"level":"info","message":"handled 500 - Cart is empty","timestamp":"2025-11-17T03:11:05.926Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T09:15:56.198Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-17T09:15:57.308Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-24T05:10:40.735Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-24T05:10:43.144Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:43:46.206Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:43:47.289Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:44:14.738Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:44:15.775Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:44:20.011Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:44:21.073Z"}
+{"level":"info","message":"handled 400 - User is Logged In through Google","timestamp":"2025-11-27T04:44:42.559Z"}
+{"level":"info","message":"handled 500 - jwt must be a string","timestamp":"2025-11-27T04:45:18.676Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:45:19.706Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:45:51.293Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:45:52.302Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:45:53.588Z"}
+{"level":"info","message":"handled 400 - Access Denied","timestamp":"2025-11-27T04:45:54.600Z"}

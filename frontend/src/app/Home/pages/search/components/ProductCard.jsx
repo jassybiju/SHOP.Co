@@ -14,7 +14,7 @@ function ProductCard({ product }) {
     }
   return (
     <Link className="group" to={'/product/'+product._id}>
-  <div className="group cursor-pointer w-full">
+  <div className="group cursor-pointer w-full h-auto">
                                 <div className="bg-gray-medium rounded-2xl p-4 mb-4 relative overflow-hidden">
                                     <img
                                         src={product.images[0].url}

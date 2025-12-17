@@ -73,7 +73,7 @@ const Navbar = () => {
                             </NavLink>
 
                             {/* Contact */}
-                            <NavLink
+                            {/* <NavLink
                                 to="/contact"
                                 className={({ isActive }) =>
                                     `sm:block hidden relative font-poppins cursor-pointer
@@ -83,7 +83,7 @@ const Navbar = () => {
                                 }
                             >
                                 Contact
-                            </NavLink>
+                            </NavLink> */}
                         </nav>
 
                         {/* Search and Icons */}

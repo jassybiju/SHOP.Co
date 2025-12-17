@@ -1,7 +1,7 @@
 const NewsLetter = () => {
     return (
-        <section className="bg-black text-white py-16 mx-4 sm:mx-6 lg:mx-8 rounded-2xl mb-16">
-            <div className="max-w-4xl mx-auto px-6 lg:px-8">
+        <>
+            {/* <div className="max-w-4xl mx-auto px-6 lg:px-8">
                 <div className="grid lg:grid-cols-2 gap-8 items-center">
                     <div>
                         <h2 className="font-bakbak text-3xl lg:text-4xl font-bold leading-tight">
@@ -22,8 +22,8 @@ const NewsLetter = () => {
                         </button>
                     </div>
                 </div>
-            </div>
-        </section>
+            </div> */}
+        </>
     );
 };
 export default NewsLetter;

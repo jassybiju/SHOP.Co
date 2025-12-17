@@ -476,7 +476,7 @@ const SearchPage = () => {
                     <button onClick={()=>setIsOpen(prev => !prev)} className="absolute z-10000 md:hidden block bottom-10 bg-white rounded-full shadow shadow-black p-2"><Filter/></button>
 
 					{/* Main Content */}
-					<div className="flex-1 md:static absolute">
+					<div className="flex-1 md:static relative">
 						{/* Header */}
 						<div className="flex items-center justify-between mb-8">
 							<h1 className="text-3xl font-bold text-black">
@@ -511,7 +511,7 @@ const SearchPage = () => {
 							"No Items"
 						) : (
 							<>
-								<div className="grid grid-cols-3 gap-8 mb-12">
+								<div className="grid md:grid-cols-3 gap-8 mb-12 h-">
 									{products.map((product) => (
 										<ProductCard key={product.id} product={product} />
 									))}
